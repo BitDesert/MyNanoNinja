@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+
+    <title><% if(typeof title !== 'undefined'){ %><%= title %> - <% } %>My Nano Ninja</title>
+
+    <meta name="description" content="The Ninja shows you verified representatives, statistics and more for the Nano cryptocurrency!">
+    <meta name="keywords" content="nano, node, ninja, cryptocurrency, representatives, statistics">
+    <meta name="robots" content="index, follow">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#2196F3">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta property="og:title" content="<% if(typeof title !== 'undefined'){ %><%= title %> - <% } %>My Nano Ninja">
+    <meta property="og:description" content="The Ninja shows you verified representatives, statistics and more for the Nano cryptocurrency!">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="/static/img/ninja-icon.png">
+
+    <link rel="stylesheet" href="/static/css/materia/bootstrap.min.css" media="screen">
+    <link rel="stylesheet" href="/static/css/custom.css?v=4" media="screen">
+    <link rel="icon" href="/static/img/ninja-icon.png">
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115902726-3"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-115902726-3');
+    </script>
+
+  </head>
+  <body>
+    <script>var init = [];</script>
+
+    <!--- add the navbar -->
+    <% include ./navbar.ejs %>
+
+    <!-- logo and ticker -->
+    <div class="container">
+
+        <div id="esntphoenix" data-adzone="31"></div>

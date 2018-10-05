@@ -1,0 +1,78 @@
+<% include ../../partials/header.ejs %>
+
+<h1>Connect Nano Accounts</h1>
+
+<div class="row">
+
+  <div class="col">
+    <div class="card mb-3">
+      <div class="card-body">
+        <h4 class="card-title">Verify Ownership</h4>
+        <p class="card-text">
+          To verify that you own the Nano address send <b>from the address to be verified</b>.
+        </p>
+        <p>
+          The amount is 0.000001 NANO or 1000000000000000000000000 raw.<br> You probably need the <a href="https://github.com/nanocurrency/raiblocks/wiki/RPC-protocol#send"
+            target="_blank">RPC send command</a> or send via a Wallet GUI by importing the seed.
+          <div id="nano-button" class="mb-3"></div>
+          <h4 id="statustext"></h4>
+        </p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://brainblocks.io/brainblocks.min.js"></script>
+
+<script>
+init.push(function () {
+  brainblocks.Button.render({
+
+    // Pass in payment options
+    payment: {
+      destination: 'xrb_1ninja7rh37ehfp9utkor5ixmxyg8kme8fnzc4zty145ibch8kf5jwpnzr3r',
+      currency: 'rai',
+      amount: '1'
+    },
+
+    // Handle successful payments
+
+    onPayment: function (data) {
+      console.log('Payment successful!', data);
+      verifyPayment(data.token)
+    }
+
+  }, '#nano-button');
+});
+
+function verifyPayment(token) {
+  setPaymentStatus('Verifying payment...');
+
+  $.getJSON('/auth/connect/nano/' + token + '/verify', function (verifydata) {
+    console.log(verifydata);
+
+    if (verifydata.status == 'OK') {
+      setPaymentStatus('Success! Redirecting...');
+      setTimeout(function () {
+        window.location = "/account/" + verifydata.sender;
+      }, 1 * 1000);
+
+    } else if (verifydata.error == 'not_fulfilled') {
+      setPaymentStatus('Waiting for confimation...');
+      setTimeout(function(){
+        verifyPayment(token);
+      }, 3000);
+
+    } else {
+      setPaymentStatus('Error: ' + verifydata.error);
+    }
+  });
+}
+
+function setPaymentStatus(status) {
+  $("#statustext").text(status);
+}
+</script>
+
+<% include ../../partials/footer.ejs %>

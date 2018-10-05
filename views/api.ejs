@@ -1,0 +1,50 @@
+<% include ../partials/header.ejs %>
+
+<h1>My Nano Ninja API</h1>
+<h4>Build awesome apps with the Ninja!</h4>
+
+<h2>Base URL</h2>
+<pre>https://mynano.ninja/api/</pre>
+
+<h2>General</h2>
+
+<h3>Blockcount</h3>
+<p>Returns the current block count</p>
+<pre>/blockcount</pre>
+
+<h3>Ledger Download</h3>
+<p>Redirects to the current ledger file at Yandex</p>
+<pre>/ledger/download</pre>
+
+<h2>Accounts</h2>
+
+<h3>Active</h3>
+<p>Accounts with over 0.1% voting weight</p>
+<pre>/accounts/active</pre>
+
+<h3>Verified</h3>
+<p>Accounts that are verified</p>
+<pre>/accounts/verified</pre>
+
+<h3>Specific account</h3>
+<p>Get information about a sepecific account</p>
+<pre>/accounts/:account</pre>
+<h4>Parameter</h4>
+<table class="table table-active">
+  <thead>
+    <tr>
+      <th scope="col">Field</th>
+      <th scope="col">Type</th>
+      <th scope="col">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>account</td>
+      <td>String</td>
+      <td>Nano address xrb_1234...</td>
+    </tr>
+  </tbody>
+</table> 
+
+<% include ../partials/footer.ejs %>

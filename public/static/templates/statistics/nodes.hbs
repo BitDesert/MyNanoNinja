@@ -1,0 +1,100 @@
+<h2>
+  Blockcount
+<!--
+  <br>
+  <small>
+    Reported by {{accounts.length}} Nodes
+  </small>
+-->
+</h2>
+
+<div class="row">
+  <div class="col-md">
+    <div class="card mb-4 box-shadow">
+      <div class="card-header">
+        <h4 class="my-0 font-weight-normal">Aggregated Blockcount</h4>
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+          Highest
+          <span class="float-right">
+            {{formatNumber blockcount.max}}
+          </span>
+        </li>
+        <li class="list-group-item">
+          Median
+          <span class="float-right">
+            {{formatNumber blockcount.median}}
+          </span>
+        </li>
+        <li class="list-group-item">
+          Average
+          <span class="float-right">
+            {{formatNumber blockcount.avg}}
+          </span>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="col-md">
+    <div class="card mb-4 box-shadow">
+      <div class="card-header">
+        <h4 class="my-0 font-weight-normal">Sync Status</h4>
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+          Fully Synced
+          <span class="float-right">
+            {{nodessync}}
+          </span>
+        </li>
+        <li class="list-group-item">
+          Out of Sync
+          <span class="float-right">
+            {{nodesoutofsync}}
+          </span>
+        </li>
+        <li class="list-group-item">
+          Not Synced
+          <span class="float-right">
+            {{nodesnotsync}}
+          </span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<h3>Over Time</h3>
+<div id="blockcountsovertime"></div>
+
+<h3>Current</h3>
+<div id="blockcountscurrent"></div>
+
+<div class="row">
+  {{#each accounts}}
+  <div class="col-12">
+    <div class="card mb-3">
+      <div class="card-body">
+        <div class="row">
+          <div class="col">
+            <a href="/account/{{account}}">
+              <h4 class="card-title">
+                {{#if alias}} {{alias}} {{else}} {{account}} {{/if}}
+              </h4>
+              <h6 class="card-subtitle text-muted">
+                {{monitor.version}}
+              </h6>
+            </a>
+          </div>
+          <div class="col-auto ml-auto">
+            <span class="h1">
+              {{formatNumber monitor.blocks}}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {{/each}}
+</div>

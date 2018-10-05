@@ -1,0 +1,69 @@
+<% include ../partials/header.ejs %>
+
+<h1>Active Nano Representatives</h1>
+<h4>Votes from representatives with over 0.1% total voting weight are being rebroadcasted.</h4>
+
+<div class="card-deck mb-3 text-center">
+  <div class="card mb-4 box-shadow">
+    <div class="card-header">
+      <h4 class="my-0 font-weight-normal">All representatives</h4>
+    </div>
+    <div class="card-body">
+      <h1 class="card-title"><%= accounts.length %></h1>
+    </div>
+  </div>
+  <div class="card mb-4 box-shadow">
+    <div class="card-header">
+      <h4 class="my-0 font-weight-normal">Online representatives</h4>
+    </div>
+    <div class="card-body">
+      <h1 class="card-title"><%= nanorpc.getNodesOnlineRebroad() %></h1>
+    </div>
+  </div>
+  <div class="card mb-4 box-shadow">
+    <div class="card-header">
+      <h4 class="my-0 font-weight-normal">% Online</h4>
+    </div>
+    <div class="card-body">
+      <h1 class="card-title"><%= nodesOnlinePercent %> %</h1>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+
+  <% for(var i=0; i < accounts.length; i++) { %>
+  <div class="col-12">
+    <div class="card mb-3">
+      <div class="card-body">
+        <div class="row">
+          <div class="col">
+            <a href="/account/<%= accounts[i].account %>">
+              <h4 class="card-title">
+                <% if(typeof accounts[i].alias !== 'undefined'){ %>
+                  <%= accounts[i].alias %>
+                <% } else { %>
+                  <%= accounts[i].account %>
+                <% } %>
+              </h4>
+            </a>
+            <h6 class="card-subtitle text-muted">
+              <% if(accounts[i].lastVoted) { %>
+              Last voted <%= moment(accounts[i].lastVoted).fromNow() %> (<%= round(accounts[i].uptime, 3) %> %)
+              <% } else { %>
+                Never voted
+              <% } %>
+            </h6>
+          </div>
+          <div class="col-auto ml-auto">
+            <span class="h1"><%= variableRound((accounts[i].votingweight / nanorpc.getAvailable()) * 100, 3) %> %</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% } %>
+
+</div>
+
+<% include ../partials/footer.ejs %>
