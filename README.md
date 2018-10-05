@@ -1,3 +1,9 @@
+<hr />
+<div align="center">
+    <img src="public/static/img/ninja-icon.png" alt="Logo" width='150px' height='auto'/>
+</div>
+<hr />
+
 # My Nano Ninja
 
 The perfect tool for Nano representatives lists and network statistics.
