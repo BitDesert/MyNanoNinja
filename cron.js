@@ -397,6 +397,12 @@ module.exports = function (nanorpc) {
         url: value,
         json: true
       }, function (err, response, data) {
+        if(err){
+          // error getting data
+          console.error('updateUptimeDistributed', err);
+          callback();
+          return;
+        }
         for (var rep in data.representatives) {
           if (!onlinereps.includes(rep)) {
             onlinereps.push(rep)
