@@ -63,3 +63,6 @@ test.js
 
 # PM2 ecosystem config
 ecosystem.config.js
+
+# IDEs
+.idea
