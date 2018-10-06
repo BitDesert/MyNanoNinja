@@ -15,6 +15,7 @@ module.exports = {
         NODE_RPC: 'http://[::1]:7076',
         MONGO_URL: 'mongodb://localhost:27017/mynanoninja',
         MONGO_SESSIONURL: 'mongodb://localhost:27017/mynanoninja-session',
+        SESSION_SECRET: 'ohyeahnanoisgreat',
         FACEBOOK_CLIENTID: '',
         FACEBOOK_CLIENTSECRET: '',
         TWITTER_CONSUMERKEY: '',

@@ -47,7 +47,7 @@ app.use('/static/js', express.static(__dirname + '/node_modules/popper.js/dist/u
 
 // required for passport
 app.use(session({
-  secret: 'ohyeahnanoisgreat', // session secret
+  secret: process.env.SESSION_SECRET, // session secret
   resave: true,
   saveUninitialized: true,
   store: new MongoStore({url: configDB.sessionurl})
