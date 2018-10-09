@@ -16,6 +16,7 @@ module.exports = {
         MONGO_URL: 'mongodb://localhost:27017/mynanoninja',
         MONGO_SESSIONURL: 'mongodb://localhost:27017/mynanoninja-session',
         SESSION_SECRET: 'ohyeahnanoisgreat',
+        SENTRY_URL: '',
         FACEBOOK_CLIENTID: '',
         FACEBOOK_CLIENTSECRET: '',
         TWITTER_CONSUMERKEY: '',
