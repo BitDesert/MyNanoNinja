@@ -13,6 +13,7 @@ module.exports = {
         NODE_ENV: 'production',
         DOMAIN: 'https://mynano.ninja',
         NODE_RPC: 'http://[::1]:7076',
+        NODE_INTERNAL: '12000',
         MONGO_URL: 'mongodb://localhost:27017/mynanoninja',
         MONGO_SESSIONURL: 'mongodb://localhost:27017/mynanoninja-session',
         SESSION_SECRET: 'ohyeahnanoisgreat',
@@ -33,6 +34,7 @@ module.exports = {
         EMAIL_USER: 'alert@mynano.ninja',
         EMAIL_PASS: 'mypassword',
         BRAINBLOCKS_POD_KEY: 'mykey',
+        DRPC_REPSONLINE: '[]',
         PORT: 4000
       }
     }
