@@ -44,6 +44,19 @@ function getQueueLength(){
 function updateLocalVars(){
   updateBlockcount();
   updateNodesOnline();
+  updateAvailable();
+}
+
+function updateAvailable(){
+  nano.available()
+  .then((data) => {
+    console.log(data);
+    available = data;
+    console.log('Available Supply: ' + available);
+  })
+  .catch( reason => {
+    console.error( 'onRejected function called: ', reason );
+  });
 }
 
 function updateBlockcount(){

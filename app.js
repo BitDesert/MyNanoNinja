@@ -20,7 +20,10 @@ var configDB = require('./config/database.js');
 mongoose.connect(configDB.url, { useMongoClient: true });
 
 // nano node
-var nanonode = require('./nano/node');
+if(process.env.NODE_INTERNAL != ''){
+   var nanonode = require('./nano/node');
+}
+
 var nanorpc = require('./nano/rpc_client');
 var cron = require('./cron')(nanorpc);
 

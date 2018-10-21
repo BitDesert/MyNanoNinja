@@ -384,10 +384,7 @@ module.exports = function (nanorpc) {
   function updateUptimeDistributed() {
     console.log('Updating Uptime via distributed RPC...');
 
-    var provider = [
-      'https://www.repnode.org/api/representatives-online.php',
-      'http://66.228.51.21:8500/representatives-online'
-    ];
+    var provider = JSON.parse(process.env.DRPC_REPSONLINE);
   
     var onlinereps = [];
   

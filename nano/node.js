@@ -3,7 +3,9 @@ var Account = require('../models/account');
 var queue = require('queue');
 const request = require('request');
 
-const node = new NanoNode(12000);
+console.log('Using internal node at port ' + process.env.NODE_INTERNAL);
+
+const node = new NanoNode(process.env.NODE_INTERNAL);
 node.peers = ['5.189.128.113:7075', 'rai.raiblocks.net:7075'];
 node.minimalConfirmAck = true;
 node.maxPeers = 1000;
