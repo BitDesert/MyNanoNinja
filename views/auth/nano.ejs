@@ -23,27 +23,34 @@
 
 </div>
 
-<script src="https://brainblocks.io/brainblocks.min.js"></script>
+<script src="/static/js/accept-nano/index.js"></script>
 
 <script>
+window.acceptNano.setup({
+    apiURL: 'https://payment-gw.mynano.ninja/api', // URL of your Accept NANO server (String, required)
+    debug: false, // used for enabling debug mode, (Bool, non-required, false by default)
+    pollInterval: 1500, // time period (ms) to check for verification of the payment sessions (Number, non-required, 1500 by default)
+});
+
 init.push(function () {
-  brainblocks.Button.render({
-
-    // Pass in payment options
-    payment: {
-      destination: 'xrb_1ninja7rh37ehfp9utkor5ixmxyg8kme8fnzc4zty145ibch8kf5jwpnzr3r',
-      currency: 'rai',
-      amount: '1'
+  window.acceptNano.startPayment({
+    data: {
+        amount: '0.000001',
+        currency: 'nano'
     },
-
-    // Handle successful payments
-
-    onPayment: function (data) {
-      console.log('Payment successful!', data);
-      verifyPayment(data.token)
-    }
-
-  }, '#nano-button');
+    onStart: (paymentData) => {
+      console.log('onStart', paymentData)
+    },
+    onSuccess: (paymentData) => {
+      console.log('onSuccess', paymentData)
+      verifyPayment(paymentData.token)
+    },
+    onFailure: (failureReason) => {
+      console.log('onFailure', failureReason)
+      setPaymentStatus('Error: ' + failureReason);
+    }, 
+    onCancel: () => {}
+  })
 });
 
 function verifyPayment(token) {

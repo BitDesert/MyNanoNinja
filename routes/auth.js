@@ -35,7 +35,7 @@ module.exports = function (passport, nanorpc) {
     var output = {};
 
     request.get({
-      url: 'https://brainblocks.io/api/session/'+token+'/verify',
+      url: 'https://payment-gw.mynano.ninja/api/verify?token='+token,
       json: true
     }, function(err, response, data){
       if (err || response.statusCode !== 200) {
@@ -44,10 +44,6 @@ module.exports = function (passport, nanorpc) {
 
       } else if(data.fulfilled === false){
         output.error = 'not_fulfilled';
-        res.send(output);
-
-      } else if(data.destination != 'xrb_1ninja7rh37ehfp9utkor5ixmxyg8kme8fnzc4zty145ibch8kf5jwpnzr3r'){
-        output.error = 'wrong_destination';
         res.send(output);
 
       } else {

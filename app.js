@@ -47,6 +47,7 @@ app.use('/static/js', express.static(__dirname + '/node_modules/chart.js/dist/')
 app.use('/static/js', express.static(__dirname + '/node_modules/moment/min/'));
 app.use('/static/js', express.static(__dirname + '/node_modules/clipboard/dist/'));
 app.use('/static/js', express.static(__dirname + '/node_modules/popper.js/dist/umd/'));
+app.use('/static/js/accept-nano', express.static(__dirname + '/node_modules/@accept-nano/client/dist/'));
 
 // required for passport
 app.use(session({

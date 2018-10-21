@@ -6,6 +6,7 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "@accept-nano/client": "^1.7.0",
     "async": "^2.6.0",
     "bcrypt-nodejs": "latest",
     "body-parser": "~1.15.2",
