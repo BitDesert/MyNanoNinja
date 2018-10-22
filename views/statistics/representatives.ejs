@@ -2,81 +2,146 @@
 
 <h1>Statistics</h1>
 
-<h2>Representatives</h2>
+<h2>Representatives Decentralization</h2>
+<canvas id="chartrepsdecen"></canvas>
 
+
+<script>
+  var chartColorsReps = ['#f44336', '#9C27B0', '#3F51B5', '#03A9F4', '#009688', '#8BC34A', '#FFEB3B', '#FF9800'];
+  init.push(getDataActiveReps);
+
+  function getDataActiveReps() {
+    $.get("/api/accounts/active", function (data) {
+      console.log(data);
+
+      var chartdata = {
+        labels: [],
+        datasets: [
+          {
+            label: 'Representatives',
+            data: [],
+            backgroundColor: []
+          }]
+      };
+
+      var colorcount = 0;
+      data.forEach(function (element) {
+        if (element.alias) {
+          chartdata.labels.push(element.alias);
+        } else {
+          chartdata.labels.push(element.account);
+        }
+
+        chartdata.datasets[0].data.push(Math.round(element.votingweight / 1000000000000000000000000000000));
+        chartdata.datasets[0].backgroundColor.push(chartColorsReps[colorcount]);
+        colorcount++;
+        if (colorcount > chartColorsReps.length - 1) colorcount = 0;
+      });
+
+      setupGraphRepsDecen(chartdata);
+    });
+  }
+
+  function getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  }
+
+  function setupGraphRepsDecen(data) {
+    var ctx = document.getElementById('chartrepsdecen').getContext('2d');
+    var myLineChart = new Chart(ctx, {
+      type: 'doughnut',
+      data: data,
+      options: {
+        responsive: true,
+        cutoutPercentage: 0,
+        legend: {
+          display: false
+        }
+      }
+    });
+  }
+</script>
+
+<h2>Representatives over Time</h2>
 <canvas id="chartcanvas"></canvas>
+
+<script>
+  var chartColors = ['#f44336', '#2196F3', '#4CAF50'];
+  init.push(getData);
+
+  function getData() {
+    $.get("/api/statistics/representatives", function (data) {
+      var chartdata = {
+        labels: [],
+        datasets: [{
+          label: 'Total',
+          data: [],
+          borderColor: chartColors[0],
+          backgroundColor: hexToRgbA(chartColors[0], '0.2'),
+          hidden: true
+        },
+        {
+          label: 'Active',
+          data: [],
+          borderColor: chartColors[1],
+          backgroundColor: hexToRgbA(chartColors[1], '0.2'),
+          hidden: true
+        },
+        {
+          label: 'Online',
+          data: [],
+          borderColor: chartColors[2],
+          backgroundColor: hexToRgbA(chartColors[2], '0.2')
+        }]
+      };
+
+      data.forEach(function (element) {
+        chartdata.labels.push(formatDate(element.date));
+        chartdata.datasets[0].data.push(element.representatives.total);
+        chartdata.datasets[1].data.push(element.representatives.eligible);
+        chartdata.datasets[2].data.push(element.representatives.online);
+      });
+
+      setupGraph(chartdata);
+    });
+  }
+
+  function formatDate(date) {
+    return moment(date).format('YYYY-MM-DD HH:mm');
+  }
+
+  function hexToRgbA(hex, opacity) {
+    var c;
+    if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
+      c = hex.substring(1).split('');
+      if (c.length == 3) {
+        c = [c[0], c[0], c[1], c[1], c[2], c[2]];
+      }
+      c = '0x' + c.join('');
+      return 'rgba(' + [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(',') + ',' + opacity + ')';
+    }
+    throw new Error('Bad Hex');
+  }
+
+  function setupGraph(data) {
+    var ctx = document.getElementById('chartcanvas').getContext('2d');
+    var myLineChart = new Chart(ctx, {
+      type: 'line',
+      data: data,
+      options: {
+        responsive: true
+      }
+    });
+  }
+</script>
+
 
 <script src="/static/js/moment.min.js"></script>
 <script src="/static/js/Chart.min.js"></script>
-
-<script>
-var chartColors = ['#f44336', '#2196F3', '#4CAF50'];
-init.push(getData);
-
-function getData(){
-  $.get( "/api/statistics/representatives", function( data ) {
-    var chartdata = {
-      labels: [],
-      datasets: [{
-        label: 'Total',
-        data: [],
-        borderColor: chartColors[0],
-				backgroundColor: hexToRgbA(chartColors[0], '0.2'),
-        hidden: true
-      },
-      {
-        label: 'Active',
-        data: [],
-        borderColor: chartColors[1],
-				backgroundColor: hexToRgbA(chartColors[1], '0.2'),
-        hidden: true
-      },
-      {
-        label: 'Online',
-        data: [],
-        borderColor: chartColors[2],
-				backgroundColor: hexToRgbA(chartColors[2], '0.2')
-      }]
-    };
-
-    data.forEach(function(element){
-      chartdata.labels.push(formatDate(element.date));
-      chartdata.datasets[0].data.push(element.representatives.total);
-      chartdata.datasets[1].data.push(element.representatives.eligible);
-      chartdata.datasets[2].data.push(element.representatives.online);
-    });
-
-    setupGraph(chartdata);
-  });
-}
-
-function formatDate(date){
-  return moment(date).format('YYYY-MM-DD HH:mm');
-}
-
-function hexToRgbA(hex, opacity){
-    var c;
-    if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
-        c= hex.substring(1).split('');
-        if(c.length== 3){
-            c= [c[0], c[0], c[1], c[1], c[2], c[2]];
-        }
-        c= '0x'+c.join('');
-        return 'rgba('+[(c>>16)&255, (c>>8)&255, c&255].join(',')+','+opacity+')';
-    }
-    throw new Error('Bad Hex');
-}
-
-function setupGraph(data){
-  var ctx = document.getElementById('chartcanvas').getContext('2d');
-  var myLineChart = new Chart(ctx, {
-    type: 'line',
-    data: data,
-    options: {
-      responsive: true
-    }
-  });
-}
-</script>
 
 <% include ../../partials/footer.ejs %>
