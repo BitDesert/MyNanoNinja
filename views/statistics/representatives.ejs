@@ -3,7 +3,17 @@
 <h1>Statistics</h1>
 
 <h2>Representatives Decentralization</h2>
-<canvas id="chartrepsdecen"></canvas>
+
+<div class="row">
+  <div class="col">
+    <h3>All Representatives</h3>
+    <canvas id="chartrepsdecen"></canvas>
+  </div>
+  <div class="col">
+    <h3>Online Representatives</h3>
+    <canvas id="chartrepsdecenonline"></canvas>
+  </div>
+</div>
 
 
 <script>
@@ -19,11 +29,16 @@
   ];
 
   var chartColorsReps = ['#f44336', '#9C27B0', '#3F51B5', '#03A9F4', '#009688', '#8BC34A', '#FFEB3B', '#FF9800'];
-  init.push(getDataActiveReps);
+  init.push(setupActiveReps);
 
-  function getDataActiveReps() {
-    $.get("/api/accounts/active", function (data) {
-      console.log(data);
+  function setupActiveReps(){
+    getDataActiveReps('chartrepsdecen', '/api/accounts/active');
+    getDataActiveReps('chartrepsdecenonline', '/api/accounts/active/online');
+  }
+
+  function getDataActiveReps(chartid, url) {
+    console.log(chartid, url)
+    $.get(url, function (data) {
 
       var chartdata = {
         labels: [],
@@ -32,7 +47,8 @@
             label: 'Representatives',
             data: [],
             backgroundColor: []
-          }]
+          }
+        ]
       };
 
       // filter the official reps
@@ -57,7 +73,7 @@
         if (colorcount > chartColorsReps.length - 1) colorcount = 0;
       });
 
-      setupGraphRepsDecen(chartdata);
+      setupGraphRepsDecen(chartid, chartdata);
     });
   }
 
@@ -69,9 +85,10 @@
     return total
   }
 
-  function setupGraphRepsDecen(data) {
-    var ctx = document.getElementById('chartrepsdecen').getContext('2d');
-    var myLineChart = new Chart(ctx, {
+  function setupGraphRepsDecen(chartid, data) {
+
+    var ctx = document.getElementById(chartid).getContext('2d');
+    var chartRepsDecen = new Chart(ctx, {
       type: 'doughnut',
       data: data,
       options: {
