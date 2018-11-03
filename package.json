@@ -9,6 +9,7 @@
     "@accept-nano/client": "^1.7.0",
     "async": "^2.6.0",
     "bcrypt-nodejs": "latest",
+    "big.js": "^5.2.2",
     "body-parser": "~1.15.2",
     "chart.js": "^2.7.2",
     "clipboard": "^2.0.0",

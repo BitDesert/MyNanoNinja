@@ -15,9 +15,11 @@
           <b>With this donation you help funding the costs of My Nano Ninja. Thank you for your support!</b>
         </p>
         <p>
-          The amount is 1 NANO or 1000000000000000000000000000000 raw.<br> You probably need the <a href="https://github.com/nanocurrency/raiblocks/wiki/RPC-protocol#send"
+          The amount is <%= amount %> NANO or <%= amount_raw %> raw.<br> You probably need the <a href="https://github.com/nanocurrency/raiblocks/wiki/RPC-protocol#send"
             target="_blank">RPC send command</a> or send via a Wallet GUI by importing the seed.
-          <div id="nano-button" class="mb-3"></div>
+          <div id="nano-button" class="btn btn-primary mb-3">
+            Start verification
+          </div>
           <h4 id="statustext"></h4>
         </p>
       </div>
@@ -29,60 +31,66 @@
 <script src="/static/js/accept-nano/index.js"></script>
 
 <script>
-window.acceptNano.setup({
+  window.acceptNano.setup({
     apiURL: 'https://payment-gw.mynano.ninja/api', // URL of your Accept NANO server (String, required)
     debug: false, // used for enabling debug mode, (Bool, non-required, false by default)
     pollInterval: 1500, // time period (ms) to check for verification of the payment sessions (Number, non-required, 1500 by default)
-});
-
-init.push(function () {
-  window.acceptNano.startPayment({
-    data: {
-        amount: '0.000001',
-        currency: 'nano'
-    },
-    onStart: (paymentData) => {
-      console.log('onStart', paymentData)
-    },
-    onSuccess: (paymentData) => {
-      console.log('onSuccess', paymentData)
-      verifyPayment(paymentData.token)
-    },
-    onFailure: (failureReason) => {
-      console.log('onFailure', failureReason)
-      setPaymentStatus('Error: ' + failureReason);
-    }, 
-    onCancel: () => {}
-  })
-});
-
-function verifyPayment(token) {
-  setPaymentStatus('Verifying payment...');
-
-  $.getJSON('/auth/connect/nano/' + token + '/verify', function (verifydata) {
-    console.log(verifydata);
-
-    if (verifydata.status == 'OK') {
-      setPaymentStatus('Success! Redirecting...');
-      setTimeout(function () {
-        window.location = "/account/" + verifydata.sender;
-      }, 1 * 1000);
-
-    } else if (verifydata.error == 'not_fulfilled') {
-      setPaymentStatus('Waiting for confimation...');
-      setTimeout(function(){
-        verifyPayment(token);
-      }, 3000);
-
-    } else {
-      setPaymentStatus('Error: ' + verifydata.error);
-    }
   });
-}
 
-function setPaymentStatus(status) {
-  $("#statustext").text(status);
-}
+  init.push(function () {
+    $("#nano-button").click(
+      function () {
+        window.acceptNano.startPayment({
+          data: {
+            amount: '<%= amount %>',
+            currency: 'nano'
+          },
+          onStart: (paymentData) => {
+            console.log('onStart', paymentData)
+          },
+          onSuccess: (paymentData) => {
+            console.log('onSuccess', paymentData)
+            verifyPayment(paymentData.token)
+          },
+          onFailure: (failureReason) => {
+            console.log('onFailure', failureReason)
+            setPaymentStatus('Error: ' + failureReason);
+          },
+          onCancel: () => {
+            setPaymentStatus('Verification cancelled.');
+          }
+        })
+      }
+    )
+  });
+
+  function verifyPayment(token) {
+    setPaymentStatus('Verifying payment...');
+
+    $.getJSON('/auth/connect/nano/' + token + '/verify', function (verifydata) {
+      console.log(verifydata);
+
+      if (verifydata.status == 'OK') {
+        setPaymentStatus('Success! Redirecting...');
+        setTimeout(function () {
+          window.location = "/account/" + verifydata.sender;
+        }, 1 * 1000);
+
+      } else if (verifydata.error == 'not_fulfilled') {
+        setPaymentStatus('Waiting for confimation...');
+        setTimeout(function () {
+          verifyPayment(token);
+        }, 3000);
+
+      } else {
+        setPaymentStatus('Error: ' + verifydata.error);
+      }
+    });
+  }
+
+  function setPaymentStatus(status) {
+    $("#statustext").text(status);
+  }
 </script>
 
 <% include ../../partials/footer.ejs %>

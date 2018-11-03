@@ -4,6 +4,8 @@ module.exports = function (passport, nanorpc) {
   var request = require('request');
   var router = express.Router();
   var Account = require('../models/account');
+  const Big = require('big.js');
+  multNANO = Big('1000000000000000000000000000000');
 
   /* GET users listing. */
   router.get('/login', function (req, res, next) {
@@ -23,7 +25,9 @@ module.exports = function (passport, nanorpc) {
 
     res.render('auth/nano', { 
       loggedin: req.isAuthenticated(),
-      user : req.user
+      user : req.user,
+      amount: process.env.VERIFICATION_AMOUNT,
+      amount_raw: Big(process.env.VERIFICATION_AMOUNT).times(multNANO).toFixed().toString()
     });
 
   });
@@ -46,30 +50,41 @@ module.exports = function (passport, nanorpc) {
         output.error = 'not_fulfilled';
         res.send(output);
 
+      } else if(data.amount != process.env.VERIFICATION_AMOUNT){
+        output.error = 'wrong_amount';
+        res.send(output);
+
       } else {
         var sender = data.sender;
-        Account.findOne({
-          'account': sender
-        }, function (err, account) {
-          if (err){
-            return
-          }
-      
-          if (!account){
-            var account = new Account();
-            account.account = sender;
-          }
-          account.owner = user._id;
-      
-          account.save(function (err) {
-            if (err) {
-              console.log("Auth - Nano Token Verify - Error saving account", err);
+
+        for (const block in data.subPayments) {
+          var sender = data.subPayments[block].account;
+          Account.findOne({
+            'account': sender
+          }, function (err, account) {
+            if (err){
+              return
             }
-            output.status = 'OK';
-            output.sender = sender;
-            res.send(output);
+        
+            if (!account){
+              var account = new Account();
+              account.account = sender;
+            }
+            account.owner = user._id;
+        
+            account.save(function (err) {
+              if (err) {
+                console.log("Auth - Nano Token Verify - Error saving account", err);
+              }
+              output.status = 'OK';
+              output.sender = sender;
+              res.send(output);
+            });
           });
-        });
+
+          // only the first payment
+          return;
+        }
       }
     });
   });

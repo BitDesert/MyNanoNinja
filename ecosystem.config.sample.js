@@ -35,6 +35,7 @@ module.exports = {
         EMAIL_PASS: 'mypassword',
         BRAINBLOCKS_POD_KEY: 'mykey',
         DRPC_REPSONLINE: '[]',
+        VERIFICATION_AMOUNT: '1',
         PORT: 4000
       }
     }
