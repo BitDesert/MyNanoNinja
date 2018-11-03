@@ -230,7 +230,8 @@ cron.schedule('* * * * *', updateLocalVars);
 cron.schedule('*/15 * * * *', updateWeights);
 
 // update account delegators
-cron.schedule('0 */3 * * *', updateDelegators);
+// disabled due to poor performance
+//cron.schedule('0 */3 * * *', updateDelegators);
 
 // get all representatives
 cron.schedule('0 * * * *', updateRepresentatives);
