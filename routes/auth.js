@@ -39,7 +39,7 @@ module.exports = function (passport, nanorpc) {
     var output = {};
 
     request.get({
-      url: 'https://payment-gw.mynano.ninja/api/verify?token='+token,
+      url: 'https://payment-gw-banano.mynano.ninja/api/verify?token='+token,
       json: true
     }, function(err, response, data){
       if (err || response.statusCode !== 200) {

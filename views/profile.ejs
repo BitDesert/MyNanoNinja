@@ -7,7 +7,7 @@
   <div class="col">
     <div class="card mb-3">
         <div class="card-body">
-          <h4 class="card-title">Nano Accounts</h4>
+          <h4 class="card-title">Banano Accounts</h4>
           <p class="card-text"></p>
           <% if (accounts.length > 0) { %>
             <!--<%= accounts.length %> Nano accounts<br>-->
@@ -15,7 +15,7 @@
               <a href="/account/<%= accounts[i].account %>"><%= accounts[i].account %></a><br>
             <% } %>
           <% } else { %>
-            No Nano accounts connected
+            No Banano accounts connected
           <% } %>
           </p>
           <a href="/auth/connect/nano" class="btn btn-primary">
@@ -34,7 +34,7 @@
 <h2>
   Social Accounts
 </h2>
-<p>They appear on all your connected Nano accounts</p>
+<p>They appear on all your connected Banano accounts</p>
 
 <div class="row">
 
@@ -195,7 +195,7 @@
 <% } %>
 
 <h2 class="mt-3">Stay up to date!</h2>
-<p>Follow My Nano Ninja at Discord for feature updates and a chat with other node operators!</p>
+<p>Follow My Banano Ninja at Discord for feature updates and a chat with other node operators!</p>
 <a href="https://discord.me/nanonodeninja" target="_blank"><img src="https://discordapp.com/api/guilds/431555900432580619/widget.png?style=banner2"></a>
 
 <% include ../partials/footer.ejs %>

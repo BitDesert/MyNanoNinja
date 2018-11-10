@@ -261,7 +261,7 @@ module.exports = function (nanorpc) {
       var lastvote = 'Never noted';
     }
 
-    var body = 'The Nano representative ' + title + ' is up again.<br>' +
+    var body = 'The Banano representative ' + title + ' is up again.<br>' +
       lastvote + '.<br>' +
       'Address: ' + account.account + '<br><br>' +
       '<a href="https://mynano.ninja/account/' + account.account + '">View on My Nano Ninja</a>'
@@ -283,17 +283,17 @@ module.exports = function (nanorpc) {
       var lastvote = 'Never noted';
     }
 
-    var body = 'The Nano representative ' + title + ' is down.<br>' +
+    var body = 'The Banano representative ' + title + ' is down.<br>' +
       lastvote + '.<br>' +
       'Address: ' + account.account + '<br><br>' +
-      '<a href="https://mynano.ninja/account/' + account.account + '">View on My Nano Ninja</a>'
+      '<a href="https://mynano.ninja/account/' + account.account + '">View on My Banano Ninja</a>'
 
     sendMail('DOWN: ' + title, body, email);
   }
 
   function sendMail(subject, body, email) {
     var data = {
-      from: 'My Nano Ninja <alert@mynano.ninja>',
+      from: 'My Banano Ninja <alert@mynano.ninja>',
       to: email,
       subject: subject,
       html: body

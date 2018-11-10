@@ -1,6 +1,6 @@
 <% include ../../partials/header.ejs %>
 
-<h1>Connect Nano Accounts</h1>
+<h1>Connect Banano Accounts</h1>
 
 <div class="row">
 
@@ -9,13 +9,13 @@
       <div class="card-body">
         <h4 class="card-title">Verify Ownership</h4>
         <p class="card-text">
-          To verify that you own the Nano address send <b>from the address to be verified</b>.
+          To verify that you own the Banano address send <b>from the address to be verified</b>.
         </p>
         <p>
-          <b>With this donation you help funding the costs of My Nano Ninja. Thank you for your support!</b>
+          <b>With this donation you help funding the costs of My Banano Ninja. Thank you for your support!</b>
         </p>
         <p>
-          The amount is <%= amount %> NANO or <%= amount_raw %> raw.<br> You probably need the <a href="https://github.com/nanocurrency/raiblocks/wiki/RPC-protocol#send"
+          The amount is <%= amount %> BANANO or <%= amount_raw %> raw.<br> You probably need the <a href="https://github.com/nanocurrency/raiblocks/wiki/RPC-protocol#send"
             target="_blank">RPC send command</a> or send via a Wallet GUI by importing the seed.
           <div id="nano-button" class="btn btn-primary mb-3">
             Start verification
@@ -32,7 +32,7 @@
 
 <script>
   window.acceptNano.setup({
-    apiURL: 'https://payment-gw.mynano.ninja/api', // URL of your Accept NANO server (String, required)
+    apiURL: 'https://payment-gw-banano.mynano.ninja/api', // URL of your Accept NANO server (String, required)
     debug: false, // used for enabling debug mode, (Bool, non-required, false by default)
     pollInterval: 1500, // time period (ms) to check for verification of the payment sessions (Number, non-required, 1500 by default)
   });

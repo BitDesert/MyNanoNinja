@@ -7,11 +7,11 @@ module.exports = {
 
     // First application
     {
-      name      : 'My Nano Ninja',
+      name      : 'My Banano Ninja',
       script    : 'bin/www',
       env: {
         NODE_ENV: 'production',
-        DOMAIN: 'https://mynano.ninja',
+        DOMAIN: 'https://banano.mynano.ninja',
         NODE_RPC: 'http://[::1]:7076',
         NODE_INTERNAL: '12000',
         MONGO_URL: 'mongodb://localhost:27017/mynanoninja',
