@@ -169,6 +169,16 @@ init.push(function(){
           <% } %>
         </span>
       </li>
+      <li class="list-group-item">
+        Server Provider
+        <span class="float-right">
+          <% if(account.network.ip){ %>
+            <%= orgLookup.get(account.network.ip).autonomous_system_organization %>
+          <% } else { %>
+            <i>Not available</i>
+          <% } %>
+        </span>
+      </li>
     </ul>
   </div>
 

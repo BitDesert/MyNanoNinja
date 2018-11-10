@@ -3,14 +3,16 @@ module.exports = function (nanorpc) {
   var router = express.Router();
   var Account = require('../models/account');
   var moment = require('moment');
+  var maxmind = require('maxmind');
+  var orgLookup = maxmind.openSync('./utils/GeoLite2-ASN.mmdb');
 
   /* GET users listing. */
   router.get('/:address', function (req, res, next) {
     var myaccount = req.params.address;
 
     Account.findOne({
-        'account': myaccount
-      })
+      'account': myaccount
+    })
       .populate('owner')
       .exec(function (err, account) {
         if (err || !account) {
@@ -22,7 +24,7 @@ module.exports = function (nanorpc) {
           return;
         }
 
-        if(account.alias){
+        if (account.alias) {
           var title = account.alias;
         } else {
           var title = account.account;
@@ -31,6 +33,7 @@ module.exports = function (nanorpc) {
         res.render('account', {
           title: title,
           loggedin: req.isAuthenticated(),
+          orgLookup: orgLookup,
           user: req.user,
           nanorpc: nanorpc,
           moment: moment,
@@ -42,8 +45,8 @@ module.exports = function (nanorpc) {
       });
   });
 
-  function variableRound(value){
-    if(value > 1){
+  function variableRound(value) {
+    if (value > 1) {
       return round(value, 2);
     } else {
       return round(value, 5);
@@ -57,7 +60,7 @@ module.exports = function (nanorpc) {
     } else {
       return Math.round(value);
     }
-  } 
+  }
 
   return router;
 }
