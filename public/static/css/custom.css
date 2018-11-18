@@ -158,3 +158,10 @@ ul.nav li.dropdown:hover .dropdown-menu{
 .btn {
     text-transform: none;
 }
+
+.hashcolor {
+    display: inline-block;
+    width: 8px;
+    overflow: hidden;
+    line-height: 1;
+}

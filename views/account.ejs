@@ -1,13 +1,17 @@
 <% include ../partials/header.ejs %>
 
 <h2 class="truncate">
-<% if (account.alias) { %>
+  <% if (account === null) { %>
+  <%= myaccount %><br>
+  <small>No alias</small>
+  <% } else if (account.alias) { %>
   <%= account.alias %><br>
-  <small><%= account.account %></small>
-<% } else { %>
+  <small>
+    <%= account.account %></small>
+  <% } else { %>
   <%= account.account %><br>
   <small>No alias</small>
-<% } %>
+  <% } %>
 </h2>
 
 <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#setRepresentative">
@@ -37,8 +41,9 @@
           <img src="https://chart.googleapis.com/chart?chs=150x150&amp;cht=qr&amp;chl=xrb:<%= account.account %>&amp;choe=UTF-8">
         </p>
         <p>
-          2. Change your representative in your wallet. 
-          <a href="https://nanotools.github.io/Change-Nano-Representative/#how-do-i-change-my-nano-representative" target="_blank">How do I do that?</a>
+          2. Change your representative in your wallet.
+          <a href="https://nanotools.github.io/Change-Nano-Representative/#how-do-i-change-my-nano-representative"
+            target="_blank">How do I do that?</a>
         </p>
       </div>
       <div class="modal-footer">
@@ -49,18 +54,18 @@
 </div>
 <script src="/static/js/clipboard.min.js"></script>
 <script>
-init.push(function(){
-  var clipboard = new ClipboardJS('.btn-copy');
-  clipboard.on('success', function(e) {
-    setTooltip(e.trigger, 'Copied!');
-    hideTooltip(e.trigger);
-  });
+  init.push(function () {
+    var clipboard = new ClipboardJS('.btn-copy');
+    clipboard.on('success', function (e) {
+      setTooltip(e.trigger, 'Copied!');
+      hideTooltip(e.trigger);
+    });
 
-  clipboard.on('error', function(e) {
-    setTooltip(e.trigger, 'Failed!');
-    hideTooltip(e.trigger);
+    clipboard.on('error', function (e) {
+      setTooltip(e.trigger, 'Failed!');
+      hideTooltip(e.trigger);
+    });
   });
-});
 </script>
 
 <div class="card-deck mb-3 text-center">
@@ -71,7 +76,8 @@ init.push(function(){
     <div class="card-body">
       <h3 class="card-title">
         <%= votingWeight %> Nano<br>
-        <h6>(<%= Math.round((account.votingweight / nanorpc.getAvailable())*100000)/1000 %> %)</h6>
+        <h6>(
+          <%= Math.round((account.votingweight / nanorpc.getAvailable())*100000)/1000 %> %)</h6>
       </h3>
     </div>
   </div>
@@ -95,9 +101,10 @@ init.push(function(){
         <%= round(account.uptime, 3) %> %<br>
         <h6>
           <% if(account.lastVoted) { %>
-            Last voted <%= moment(account.lastVoted).fromNow() %>
+          Last voted
+          <%= moment(account.lastVoted).fromNow() %>
           <% } else { %>
-            Never voted
+          Never voted
           <% } %>
         </h6>
       </h3>
@@ -120,7 +127,8 @@ init.push(function(){
         Website
         <span class="float-right">
           <% if(account.website){ %>
-          <a href="<%= account.website %>" target="_blank"><%= account.website %></a>
+          <a href="<%= account.website %>" target="_blank">
+            <%= account.website %></a>
           <% } else { %>
           <i>Not set</i>
           <% } %>
@@ -140,10 +148,10 @@ init.push(function(){
         Server Type
         <span class="float-right">
           <% if(account.server && account.server.type){ %>
-            <%= account.server.type %>
-            <% if(account.server.renewable){ %>
-              <i class="fas fa-leaf" style="color: #8BC34A" title="Renewable Energy"></i>
-            <% } %>
+          <%= account.server.type %>
+          <% if(account.server.renewable){ %>
+          <i class="fas fa-leaf" style="color: #8BC34A" title="Renewable Energy"></i>
+          <% } %>
           <% } else { %>
           <i>Not set</i>
           <% } %>
@@ -153,7 +161,8 @@ init.push(function(){
         Node Version
         <span class="float-right">
           <% if(account.monitor.version){ %>
-          <a href="<%= account.monitor.url %>" target="_blank"><%= account.monitor.version %></a>
+          <a href="<%= account.monitor.url %>" target="_blank">
+            <%= account.monitor.version %></a>
           <% } else { %>
           <i>Not set</i>
           <% } %>
@@ -163,7 +172,8 @@ init.push(function(){
         Sync Status
         <span class="float-right">
           <% if(account.monitor.sync){ %>
-            <a href="<%= account.monitor.url %>" target="_blank"><%= account.monitor.sync %> %</a>
+          <a href="<%= account.monitor.url %>" target="_blank">
+            <%= account.monitor.sync %> %</a>
           <% } else { %>
           <i>Not set</i>
           <% } %>
@@ -173,9 +183,9 @@ init.push(function(){
         Server Provider
         <span class="float-right">
           <% if(account.network.ip){ %>
-            <%= orgLookup.get(account.network.ip).autonomous_system_organization %>
+          <%= orgLookup.get(account.network.ip).autonomous_system_organization %>
           <% } else { %>
-            <i>Not available</i>
+          <i>Not available</i>
           <% } %>
         </span>
       </li>
@@ -185,7 +195,7 @@ init.push(function(){
   <div class="col-lg-8">
     <h3>Description</h3>
     <ul class="list-group mb-4">
-      <li class="list-group-item">        
+      <li class="list-group-item">
         <% if(account.description){ %>
         <%= account.description %>
         <% } else { %>
@@ -199,249 +209,329 @@ init.push(function(){
 
 <h3>Account Owner</h3>
 <% if (account.owner) { %>
-  
-<% if (loggedin && account.owner._id.toString() == user._id.toString()) { %>
-  <div class="alert alert-dismissible alert-primary">
-    <button type="button" class="close" data-dismiss="alert">&times;</button>
-    <strong>Welcome!</strong> You are the owner of this account. <a href="#" class="alert-link" data-toggle="modal" data-target="#editAccountModal">Edit it here</a>!
-  </div>
 
-  <div class="modal fade" id="editAccountModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <form id="editAccountForm" action="/api/editAccount">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Edit account</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
+<% if (loggedin && account.owner._id.toString() == user._id.toString()) { %>
+<div class="alert alert-dismissible alert-primary">
+  <button type="button" class="close" data-dismiss="alert">&times;</button>
+  <strong>Welcome!</strong> You are the owner of this account. <a href="#" class="alert-link" data-toggle="modal"
+    data-target="#editAccountModal">Edit it here</a>!
+</div>
+
+<div class="modal fade" id="editAccountModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <form id="editAccountForm" action="/api/editAccount">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Edit account</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Account alias</label>
+            <input type="text" class="form-control" name="account_alias" id="account_alias" placeholder="My Nano node"
+              value="<% if (account.alias) { %><%= account.alias %><% } %>">
+            <small class="form-text text-muted">This will be shown insted of the full address.</small>
           </div>
-          <div class="modal-body">
-            <div class="form-group">
-              <label>Account alias</label>
-              <input type="text" class="form-control" name="account_alias" id="account_alias" placeholder="My Nano node" value="<% if (account.alias) { %><%= account.alias %><% } %>">
-              <small class="form-text text-muted">This will be shown insted of the full address.</small>
-            </div>
-            <div class="form-group">
-              <label>Introduction</label>
-              <input type="text" class="form-control" name="account_description" id="account_description" placeholder="I run this representative because..." value="<% if (account.description) { %><%= account.description %><% } %>"  maxlength="500">
-              <small class="form-text text-muted">Write a short text why you run this representative.</small>
-            </div>
-            <div class="form-group">
-              <label>Geographic location</label>
-              <input type="text" class="form-control" name="account_location" id="account_location" placeholder="Berlin, Germany" value="<% if (account.location) { %><%= account.location %><% } %>">
-              <small class="form-text text-muted">Add a country, city etc.</small>
-            </div>
-            <div class="form-group">
-              <label>Server Type</label>
-              <select class="form-control" id="server_type" name="server_type">
-                <option<% if (account.server && account.server.type == 'VPS') { %> selected<% } %>>VPS</option>
-                <option<% if (account.server && account.server.type == 'Dedicated') { %> selected<% } %>>Dedicated</option>
-                <option<% if (account.server && account.server.type == 'Desktop') { %> selected<% } %>>Desktop</option>
-                <option<% if (account.server && account.server.type == 'BrainBlocks Pod') { %> selected<% } %>>BrainBlocks Pod</option>
-                <option<% if (account.server && account.server.type == 'Other') { %> selected<% } %>>Other</option>
-              </select>
-              <small class="form-text text-muted">Select the server your node is running on</small>
-            </div>
-            <div class="form-group">
-              <label>Server Renewable Energy</label>
-              <select class="form-control" id="server_renewable" name="server_renewable">
-                <option value="true"<% if (account.server && account.server.renewable) { %> selected<% } %>>Yes</option>
-                <option value="false"<% if (account.server && !account.server.renewable) { %> selected<% } %>>No</option>
-              </select>
-              <small class="form-text text-muted">Is your server running on green power?</small>
-            </div>
-            <div class="form-group">
-              <label>Website</label>
-              <input type="text" class="form-control" name="account_website" id="account_website" placeholder="https://ilovenano.com" pattern="(http(s)?:\/\/.)(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)" value="<% if (account.website) { %><%= account.website %><% } %>">
-              <small class="form-text text-muted">Your project / personal website</small>
-            </div>
-            <div class="form-group">
-              <label>Nano Node Monitor URL</label>
-              <input type="text" class="form-control" name="account_monitorUrl" id="account_monitorUrl" placeholder="https://monitor.mynanonode.com" value="<% if (account.monitor.url) { %><%= account.monitor.url %><% } %>">
-              <small class="form-text text-muted">Add the full URL to your <a href="https://github.com/NanoTools/nanoNodeMonitor" target="_blank">Nano Node Monitor</a></small>
-            </div>
+          <div class="form-group">
+            <label>Introduction</label>
+            <input type="text" class="form-control" name="account_description" id="account_description" placeholder="I run this representative because..."
+              value="<% if (account.description) { %><%= account.description %><% } %>" maxlength="500">
+            <small class="form-text text-muted">Write a short text why you run this representative.</small>
           </div>
-          <div class="modal-footer">
-            <button type="submit" class="btn btn-primary">Save changes</button>
+          <div class="form-group">
+            <label>Geographic location</label>
+            <input type="text" class="form-control" name="account_location" id="account_location" placeholder="Berlin, Germany"
+              value="<% if (account.location) { %><%= account.location %><% } %>">
+            <small class="form-text text-muted">Add a country, city etc.</small>
+          </div>
+          <div class="form-group">
+            <label>Server Type</label>
+            <select class="form-control" id="server_type" name="server_type">
+              <option<% if (account.server && account.server.type=='VPS' ) { %> selected
+                <% } %>>VPS</option>
+                <option<% if (account.server && account.server.type=='Dedicated' ) { %> selected
+                  <% } %>>Dedicated</option>
+                  <option<% if (account.server && account.server.type=='Desktop' ) { %> selected
+                    <% } %>>Desktop</option>
+                    <option<% if (account.server && account.server.type=='BrainBlocks Pod' ) { %> selected
+                      <% } %>>BrainBlocks Pod</option>
+                      <option<% if (account.server && account.server.type=='Other' ) { %> selected
+                        <% } %>>Other</option>
+            </select>
+            <small class="form-text text-muted">Select the server your node is running on</small>
+          </div>
+          <div class="form-group">
+            <label>Server Renewable Energy</label>
+            <select class="form-control" id="server_renewable" name="server_renewable">
+              <option value="true" <% if (account.server && account.server.renewable) { %> selected
+                <% } %>>Yes</option>
+              <option value="false" <% if (account.server && !account.server.renewable) { %> selected
+                <% } %>>No</option>
+            </select>
+            <small class="form-text text-muted">Is your server running on green power?</small>
+          </div>
+          <div class="form-group">
+            <label>Website</label>
+            <input type="text" class="form-control" name="account_website" id="account_website" placeholder="https://ilovenano.com"
+              pattern="(http(s)?:\/\/.)(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)"
+              value="<% if (account.website) { %><%= account.website %><% } %>">
+            <small class="form-text text-muted">Your project / personal website</small>
+          </div>
+          <div class="form-group">
+            <label>Nano Node Monitor URL</label>
+            <input type="text" class="form-control" name="account_monitorUrl" id="account_monitorUrl" placeholder="https://monitor.mynanonode.com"
+              value="<% if (account.monitor.url) { %><%= account.monitor.url %><% } %>">
+            <small class="form-text text-muted">Add the full URL to your <a href="https://github.com/NanoTools/nanoNodeMonitor"
+                target="_blank">Nano Node Monitor</a></small>
           </div>
         </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Save changes</button>
+        </div>
       </div>
-      <input type="hidden" name="account" value="<%= account.account %>" required>
-    </form>
-  </div>
-  <script>
-    init.push(function(){
-      $("#editAccountForm").submit(function(e) {
-        e.preventDefault();
-        var form = $(this);
-        var formaction = $(this).attr('action');
-        var formbutton = $(this).find("button[type=submit]").first();
+    </div>
+    <input type="hidden" name="account" value="<%= account.account %>" required>
+  </form>
+</div>
+<script>
+  init.push(function () {
+    $("#editAccountForm").submit(function (e) {
+      e.preventDefault();
+      var form = $(this);
+      var formaction = $(this).attr('action');
+      var formbutton = $(this).find("button[type=submit]").first();
 
-        formbutton.html('<i class="fas fa-spinner fa-spin"></i>');
-        
-        $.ajax({
-          type: "POST",
-          url: formaction,
-          data: form.serialize(), // serializes the form's elements.
-          success: function(data){
-            if(data.status == 'success'){
-              formbutton.attr('class','btn btn-success');
-              setTimeout(function(){
-                location.reload();
-              }, 500);
-            } else if(data.status == 'error'){
-              formbutton.attr('class','btn btn-danger');
-            }
-            formbutton.text(data.msg);
+      formbutton.html('<i class="fas fa-spinner fa-spin"></i>');
+
+      $.ajax({
+        type: "POST",
+        url: formaction,
+        data: form.serialize(), // serializes the form's elements.
+        success: function (data) {
+          if (data.status == 'success') {
+            formbutton.attr('class', 'btn btn-success');
+            setTimeout(function () {
+              location.reload();
+            }, 500);
+          } else if (data.status == 'error') {
+            formbutton.attr('class', 'btn btn-danger');
           }
-        });
+          formbutton.text(data.msg);
+        }
       });
     });
-  </script>
+  });
+</script>
 
-  <% if(account.uptime < 95){ %>
-    <div class="alert alert-dismissible alert-warning">
-      <button type="button" class="close" data-dismiss="alert">&times;</button>
-      <strong>Heads up!</strong> Your account has a low uptime (below 95%). It will not appear in the lists.
-    </div>
-  <% } %>
+<% if(account.uptime < 95){ %>
+<div class="alert alert-dismissible alert-warning">
+  <button type="button" class="close" data-dismiss="alert">&times;</button>
+  <strong>Heads up!</strong> Your account has a low uptime (below 95%). It will not appear in the lists.
+</div>
+<% } %>
 <% } %>
 
 <div class="row">
-<% if (account.owner.facebook.token) { %>
+  <% if (account.owner.facebook.token) { %>
   <div class="col-sm-4">
     <div class="card mb-3">
-        <div class="card-body">
-          <h4 class="card-title">Facebook <small><i class="fas fa-check-circle"></i></small></h4>
-          <div class="row">
-            <div class="col-3">
-                <img class="img-fluid" src="<% if(account.owner.facebook.avatar){ %><%= account.owner.facebook.avatar %><% } else { %>/static/img/ninja-icon.png<% } %>" alt="Avatar">
-            </div>
-            <div class="col">
-              <p>
-                  <%= account.owner.facebook.name %>
-              </p>
-              <a href="https://facebook.com/<%= account.owner.facebook.id %>" class="card-link" target="_blank">Visit profile</a>
-            </div>
+      <div class="card-body">
+        <h4 class="card-title">Facebook <small><i class="fas fa-check-circle"></i></small></h4>
+        <div class="row">
+          <div class="col-3">
+            <img class="img-fluid" src="<% if(account.owner.facebook.avatar){ %><%= account.owner.facebook.avatar %><% } else { %>/static/img/ninja-icon.png<% } %>"
+              alt="Avatar">
+          </div>
+          <div class="col">
+            <p>
+              <%= account.owner.facebook.name %>
+            </p>
+            <a href="https://facebook.com/<%= account.owner.facebook.id %>" class="card-link" target="_blank">Visit
+              profile</a>
           </div>
         </div>
       </div>
+    </div>
   </div>
-<% } %>
+  <% } %>
 
-<% if (account.owner.twitter.token) { %>
+  <% if (account.owner.twitter.token) { %>
   <div class="col-sm-4">
     <div class="card mb-3">
-        <div class="card-body">
-          <h4 class="card-title">Twitter <small><i class="fas fa-check-circle"></i></small></h4>
-          <div class="row">
-            <div class="col-3">
-              <img class="img-fluid" src="<% if(account.owner.twitter.avatar){ %><%= account.owner.twitter.avatar %><% } else { %>/static/img/ninja-icon.png<% } %>" alt="Avatar">
-            </div>
-            <div class="col">
-              <p>
-                <a href="https://twitter.com/<%= account.owner.twitter.username %>" class="twitter-follow-button" data-size="large" data-dnt="true" data-show-count="false">Follow @<%= account.owner.twitter.username %></a>
-              </p>
-              <a href="https://twitter.com/<%= account.owner.twitter.username %>" class="card-link" target="_blank" target="_blank">Visit profile</a>
-            </div>
+      <div class="card-body">
+        <h4 class="card-title">Twitter <small><i class="fas fa-check-circle"></i></small></h4>
+        <div class="row">
+          <div class="col-3">
+            <img class="img-fluid" src="<% if(account.owner.twitter.avatar){ %><%= account.owner.twitter.avatar %><% } else { %>/static/img/ninja-icon.png<% } %>"
+              alt="Avatar">
+          </div>
+          <div class="col">
+            <p>
+              <a href="https://twitter.com/<%= account.owner.twitter.username %>" class="twitter-follow-button"
+                data-size="large" data-dnt="true" data-show-count="false">Follow @
+                <%= account.owner.twitter.username %></a>
+            </p>
+            <a href="https://twitter.com/<%= account.owner.twitter.username %>" class="card-link" target="_blank"
+              target="_blank">Visit profile</a>
           </div>
         </div>
       </div>
+    </div>
   </div>
-  <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> 
-<% } %>
+  <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  <% } %>
 
-<% if (account.owner.google.token) { %>
+  <% if (account.owner.google.token) { %>
   <div class="col-sm-4">
     <div class="card mb-3">
-        <div class="card-body">
-          <h4 class="card-title">Google <small><i class="fas fa-check-circle"></i></small></h4>
-          <div class="row">
-            <div class="col-3">
-              <img class="img-fluid" src="<% if(account.owner.google.avatar){ %><%= account.owner.google.avatar %><% } else { %>/static/img/ninja-icon.png<% } %>" alt="Avatar">
-            </div>
-            <div class="col">
-              <p>
-                  <%= account.owner.google.name %>
-              </p>
-              <a href="https://plus.google.com/<%= account.owner.google.id %>" class="card-link" target="_blank" target="_blank">Visit profile</a>
-            </div>
+      <div class="card-body">
+        <h4 class="card-title">Google <small><i class="fas fa-check-circle"></i></small></h4>
+        <div class="row">
+          <div class="col-3">
+            <img class="img-fluid" src="<% if(account.owner.google.avatar){ %><%= account.owner.google.avatar %><% } else { %>/static/img/ninja-icon.png<% } %>"
+              alt="Avatar">
+          </div>
+          <div class="col">
+            <p>
+              <%= account.owner.google.name %>
+            </p>
+            <a href="https://plus.google.com/<%= account.owner.google.id %>" class="card-link" target="_blank" target="_blank">Visit
+              profile</a>
           </div>
         </div>
       </div>
+    </div>
   </div>
-<% } %>
+  <% } %>
 
-<% if (account.owner.github.token) { %>
+  <% if (account.owner.github.token) { %>
   <div class="col-sm-4">
     <div class="card mb-3">
-        <div class="card-body">
-          <h4 class="card-title">GitHub <small><i class="fas fa-check-circle"></i></small></h4>
-          <div class="row">
-            <div class="col-3">
-              <img class="img-fluid" src="<% if(account.owner.github.avatar){ %><%= account.owner.github.avatar %><% } else { %>/static/img/ninja-icon.png<% } %>" alt="Avatar">
-            </div>
-            <div class="col">
-              <p>
-                <%= account.owner.github.displayName %> (<%= account.owner.github.username %>)
-              </p>
-              <a href="https://github.com/<%= account.owner.github.username %>" class="card-link" target="_blank">Visit profile</a>
-            </div>
+      <div class="card-body">
+        <h4 class="card-title">GitHub <small><i class="fas fa-check-circle"></i></small></h4>
+        <div class="row">
+          <div class="col-3">
+            <img class="img-fluid" src="<% if(account.owner.github.avatar){ %><%= account.owner.github.avatar %><% } else { %>/static/img/ninja-icon.png<% } %>"
+              alt="Avatar">
+          </div>
+          <div class="col">
+            <p>
+              <%= account.owner.github.displayName %> (
+              <%= account.owner.github.username %>)
+            </p>
+            <a href="https://github.com/<%= account.owner.github.username %>" class="card-link" target="_blank">Visit
+              profile</a>
           </div>
         </div>
       </div>
+    </div>
   </div>
-<% } %>
+  <% } %>
 
-<% if (account.owner.reddit.token) { %>
+  <% if (account.owner.reddit.token) { %>
   <div class="col-sm-4">
     <div class="card mb-3">
-        <div class="card-body">
-          <h4 class="card-title">Reddit <small><i class="fas fa-check-circle"></i></small></h4>
-          <div class="row">
-            <div class="col-3">
-              <img class="img-fluid" src="<% if(account.owner.reddit.avatar){ %><%= account.owner.reddit.avatar %><% } else { %>/static/img/ninja-icon.png<% } %>" alt="Avatar">
-            </div>
-            <div class="col">
-              <p>
-                  <%= account.owner.reddit.name %>
-              </p>
-              <a href="https://www.reddit.com/user/<%= account.owner.reddit.name %>" class="card-link" target="_blank">Visit profile</a>
-            </div>
+      <div class="card-body">
+        <h4 class="card-title">Reddit <small><i class="fas fa-check-circle"></i></small></h4>
+        <div class="row">
+          <div class="col-3">
+            <img class="img-fluid" src="<% if(account.owner.reddit.avatar){ %><%= account.owner.reddit.avatar %><% } else { %>/static/img/ninja-icon.png<% } %>"
+              alt="Avatar">
+          </div>
+          <div class="col">
+            <p>
+              <%= account.owner.reddit.name %>
+            </p>
+            <a href="https://www.reddit.com/user/<%= account.owner.reddit.name %>" class="card-link" target="_blank">Visit
+              profile</a>
           </div>
         </div>
       </div>
+    </div>
   </div>
-<% } %>
+  <% } %>
 
-<% if (account.owner.discord.token) { %>
+  <% if (account.owner.discord.token) { %>
   <div class="col-sm-4">
     <div class="card mb-3">
-        <div class="card-body">
-          <h4 class="card-title">Discord <small><i class="fas fa-check-circle"></i></small></h4>
-          <div class="row">
-            <div class="col-3">
-              <img class="img-fluid" src="<% if(account.owner.discord.avatar){ %>https://cdn.discordapp.com/avatars/<%= account.owner.discord.id %>/<%= account.owner.discord.avatar %>.png<% } else { %>/static/img/ninja-icon.png<% } %>" alt="Avatar">
-            </div>
-            <div class="col">
-              <p>
-                <%= account.owner.discord.username %>#<%= account.owner.discord.discriminator %>
-              </p>
-            </div>
+      <div class="card-body">
+        <h4 class="card-title">Discord <small><i class="fas fa-check-circle"></i></small></h4>
+        <div class="row">
+          <div class="col-3">
+            <img class="img-fluid" src="<% if(account.owner.discord.avatar){ %>https://cdn.discordapp.com/avatars/<%= account.owner.discord.id %>/<%= account.owner.discord.avatar %>.png<% } else { %>/static/img/ninja-icon.png<% } %>"
+              alt="Avatar">
+          </div>
+          <div class="col">
+            <p>
+              <%= account.owner.discord.username %>#
+              <%= account.owner.discord.discriminator %>
+            </p>
           </div>
         </div>
       </div>
+    </div>
   </div>
-<% } %>
+  <% } %>
 
 </div>
 
 <% } else { %>
-  <div class="alert alert-dismissible alert-primary">
-    <button type="button" class="close" data-dismiss="alert">&times;</button>
-    <strong>Whoops!</strong> No owner set up. Is this yours? <a href="/auth/login" class="alert-link">Log in to claim this account</a>!
-  </div>
+<div class="alert alert-dismissible alert-primary">
+  <button type="button" class="close" data-dismiss="alert">&times;</button>
+  <strong>Whoops!</strong> No owner set up. Is this yours? <a href="/auth/login" class="alert-link">Log in to claim
+    this account</a>!
+</div>
 <% } %>
+
+<div id="app">
+  <h3 v-if="pending">Pending Transactions</h3>
+  <table class="table" v-if="pending">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+        <th scope="col">Account</th>
+        <th scope="col">Amount</th>
+        <th scope="col">Hash</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="item of pending">
+        <th scope="row">{{item.type}}</th>
+        <td>{{item.account}}</td>
+        <td>{{item.amount | toMnano}}</td>
+        <td><span v-html="$options.filters.formatHash(item.hash)"></span></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3>Transaction History</h3>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+        <th scope="col">Account</th>
+        <th scope="col">Amount</th>
+        <th scope="col">Hash</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="item of history">
+        <th scope="row">{{item.type}}</th>
+        <td>{{item.account}}</td>
+        <td>{{item.amount | toMnano}}</td>
+        <td><span v-html="$options.filters.formatHash(item.hash)"></span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="/static/js/big.min.js"></script>
+<script>
+  const account = "<%= account.account %>";
+</script>
+<script src="/static/js/sites/account.js"></script>
 
 <% include ../partials/footer.ejs %>

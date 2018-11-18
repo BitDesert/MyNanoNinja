@@ -1,6 +1,12 @@
 var express = require('express');
 var moment = require('moment');
+const {
+  Nano
+} = require('nanode');
 
+const nano = new Nano({
+  url: process.env.NODE_RPC
+});
 var router = express.Router();
 var Account = require('../../models/account');
 
@@ -76,6 +82,30 @@ router.get('/:account', function (req, res) {
       }
       res.json(account);
     });
+});
+
+router.get('/:account/history', function (req, res) {
+  nano.accounts.history(req.params.account, 50)
+  .then(history => {
+    if(!history) return res.status(404).json({ error: 'Not found' });
+
+    res.json(history);
+  })
+  .catch(reason => {
+    res.status(500).json({ error: 'Not found' });
+  });
+});
+
+router.get('/:account/pending', function (req, res) {
+  nano.accounts.pending(req.params.account, 50, '0.000001')
+  .then(history => {
+    if(!history) return res.status(404).json({ error: 'Not found' });
+
+    res.json(history);
+  })
+  .catch(reason => {
+    res.status(500).json({ error: 'Not found' });
+  });
 });
 
 module.exports = router;
