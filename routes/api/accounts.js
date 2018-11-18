@@ -97,7 +97,12 @@ router.get('/:account/history', function (req, res) {
 });
 
 router.get('/:account/pending', function (req, res) {
-  nano.accounts.pending(req.params.account, 50, '0.000001')
+  nano.rpc('pending', { 
+    account: req.params.account,
+    threshold: '1000000000000000000000000',
+    source: true,
+    include_active: true
+   })
   .then(history => {
     if(!history) return res.status(404).json({ error: 'Not found' });
 

@@ -13,10 +13,12 @@ module.exports = function (nanorpc) {
 
   var statisticsRouter = require('./api/statistics');
   var accountsRouter = require('./api/accounts');
+  var blocksRouter = require('./api/blocks');
 
   router.use('/statistics', statisticsRouter);
   router.use('/representatives', accountsRouter);
   router.use('/accounts', accountsRouter);
+  router.use('/blocks', blocksRouter);
 
   router.get('/', function (req, res, next) {
     res.render('api', {

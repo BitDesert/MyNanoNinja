@@ -14,6 +14,9 @@
   <% } %>
 </h2>
 
+<% if (account !== null) { %>
+  <% if (account.votingweight > 0) { %>
+
 <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#setRepresentative">
   Set as my representative
 </button>
@@ -206,8 +209,11 @@
   </div>
 
 </div>
+<% } %>
+<% } %>
 
 <h3>Account Owner</h3>
+<% if (account) { %>
 <% if (account.owner) { %>
 
 <% if (loggedin && account.owner._id.toString() == user._id.toString()) { %>
@@ -325,7 +331,7 @@
   });
 </script>
 
-<% if(account.uptime < 95){ %>
+<% if(account.votingweight > 0 && account.uptime < 95){ %>
 <div class="alert alert-dismissible alert-warning">
   <button type="button" class="close" data-dismiss="alert">&times;</button>
   <strong>Heads up!</strong> Your account has a low uptime (below 95%). It will not appear in the lists.
@@ -485,9 +491,17 @@
 </div>
 <% } %>
 
+<% } else { %>
+<div class="alert alert-dismissible alert-primary">
+  <button type="button" class="close" data-dismiss="alert">&times;</button>
+  <strong>Whoops!</strong> No owner set up. Is this yours? <a href="/auth/login" class="alert-link">Log in to claim
+    this account</a>!
+</div>
+<% } %>
+
 <div id="app">
-  <h3 v-if="pending">Pending Transactions</h3>
-  <table class="table" v-if="pending">
+  <h3 v-if="pending.blocks">Pending Transactions</h3>
+  <table class="table" v-if="pending.blocks">
     <thead>
       <tr>
         <th scope="col">Type</th>
@@ -497,11 +511,11 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="item of pending">
-        <th scope="row">{{item.type}}</th>
-        <td>{{item.account}}</td>
-        <td>{{item.amount | toMnano}}</td>
-        <td><span v-html="$options.filters.formatHash(item.hash)"></span></td>
+      <tr v-for="(item, key) in pending.blocks">
+        <th scope="row">recieve</th>
+        <td><a v-bind:href="'/account/'+ item.source">{{item.source}}</a></td>
+        <td>{{item.amount | toMnano}} NANO</td>
+        <td><a v-bind:href="'/block/'+ key"><span v-html="$options.filters.formatHash(key)"></span></a></td>
       </tr>
     </tbody>
   </table>
@@ -518,19 +532,19 @@
     <tbody>
       <tr v-for="item of history">
         <th scope="row">{{item.type}}</th>
-        <td>{{item.account}}</td>
-        <td>{{item.amount | toMnano}}</td>
-        <td><span v-html="$options.filters.formatHash(item.hash)"></span></td>
+        <td><a v-bind:href="'/account/'+ item.account">{{item.account}}</a></td>
+        <td>{{item.amount | toMnano}} NANO</td>
+        <td><a v-bind:href="'/block/'+ item.hash"><span v-html="$options.filters.formatHash(item.hash)"></span></a></td>
       </tr>
     </tbody>
   </table>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="/static/js/vue.min.js"></script>
+<script src="/static/js/axios.min.js"></script>
 <script src="/static/js/big.min.js"></script>
 <script>
-  const account = "<%= account.account %>";
+  const account = "<%= myaccount %>";
 </script>
 <script src="/static/js/sites/account.js"></script>
 
