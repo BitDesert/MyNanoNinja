@@ -1,0 +1,62 @@
+<% include ../partials/header.ejs %>
+
+<div id="app">
+  <h2 class="truncate">
+    {{hash}}
+  </h2>
+
+  <table class="table">
+    <tbody>
+      <tr>
+        <th scope="row">Type</th>
+        <td>{{block.contents.type}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Account</th>
+        <td><a v-bind:href="'/account/'+ block.contents.account">{{block.contents.account}}</a></td>
+      </tr>
+      <tr>
+        <th scope="row">Previous</th>
+        <td><a v-bind:href="'/block/'+ block.contents.previous"><span v-html="$options.filters.formatHash(block.contents.previous)"></span></a></td>
+      </tr>
+      <tr>
+        <th scope="row">Representative</th>
+        <td><a v-bind:href="'/account/'+ block.contents.representative">{{block.contents.representative}}</a></td>
+      </tr>
+      <tr>
+        <th scope="row">Amount</th>
+        <td>{{block.amount | toMnano}} NANO</td>
+      </tr>
+      <tr>
+        <th scope="row">Balance</th>
+        <td>{{block.contents.balance | toMnano}} NANO</td>
+      </tr>
+      <tr>
+        <th scope="row">Link</th>
+        <td>{{block.contents.link}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Link as Account</th>
+        <td><a v-bind:href="'/account/'+ block.contents.link_as_account">{{block.contents.link_as_account}}</a></td>
+      </tr>
+      <tr>
+        <th scope="row">Signature</th>
+        <td>{{block.contents.signature}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Work</th>
+        <td>{{block.contents.work}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<script src="/static/js/vue.min.js"></script>
+<script src="/static/js/axios.min.js"></script>
+<script src="/static/js/big.min.js"></script>
+<script>
+  const hash = "<%= hash %>";
+</script>
+<script src="/static/js/sites/block.js"></script>
+
+<% include ../partials/footer.ejs %>

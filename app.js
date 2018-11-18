@@ -47,6 +47,9 @@ app.use('/static/js', express.static(__dirname + '/node_modules/chart.js/dist/')
 app.use('/static/js', express.static(__dirname + '/node_modules/moment/min/'));
 app.use('/static/js', express.static(__dirname + '/node_modules/clipboard/dist/'));
 app.use('/static/js', express.static(__dirname + '/node_modules/popper.js/dist/umd/'));
+app.use('/static/js', express.static(__dirname + '/node_modules/big.js/'));
+app.use('/static/js', express.static(__dirname + '/node_modules/vue/dist/'));
+app.use('/static/js', express.static(__dirname + '/node_modules/axios/dist/'));
 app.use('/static/js/accept-nano', express.static(__dirname + '/node_modules/@accept-nano/client/dist/'));
 
 // required for passport
@@ -64,6 +67,7 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 var indexRouter = require('./routes/index')(nanorpc);
 var apiRouter = require('./routes/api')(nanorpc);
 var accountRouter = require('./routes/account')(nanorpc);
+var blockRouter = require('./routes/block');
 var profileRouter = require('./routes/profile');
 var authRouter = require('./routes/auth')(passport, nanorpc);
 var statisticsRouter = require('./routes/statistics');
@@ -71,6 +75,7 @@ var statisticsRouter = require('./routes/statistics');
 app.use('/', indexRouter);
 app.use('/api', apiRouter);
 app.use('/account', accountRouter);
+app.use('/block', blockRouter);
 app.use('/profile', profileRouter);
 app.use('/auth', authRouter);
 app.use('/statistics', statisticsRouter);

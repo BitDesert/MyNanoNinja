@@ -8,6 +8,7 @@
   "dependencies": {
     "@accept-nano/client": "^1.7.0",
     "async": "^2.6.0",
+    "axios": "^0.18.0",
     "bcrypt-nodejs": "latest",
     "big.js": "^5.2.2",
     "body-parser": "~1.15.2",
@@ -42,6 +43,7 @@
     "popper.js": "^1.14.3",
     "queue": "^4.4.2",
     "raven": "^2.6.3",
-    "request": "^2.85.0"
+    "request": "^2.85.0",
+    "vue": "^2.5.17"
   }
 }

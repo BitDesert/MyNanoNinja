@@ -15,19 +15,26 @@ module.exports = function (nanorpc) {
     })
       .populate('owner')
       .exec(function (err, account) {
-        if (err || !account) {
+        if (err) {
           res.status(404);
           res.render('error', {
-            message: 'Address is not a valid representative',
+            message: 'Whoops! There was an error...',
             error: {}
           });
           return;
         }
 
-        if (account.alias) {
-          var title = account.alias;
+        if (account) {
+          if (account.alias) {
+            var title = account.alias;
+          } else {
+            var title = account.account;
+          }
+          var votingWeight = variableRound(nanorpc.rpc.convert.fromRaw(account.votingweight, 'mrai'));
         } else {
-          var title = account.account;
+          var title = myaccount;
+          var votingWeight = null;
+          var account = null;
         }
 
         res.render('account', {
@@ -39,7 +46,8 @@ module.exports = function (nanorpc) {
           moment: moment,
           account: account,
           round: round,
-          votingWeight: variableRound(nanorpc.rpc.convert.fromRaw(account.votingweight, 'mrai'))
+          votingWeight: votingWeight,
+          myaccount: myaccount
         });
 
       });
