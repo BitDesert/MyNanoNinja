@@ -13,7 +13,7 @@
       </tr>
       <tr>
         <th scope="row">Account</th>
-        <td><a v-bind:href="'/account/'+ block.contents.account">{{block.contents.account}}</a></td>
+        <td><account-alias :account="block.contents.account"></account-alias></td>
       </tr>
       <tr>
         <th scope="row">Previous</th>
@@ -21,7 +21,7 @@
       </tr>
       <tr>
         <th scope="row">Representative</th>
-        <td><a v-bind:href="'/account/'+ block.contents.representative">{{block.contents.representative}}</a></td>
+        <td><account-alias :account="block.contents.representative"></account-alias></td>
       </tr>
       <tr>
         <th scope="row">Amount</th>
@@ -37,7 +37,7 @@
       </tr>
       <tr>
         <th scope="row">Link as Account</th>
-        <td><a v-bind:href="'/account/'+ block.contents.link_as_account">{{block.contents.link_as_account}}</a></td>
+        <td><account-alias :account="block.contents.link_as_account"></account-alias></td>
       </tr>
       <tr>
         <th scope="row">Signature</th>
@@ -52,6 +52,7 @@
 </div>
 
 <script src="/static/js/vue.min.js"></script>
+<script src="/static/js/main-vue.js"></script>
 <script src="/static/js/axios.min.js"></script>
 <script src="/static/js/big.min.js"></script>
 <script>

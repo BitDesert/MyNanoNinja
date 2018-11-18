@@ -513,7 +513,7 @@
     <tbody>
       <tr v-for="(item, key) in pending.blocks">
         <th scope="row">recieve</th>
-        <td><a v-bind:href="'/account/'+ item.source">{{item.source}}</a></td>
+        <td><account-alias :account="item.source"></account-alias></td>
         <td>{{item.amount | toMnano}} NANO</td>
         <td><a v-bind:href="'/block/'+ key"><span v-html="$options.filters.formatHash(key)"></span></a></td>
       </tr>
@@ -532,7 +532,7 @@
     <tbody>
       <tr v-for="item of history">
         <th scope="row">{{item.type}}</th>
-        <td><a v-bind:href="'/account/'+ item.account">{{item.account}}</a></td>
+        <td><account-alias :account="item.account"></account-alias></td>
         <td>{{item.amount | toMnano}} NANO</td>
         <td><a v-bind:href="'/block/'+ item.hash"><span v-html="$options.filters.formatHash(item.hash)"></span></a></td>
       </tr>
@@ -540,7 +540,8 @@
   </table>
 </div>
 
-<script src="/static/js/vue.min.js"></script>
+<script src="/static/js/vue.js"></script>
+<script src="/static/js/main-vue.js"></script>
 <script src="/static/js/axios.min.js"></script>
 <script src="/static/js/big.min.js"></script>
 <script>
