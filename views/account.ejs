@@ -15,7 +15,7 @@
 </h2>
 
 <% if (account !== null) { %>
-  <% if (account.votingweight > 0) { %>
+<% if (account.votingweight > 0) { %>
 
 <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#setRepresentative">
   Set as my representative
@@ -501,43 +501,51 @@
 
 <div id="app">
   <h3 v-if="pending.blocks">Pending Transactions</h3>
-  <table class="table" v-if="pending.blocks">
-    <thead>
-      <tr>
-        <th scope="col">Type</th>
-        <th scope="col">Account</th>
-        <th scope="col">Amount</th>
-        <th scope="col">Hash</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="(item, key) in pending.blocks">
-        <th scope="row">recieve</th>
-        <td><account-alias :account="item.source"></account-alias></td>
-        <td>{{item.amount | toMnano}} NANO</td>
-        <td><a v-bind:href="'/block/'+ key"><span v-html="$options.filters.formatHash(key)"></span></a></td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="table-responsive">
+    <table class="table" v-if="pending.blocks">
+      <thead>
+        <tr>
+          <th scope="col">Type</th>
+          <th scope="col">Account</th>
+          <th scope="col">Amount</th>
+          <th scope="col">Hash</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(item, key) in pending.blocks">
+          <th scope="row">recieve</th>
+          <td>
+            <account-alias :account="item.source"></account-alias>
+          </td>
+          <td>{{item.amount | toMnano}} NANO</td>
+          <td><a v-bind:href="'/block/'+ key"><span v-html="$options.filters.formatHash(key)"></span></a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
   <h3>Transaction History</h3>
-  <table class="table">
-    <thead>
-      <tr>
-        <th scope="col">Type</th>
-        <th scope="col">Account</th>
-        <th scope="col">Amount</th>
-        <th scope="col">Hash</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="item of history">
-        <th scope="row">{{item.type}}</th>
-        <td><account-alias :account="item.account"></account-alias></td>
-        <td>{{item.amount | toMnano}} NANO</td>
-        <td><a v-bind:href="'/block/'+ item.hash"><span v-html="$options.filters.formatHash(item.hash)"></span></a></td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Type</th>
+          <th scope="col">Account</th>
+          <th scope="col">Amount</th>
+          <th scope="col">Hash</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="item of history">
+          <th scope="row">{{item.type}}</th>
+          <td>
+            <account-alias :account="item.account"></account-alias>
+          </td>
+          <td>{{item.amount | toMnano}} NANO</td>
+          <td><a v-bind:href="'/block/'+ item.hash"><span v-html="$options.filters.formatHash(item.hash)"></span></a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 
 <script src="/static/js/vue.min.js"></script>
