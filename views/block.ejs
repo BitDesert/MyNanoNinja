@@ -47,7 +47,7 @@
         </tr>
         <tr>
           <th scope="row">Signature</th>
-          <td>{{block.contents.signature}}</td>
+          <td><span v-html="$options.filters.formatHash(block.contents.signature)"></span></td>
         </tr>
         <tr>
           <th scope="row">Work</th>
@@ -59,7 +59,7 @@
 </div>
 
 <script src="/static/js/vue.min.js"></script>
-<script src="/static/js/main-vue.js"></script>
+<script src="/static/js/main-vue.js?v=2"></script>
 <script src="/static/js/axios.min.js"></script>
 <script src="/static/js/big.min.js"></script>
 <script>

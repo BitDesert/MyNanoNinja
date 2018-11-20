@@ -2,7 +2,7 @@
 
 <div class="row mt-5 mb-5">
   <div class="col-sm-auto mr-auto">
-    <img src="/static/img/ninja-laptop.png" alt="Nano Logo" style="width: 12rem;"/>
+    <img src="/static/img/ninja-laptop.png" alt="Nano Logo" style="width: 12rem;" />
   </div>
   <div class="col">
     <h1>
@@ -12,6 +12,20 @@
   </div>
 </div>
 
+<div class="col-12">
+  <div class="card mb-3">
+    <div class="card-body">
+      <form class="form-search">
+        <div class="input-group">
+          <input name="query" type="text" class="form-control" placeholder="Search for an address or block" pattern="(xrb_[a-z0-9]{60}|[A-Z0-9]{64})" title="Enter a valid Nano address or block hash">
+          <div class="input-group-append">
+            <button class="btn btn-secondary" type="submit">Search</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 
 <a href="/profile" class="btn btn-sm btn-secondary float-right">Add your Account</a>
 <h2>Verified Nano Representatives</h2>
@@ -27,47 +41,48 @@
             <a href="/account/<%= accounts[i].account %>">
               <h4 class="card-title">
                 <% if(typeof accounts[i].alias !== 'undefined'){ %>
-                  <%= accounts[i].alias %>
+                <%= accounts[i].alias %>
                 <% } else { %>
-                  <%= accounts[i].account %>
+                <%= accounts[i].account %>
                 <% } %>
               </h4>
             </a>
             <h6 class="card-subtitle text-muted">
               <% if (accounts[i].owner.facebook.token) { %>
-                <i class="fab fa-facebook-square"></i>
+              <i class="fab fa-facebook-square"></i>
               <% } %>
               <% if (accounts[i].owner.twitter.token) { %>
-                <i class="fab fa-twitter"></i>
+              <i class="fab fa-twitter"></i>
               <% } %>
               <% if (accounts[i].owner.google.token) { %>
-                <i class="fab fa-google-plus-g"></i>
+              <i class="fab fa-google-plus-g"></i>
               <% } %>
               <% if (accounts[i].owner.github.token) { %>
-                <i class="fab fa-github"></i>
+              <i class="fab fa-github"></i>
               <% } %>
               <% if (accounts[i].owner.reddit.token) { %>
-                <i class="fab fa-reddit"></i>
+              <i class="fab fa-reddit"></i>
               <% } %>
               <% if (accounts[i].owner.discord.token) { %>
-                <i class="fab fa-discord"></i>
+              <i class="fab fa-discord"></i>
               <% } %>
               <% if(accounts[i].website){ %>
-                <i class="fas fa-globe"></i>
+              <i class="fas fa-globe"></i>
               <% } %>
               <% if(accounts[i].monitor.version){ %>
-                <i class="fas fa-binoculars"></i>
+              <i class="fas fa-binoculars"></i>
               <% } %>
               <br>
               <% if(accounts[i].description) { %>
-                <%= accounts[i].description %>
+              <%= accounts[i].description %>
               <% } else { %>
-                No introduction
+              No introduction
               <% } %>
             </h6>
           </div>
           <div class="col-auto ml-auto">
-            <span class="h1"><%= variableRound((accounts[i].votingweight / nanorpc.getAvailable()) * 100, 3) %> %</span>
+            <span class="h1">
+              <%= variableRound((accounts[i].votingweight / nanorpc.getAvailable()) * 100, 3) %> %</span>
           </div>
         </div>
       </div>

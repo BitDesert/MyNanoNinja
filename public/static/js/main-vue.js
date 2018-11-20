@@ -32,8 +32,8 @@ Vue.filter('formatHash', function (hash) {
   hash = hash.toString()
 
   var first = hash.substring(0, 2);
-  var middle_raw = hash.substring(2, 62);
-  var last = hash.substring(62, 64);
+  var middle_raw = hash.substring(2, hash.length-2);
+  var last = hash.substring(hash.length-2, hash.length);
 
   var middle = '';
 

@@ -19,9 +19,17 @@ Handlebars.registerHelper('formatNano', function (number) {
 });
 
 // navbar search
-$("#navbar_search").submit(function(e) {
+$(".form-search").submit(function (e) {
   e.preventDefault();
-  window.location = '/account/' + $('#navbar_search_q').val();
+
+  var query = $(this).serializeArray()[0].value;
+
+  if (/^xrb_[a-z0-9]{60}$/.test(query)) {
+    window.location = '/account/' + query;
+  } else if (/^[A-Z0-9]{64}$/.test(query)) {
+    window.location = '/block/' + query;
+  }
+
 });
 
 $('button').tooltip({
@@ -36,7 +44,7 @@ function setTooltip(btn, message) {
 }
 
 function hideTooltip(btn) {
-  setTimeout(function() {
+  setTimeout(function () {
     $(btn).tooltip('hide');
   }, 1000);
 }
@@ -48,28 +56,28 @@ function round(value, precision) {
   } else {
     return Math.round(value);
   }
-} 
+}
 
 function median(values) {
 
-  values.sort( function(a,b) {return a - b;} );
+  values.sort(function (a, b) { return a - b; });
 
-  var half = Math.floor(values.length/2);
+  var half = Math.floor(values.length / 2);
 
-  if(values.length % 2)
-      return values[half];
+  if (values.length % 2)
+    return values[half];
   else
-      return (values[half-1] + values[half]) / 2.0;
+    return (values[half - 1] + values[half]) / 2.0;
 }
 
-function avg(array){
-  var sum = array.reduce(function(a, b) { return a + b; });
+function avg(array) {
+  var sum = array.reduce(function (a, b) { return a + b; });
   var avg = sum / array.length;
   return avg;
 }
 
-function max(array){
-  return Math.max.apply( Math, array );
+function max(array) {
+  return Math.max.apply(Math, array);
 };
 
 function percentile(arr, p) {
@@ -79,9 +87,9 @@ function percentile(arr, p) {
   if (p >= 1) return arr[arr.length - 1];
 
   var index = arr.length * p,
-      lower = Math.floor(index),
-      upper = lower + 1,
-      weight = index % 1;
+    lower = Math.floor(index),
+    upper = lower + 1,
+    weight = index % 1;
 
   if (upper >= arr.length) return arr[lower];
   return arr[lower] * (1 - weight) + arr[upper] * weight;
