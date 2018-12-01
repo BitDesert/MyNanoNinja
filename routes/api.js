@@ -11,14 +11,12 @@ module.exports = function (nanorpc) {
     next();
   });
 
-  var statisticsRouter = require('./api/statistics');
-  var accountsRouter = require('./api/accounts');
-  var blocksRouter = require('./api/blocks');
-
-  router.use('/statistics', statisticsRouter);
-  router.use('/representatives', accountsRouter);
-  router.use('/accounts', accountsRouter);
-  router.use('/blocks', blocksRouter);
+  router.use('/statistics', require('./api/statistics'));
+  router.use('/representatives', require('./api/accounts'));
+  router.use('/accounts', require('./api/accounts'));
+  router.use('/blocks', require('./api/blocks'));
+  router.use('/confirmation', require('./api/confirmation'));
+  router.use('/node', require('./api/node'));
 
   router.get('/', function (req, res, next) {
     res.render('api', {
