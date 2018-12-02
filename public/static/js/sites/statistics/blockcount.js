@@ -86,6 +86,11 @@ function enrichData(apidata){
     }
   }
 
+  // filter accounts with less than 10000 blocks from median
+  data.accounts = apidata.filter(function( obj ) {
+    return obj.monitor.blocks >= data.blockcount.median - 10000;
+  });
+
   return data;
 }
 
