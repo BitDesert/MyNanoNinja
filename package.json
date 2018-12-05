@@ -26,7 +26,7 @@
     "maxmind": "^2.11.0",
     "method-override": "~2.3.6",
     "moment": "^2.21.0",
-    "mongoose": "~4.13.1",
+    "mongoose": "~5.3.14",
     "morgan": "^1.9.1",
     "nano-node": "0.0.7",
     "nanode": "^2.2.1",

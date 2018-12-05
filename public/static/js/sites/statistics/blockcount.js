@@ -38,8 +38,6 @@ function setupPlotterOverTime(apidata) {
     paper_bgcolor: 'rgba(0,0,0,0)'
   };
 
-  console.log(data);
-
   Plotly.newPlot('blockcountsovertime', data, layout);
 }
 
@@ -70,6 +68,8 @@ function enrichData(apidata){
   for (var account in apidata) {
     data.blockcounts.push(apidata[account].monitor.blocks);
   }
+
+  console.log(data.blockcounts.toString());
 
   data.blockcount = {};
   data.blockcount.median = round(median(data.blockcounts), 0);

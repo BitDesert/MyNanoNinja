@@ -4,11 +4,23 @@ module.exports = function (nanorpc) {
   var async = require("async");
   const nodemailer = require('nodemailer');
   var request = require('request');
+  var queue = require('queue');
 
   var Account = require('./models/account');
   var Statistics = require('./models/statistics');
   var StatisticsVersions = require('./models/statisticsVersions');
   var StatisticsBlockcounts = require('./models/statisticsBlockcounts');
+
+  var q = queue({ autostart: true, concurrency: 1, timeout: 20 * 1000 });
+
+  q.on('timeout', function (next, job) {
+    console.log('job timed out:', job.toString().replace(/\n/g, ''))
+    next()
+  })
+
+  setInterval(() => {
+    console.log("CRON Queue: " + q.length);
+  }, 5 * 1000);
 
   let transporter = nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
@@ -31,14 +43,14 @@ module.exports = function (nanorpc) {
 
   function median(values) {
 
-    values.sort( function(a,b) {return a - b;} );
-  
-    var half = Math.floor(values.length/2);
-  
-    if(values.length % 2)
-        return values[half];
+    values.sort(function (a, b) { return a - b; });
+
+    var half = Math.floor(values.length / 2);
+
+    if (values.length % 2)
+      return values[half];
     else
-        return (values[half-1] + values[half]) / 2.0;
+      return (values[half - 1] + values[half]) / 2.0;
   }
 
   /*
@@ -148,38 +160,38 @@ module.exports = function (nanorpc) {
         $ne: null
       }
     })
-    .select('-_id account monitor')
-    .sort('-monitor.blocks')
-    .exec(function (err, accounts) {
-      if (err) {
-        return;
-      }
-      var stats = new StatisticsBlockcounts();
-
-      var blockcounts = [];
-      for (var account in accounts) {
-        blockcounts.push(accounts[account].monitor.blocks);
-      }
-
-      var medianblockcount = median(blockcounts);
-
-      for (var account in accounts) {
-        if(accounts[account].monitor.blocks > medianblockcount - 10000){
-          stats.blockcounts.push({
-            account: accounts[account].account,
-            count: accounts[account].monitor.blocks
-          });
-        }
-      }
-
-      stats.save(function (err) {
+      .select('-_id account monitor')
+      .sort('-monitor.blocks')
+      .exec(function (err, accounts) {
         if (err) {
-          console.error('CRON - updateStatistics - ', err);
-          return
+          return;
         }
-      })
-  
-    });
+        var stats = new StatisticsBlockcounts();
+
+        var blockcounts = [];
+        for (var account in accounts) {
+          blockcounts.push(accounts[account].monitor.blocks);
+        }
+
+        var medianblockcount = median(blockcounts);
+
+        for (var account in accounts) {
+          if (accounts[account].monitor.blocks > medianblockcount - 10000) {
+            stats.blockcounts.push({
+              account: accounts[account].account,
+              count: accounts[account].monitor.blocks
+            });
+          }
+        }
+
+        stats.save(function (err) {
+          if (err) {
+            console.error('CRON - updateStatistics - ', err);
+            return
+          }
+        })
+
+      });
   }
 
   /*
@@ -188,20 +200,54 @@ module.exports = function (nanorpc) {
 
   function updateNodeUptime() {
     console.log('Updating Node Uptime...');
-    Account.find()
+    var cursor = Account.find()
       .where('votingweight').gt(0)
       .populate('owner')
-      .exec(function (err, accounts) {
-        if (err) {
-          console.error('CRON - updateNodeUptime', err);
-          return
-        }
-        console.log(accounts.length + " accounts");
+      .cursor();
 
-        for (var i = 0; i < accounts.length; i++) {
-          checkNodeUptime(accounts[i]);
-        }
-      });
+    cursor.on('data', function (account) {
+      checkNodeUptime(account);
+    });
+    cursor.on('close', function () {
+      console.log('updateNodeUptime done');
+
+    });
+  }
+
+  function checkNodeUptimeQueue(account) {
+    q.push((cb) => {
+      checkNodeUptime(cb, account)
+    });
+  }
+
+  function calcUptime(array, from) {
+
+    // filter by date
+    array = array.filter((item) =>
+      item.date >= from
+    );
+
+    // count and group by
+    var uptime_values = array.reduce((p, c) => {
+      var name = c.status.toString();
+      if (!p.hasOwnProperty(name)) {
+        p[name] = 0;
+      }
+      p[name]++;
+      return p;
+    }, {});
+
+    // check for null
+    if (typeof uptime_values.true === 'undefined') {
+      uptime_values.true = 0;
+    }
+
+    if (typeof uptime_values.false === 'undefined') {
+      uptime_values.false = 0;
+    }
+
+    // return uptime
+    return ((uptime_values.true / (uptime_values.true + uptime_values.false)) * 100);
   }
 
   function checkNodeUptime(account) {
@@ -209,17 +255,23 @@ module.exports = function (nanorpc) {
     if (account.lastVoted && moment(account.lastVoted).isAfter(moment().subtract(30, 'minutes').toDate())) {
       account.uptime_data.up++;
       account.uptime_data.last = true;
+
+      account.uptime_array.push({
+        status: true
+      });
     } else {
       account.uptime_data.down++;
       account.uptime_data.last = false;
+
+      account.uptime_array.push({
+        status: false
+      });
     }
     account.uptime = ((account.uptime_data.up / (account.uptime_data.up + account.uptime_data.down)) * 100);
-
-    if (account.alias) {
-      var title = account.alias;
-    } else {
-      var title = account.account;
-    }
+    account.uptime_over.day = calcUptime(account.uptime_array, moment().subtract(1, 'day'));
+    account.uptime_over.week = calcUptime(account.uptime_array, moment().subtract(1, 'week'));
+    account.uptime_over.month = calcUptime(account.uptime_array, moment().subtract(1, 'month'));
+    account.uptime_over.year = calcUptime(account.uptime_array, moment().subtract(1, 'year'));
 
     if (account.owner && process.env.NODE_ENV != 'development') {
       if (previous === true && account.uptime_data.last === false) {
@@ -245,7 +297,7 @@ module.exports = function (nanorpc) {
     });
   }
 
-  cron.schedule('*/30 * * * *', updateNodeUptime);
+  cron.schedule('* * * * *', updateNodeUptime);
 
   function sendUpMail(account, email) {
 
@@ -309,11 +361,11 @@ module.exports = function (nanorpc) {
 
   function updateNodeMonitors() {
     Account.find({
-        'monitor.url': {
-          $exists: true,
-          $ne: null
-        }
-      })
+      'monitor.url': {
+        $exists: true,
+        $ne: null
+      }
+    })
       .exec(function (err, accounts) {
         if (err) {
           console.error('CRON - updateNodeMonitors', err);
@@ -377,7 +429,7 @@ module.exports = function (nanorpc) {
       for (var rep in reps.representatives) {
         updateVoteSimple(rep);
       };
-  
+
     });
   }
 
@@ -385,16 +437,16 @@ module.exports = function (nanorpc) {
     console.log('Updating Uptime via distributed RPC...');
 
     var provider = JSON.parse(process.env.DRPC_REPSONLINE);
-  
+
     var onlinereps = [];
-  
+
     async.forEachOf(provider, (value, key, callback) => {
-  
+
       request.get({
         url: value,
         json: true
       }, function (err, response, data) {
-        if(err){
+        if (err) {
           // error getting data
           console.error('updateUptimeDistributed', err);
           callback();
@@ -407,21 +459,21 @@ module.exports = function (nanorpc) {
         };
         callback()
       });
-  
-  
+
+
     }, err => {
       if (err) {
         console.error(err.message);
         return
       }
       console.log(onlinereps.length + ' reps via dRPC');
-      
+
       for (var rep of onlinereps) {
         updateVoteSimple(rep);
       };
     });
   }
-  
+
   function updateVoteSimple(myaccount) {
     Account.findOne(
       {
@@ -430,19 +482,19 @@ module.exports = function (nanorpc) {
         if (err) {
           return;
         }
-  
+
         if (!account) {
           var account = new Account();
           account.account = myaccount;
         }
-  
+
         account.lastVoted = Date.now();
         account.save(function (err) {
           if (err) {
             console.log("Cron - updateVoteSimple - Error saving account", err);
           }
         });
-  
+
       });
   }
 

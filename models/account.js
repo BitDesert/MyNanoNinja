@@ -31,12 +31,18 @@ var accountSchema = mongoose.Schema({
   description: String,
   website: String,
   server: {
-    type: {type: String},
+    type: { type: String },
     renewable: Boolean
   },
   uptime: {
     type: Number,
     default: 0
+  },
+  uptime_over: {
+    day: { type: Number, default: 0 },
+    week: { type: Number, default: 0 },
+    month: { type: Number, default: 0 },
+    year: { type: Number, default: 0 }
   },
   uptime_data: {
     up: {
@@ -52,6 +58,15 @@ var accountSchema = mongoose.Schema({
       default: true
     }
   },
+  uptime_array: [
+    {
+      date: {
+        type: Date, 
+        default: Date.now
+      },
+      status: Boolean
+    }
+  ],
   network: {
     ip: String,
     port: Number
@@ -62,8 +77,8 @@ var accountSchema = mongoose.Schema({
   }
 
 }, {
-  autoIndex: true
-});
+    autoIndex: true
+  });
 
 // create the model for users and expose it to our app
 var Account = mongoose.model('Account', accountSchema);

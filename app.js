@@ -17,7 +17,7 @@ const MongoStore = require('connect-mongo')(session);
 
 // database
 var configDB = require('./config/database.js');
-mongoose.connect(configDB.url, { useMongoClient: true });
+mongoose.connect(configDB.url);
 
 // nano node
 if(process.env.NODE_INTERNAL != ''){
