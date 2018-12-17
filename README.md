@@ -37,8 +37,15 @@ server {
 
         server_name mynano.ninja;
 
+        // location to your MyNanoNinja
         location / {
                 proxy_pass http://127.0.0.1:4000;
+        }
+
+        // location to your accept-nano instance
+        location /payment/ {
+                rewrite ^/payment(/.*)$ $1 break;
+                proxy_pass         http://127.0.0.1:5000;
         }
 }
 ```
