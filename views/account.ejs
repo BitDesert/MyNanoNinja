@@ -114,6 +114,7 @@
     </div>
   </div>
 </div>
+<% } %>
 
 <div class="row">
 
@@ -126,72 +127,63 @@
           <%= moment(account.created).fromNow() %>
         </span>
       </li>
+      <% if(account.website){ %>
       <li class="list-group-item">
         Website
         <span class="float-right">
-          <% if(account.website){ %>
           <a href="<%= account.website %>" target="_blank">
-            <%= account.website %></a>
-          <% } else { %>
-          <i>Not set</i>
-          <% } %>
+            <%= account.website %>
+          </a>
         </span>
       </li>
+      <% } %>
+      <% if(account.location){ %>
       <li class="list-group-item">
         Location
         <span class="float-right">
-          <% if(account.location){ %>
           <%= account.location %>
-          <% } else { %>
-          <i>Not set</i>
-          <% } %>
         </span>
       </li>
+      <% } %>
+      <% if(account.server && account.server.type){ %>
       <li class="list-group-item">
         Server Type
         <span class="float-right">
-          <% if(account.server && account.server.type){ %>
           <%= account.server.type %>
           <% if(account.server.renewable){ %>
           <i class="fas fa-leaf" style="color: #8BC34A" title="Renewable Energy"></i>
           <% } %>
-          <% } else { %>
-          <i>Not set</i>
-          <% } %>
         </span>
       </li>
+      <% } %>
+      <% if(account.monitor.version){ %>
       <li class="list-group-item">
         Node Version
         <span class="float-right">
-          <% if(account.monitor.version){ %>
           <a href="<%= account.monitor.url %>" target="_blank">
-            <%= account.monitor.version %></a>
-          <% } else { %>
-          <i>Not set</i>
-          <% } %>
+            <%= account.monitor.version %>
+          </a>
         </span>
       </li>
+      <% } %>
+      <% if(account.monitor.sync){ %>
       <li class="list-group-item">
         Sync Status
         <span class="float-right">
-          <% if(account.monitor.sync){ %>
           <a href="<%= account.monitor.url %>" target="_blank">
-            <%= account.monitor.sync %> %</a>
-          <% } else { %>
-          <i>Not set</i>
-          <% } %>
+            <%= account.monitor.sync %> %
+          </a>
         </span>
       </li>
+      <% } %>
+      <% if(account.network.ip){ %>
       <li class="list-group-item">
         Server Provider
         <span class="float-right">
-          <% if(account.network.ip){ %>
           <%= orgLookup.get(account.network.ip).autonomous_system_organization %>
-          <% } else { %>
-          <i>Not available</i>
-          <% } %>
         </span>
       </li>
+      <% } %>
     </ul>
   </div>
 
@@ -209,7 +201,6 @@
   </div>
 
 </div>
-<% } %>
 <% } %>
 
 <h3>Account Owner</h3>
