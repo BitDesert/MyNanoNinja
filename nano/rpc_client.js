@@ -145,8 +145,11 @@ function updateDelegators() {
     //return;
   }
 
-  Account.find({'votingweight': {$gt:0}})
+  // only accounts with more than 1 NANO delegated
+  Account.find({'votingweight': {$gt:1000000000000000000000000000000}})
   .exec(function (err, accounts) {
+    console.log('Reps found: '+accounts.length);
+    
     for (var i = 0; i < accounts.length; i++) {
       updateAccountDelegatorsQueue(accounts[i]);    
     }
@@ -230,8 +233,7 @@ cron.schedule('* * * * *', updateLocalVars);
 cron.schedule('*/15 * * * *', updateWeights);
 
 // update account delegators
-// disabled due to poor performance
-//cron.schedule('0 */3 * * *', updateDelegators);
+cron.schedule('0 */3 * * *', updateDelegators);
 
 // get all representatives
 cron.schedule('0 * * * *', updateRepresentatives);
