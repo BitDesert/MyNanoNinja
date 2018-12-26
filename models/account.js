@@ -68,7 +68,7 @@ var accountSchema = mongoose.Schema({
 // create the model for users and expose it to our app
 var Account = mongoose.model('Account', accountSchema);
 
-Account.ensureIndexes(function (err) {
+Account.createIndexes(function (err) {
   if (err) console.log('Account Model', err);
 });
 

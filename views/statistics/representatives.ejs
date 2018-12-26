@@ -102,7 +102,7 @@
   }
 </script>
 
-<h2>Representatives over Time</h2>
+<h2 class="mt-3">Representatives over Time</h2>
 <canvas id="chartcanvas"></canvas>
 
 <script>
@@ -176,6 +176,62 @@
 </script>
 
 
+
+<h2 class="mt-3">Quorum</h2>
+<canvas id="chartcanvasquorum"></canvas>
+
+<script>
+  var chartColors = ['#f44336', '#2196F3', '#4CAF50'];
+  init.push(getDataQuorum);
+
+  function getDataQuorum() {
+    $.get("/api/statistics/quorum", function (data) {
+      var chartdata = {
+        labels: [],
+        datasets: [{
+          label: 'Quorum Delta',
+          data: [],
+          borderColor: chartColors[0],
+          backgroundColor: hexToRgbA(chartColors[0], '0.2')
+        },
+        {
+          label: 'Online Stake Total',
+          data: [],
+          borderColor: chartColors[1],
+          backgroundColor: hexToRgbA(chartColors[1], '0.2')
+        },
+        {
+          label: 'Peers Stake Total',
+          data: [],
+          borderColor: chartColors[2],
+          backgroundColor: hexToRgbA(chartColors[2], '0.2')
+        }]
+      };
+
+      data.forEach(function (element) {
+        chartdata.labels.push(formatDate(element.date));
+        chartdata.datasets[0].data.push(element.quorum_delta);
+        chartdata.datasets[1].data.push(element.online_stake_total);
+        chartdata.datasets[2].data.push(element.peers_stake_total);
+      });
+
+      setupGraphQuorum(chartdata);
+    });
+  }
+
+  function setupGraphQuorum(data) {
+    var ctx = document.getElementById('chartcanvasquorum').getContext('2d');
+    var myLineChart = new Chart(ctx, {
+      type: 'line',
+      data: data,
+      options: {
+        responsive: true
+      }
+    });
+  }
+</script>
+
+<script src="/static/js/big.min.js"></script>
 <script src="/static/js/moment.min.js"></script>
 <script src="/static/js/Chart.min.js"></script>
 

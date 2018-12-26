@@ -2,9 +2,10 @@ var express = require('express');
 var moment = require('moment');
 
 var router = express.Router();
-var Statistics = require('../../models/statistics');
-var StatisticsVersions = require('../../models/statisticsVersions');
-var StatisticsBlockcounts = require('../../models/statisticsBlockcounts');
+var StatisticsVersions = require('../../models/statistics/versions');
+var StatisticsBlockcounts = require('../../models/statistics/blockcounts');
+var Statistics = require('../../models/statistics/representatives');
+var StatisticsQuorum = require('../../models/statistics/quorum');
 var Account = require('../../models/account');
 
 /* GET home page. */
@@ -69,6 +70,20 @@ router.get('/blockcountsovertime', function (req, res) {
   .exec(function (err, stats) {
     if (err) {
       console.log("API - Blockcounts over time", err);
+      return;
+    }
+    res.json(stats);
+  });
+});
+
+router.get('/quorum', function (req, res) {
+  StatisticsQuorum.find({
+    'date': {$gt: moment().subtract(1, 'days').toDate()}
+  })
+  .select('-_id date quorum_delta online_stake_total peers_stake_total')
+  .exec(function (err, stats) {
+    if (err) {
+      console.log("API - Quorum", err);
       return;
     }
     res.json(stats);

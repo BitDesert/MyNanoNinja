@@ -17,7 +17,7 @@ const MongoStore = require('connect-mongo')(session);
 
 // database
 var configDB = require('./config/database.js');
-mongoose.connect(configDB.url, { useMongoClient: true });
+mongoose.connect(configDB.url);
 
 // nano node
 if(process.env.NODE_INTERNAL != ''){
@@ -25,7 +25,10 @@ if(process.env.NODE_INTERNAL != ''){
 }
 
 var nanorpc = require('./nano/rpc_client');
-var cron = require('./cron')(nanorpc);
+
+// Cron
+require('./cron/statistics');
+require('./cron')(nanorpc);
 
 // passport
 require('./config/passport')(passport); // pass passport for configuration

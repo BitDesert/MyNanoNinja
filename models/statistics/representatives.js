@@ -16,7 +16,7 @@ var statisticsSchema = mongoose.Schema({
 // create the model for users and expose it to our app
 var Statistics = mongoose.model('Statistics', statisticsSchema);
 
-Statistics.ensureIndexes(function (err) {
+Statistics.createIndexes(function (err) {
     if (err) console.log('Statistics Model', err);
 });
 

@@ -4,11 +4,9 @@ module.exports = function (nanorpc) {
   var async = require("async");
   const nodemailer = require('nodemailer');
   var request = require('request');
+  var tools = require('./tools');
 
   var Account = require('./models/account');
-  var Statistics = require('./models/statistics');
-  var StatisticsVersions = require('./models/statisticsVersions');
-  var StatisticsBlockcounts = require('./models/statisticsBlockcounts');
 
   let transporter = nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
@@ -19,168 +17,6 @@ module.exports = function (nanorpc) {
       pass: process.env.EMAIL_PASS
     }
   });
-
-  function round(value, precision) {
-    if (Number.isInteger(precision)) {
-      var shift = Math.pow(10, precision);
-      return Math.round(value * shift) / shift;
-    } else {
-      return Math.round(value);
-    }
-  }
-
-  function median(values) {
-
-    values.sort( function(a,b) {return a - b;} );
-  
-    var half = Math.floor(values.length/2);
-  
-    if(values.length % 2)
-        return values[half];
-    else
-        return (values[half-1] + values[half]) / 2.0;
-  }
-
-  /*
-   * Statistics / Representatives
-   */
-
-  cron.schedule('*/15 * * * *', updateStatistics);
-  //cron.schedule('*/10 * * * * *', updateStatisticsBlockcounts);
-
-  function updateStatistics() {
-    console.log('Updating Statistics...');
-    updateStatisticsUptime();
-    updateStatisticsVersions();
-    updateStatisticsBlockcounts();
-  }
-
-  function updateStatisticsUptime() {
-
-    var obj = {
-      total: {
-        votingweight: {
-          $gte: 0
-        }
-      },
-      eligible: {
-        votingweight: {
-          $gte: 133248289218203497353846153999000000
-        }
-      }, // more than 0.1 %
-      online: {
-        lastVoted: {
-          $gt: moment().subtract(15, 'minutes').toDate()
-        },
-        votingweight: {
-          $gte: 0
-        }
-      },
-    };
-
-    var repstats = {};
-
-    async.forEachOf(obj, (value, key, callback) => {
-      Account.find(value)
-        .exec(function (err, accounts) {
-          if (err) {
-            console.error(err);
-            callback(false);
-            return;
-          }
-          repstats[key] = accounts.length;
-          callback();
-        });
-    }, err => {
-      if (err) {
-        console.error(err.message);
-        return
-      }
-      var stats = new Statistics();
-      stats.representatives = repstats;
-      stats.save(function (err) {
-        if (err) {
-          console.error('CRON - updateStatistics - ', err);
-          return
-        }
-      })
-    });
-  }
-
-  /*
-   * Statistics - Node Versions
-   */
-
-  function updateStatisticsVersions() {
-    nanorpc.rpc.rpc('peers').then(function (peers) {
-
-      var stats = new StatisticsVersions();
-
-      for (var peer in peers.peers) {
-        stats.nodeversions[peers.peers[peer]]++;
-      }
-
-      console.log(stats);
-
-      stats.save(function (err) {
-        if (err) {
-          console.error('CRON - updateStatistics - ', err);
-          return
-        }
-        console.log('updateStatisticsVersions done');
-      })
-
-    });
-  }
-
-  /*
-   * Statistics - Blockcounts
-   */
-
-  function updateStatisticsBlockcounts() {
-    Account.find({
-      'monitor.url': {
-        $exists: true,
-        $ne: null
-      },
-      'monitor.blocks': {
-        $exists: true,
-        $ne: null
-      }
-    })
-    .select('-_id account monitor')
-    .sort('-monitor.blocks')
-    .exec(function (err, accounts) {
-      if (err) {
-        return;
-      }
-      var stats = new StatisticsBlockcounts();
-
-      var blockcounts = [];
-      for (var account in accounts) {
-        blockcounts.push(accounts[account].monitor.blocks);
-      }
-
-      var medianblockcount = median(blockcounts);
-
-      for (var account in accounts) {
-        if(accounts[account].monitor.blocks > medianblockcount - 10000){
-          stats.blockcounts.push({
-            account: accounts[account].account,
-            count: accounts[account].monitor.blocks
-          });
-        }
-      }
-
-      stats.save(function (err) {
-        if (err) {
-          console.error('CRON - updateStatistics - ', err);
-          return
-        }
-      })
-  
-    });
-  }
 
   /*
    * Node Uptime 
@@ -347,7 +183,7 @@ module.exports = function (nanorpc) {
         } else {
           account.monitor.version = data.version;
           account.monitor.blocks = data.currentBlock;
-          account.monitor.sync = round((data.currentBlock / nanorpc.getBlockcount()) * 100, 3);
+          account.monitor.sync = tools.round((data.currentBlock / nanorpc.getBlockcount()) * 100, 3);
           if (account.monitor.sync > 100) {
             account.monitor.sync = 100;
           }

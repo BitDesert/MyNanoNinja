@@ -150,8 +150,8 @@ setInterval(() => {
   console.log('Sending keepalive to ' + node.peers.length + ' peers (' + node.peers[0] + ')');
   node.publish({
     type: 'keepalive',
-    versionMax: 0x0c,
-    versionUsing: 0x07,
+    versionMax: 0x0f,
+    versionUsing: 0x0f,
     versionMin: 0x01
   });
 }, 30000);
