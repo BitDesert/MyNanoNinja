@@ -282,4 +282,46 @@ module.exports = function (nanorpc) {
       });
   }
 
+  function updateScore() {
+    console.log('Updating Node Uptime...');
+    Account.find()
+      .where('votingweight').gt(0)
+      .populate('owner')
+      .exec(function (err, accounts) {
+        if (err) {
+          console.error('CRON - updateScore', err);
+          return
+        }
+        console.log(accounts.length + " accounts");
+
+        for (var i = 0; i < accounts.length; i++) {
+          updateScoreAccount(accounts[i]);
+        }
+      });
+  }
+
+  function updateScoreAccount(account) {
+    var score = 0;
+
+    // calculate weight score
+    var weightpercent = (account.votingweight / nanorpc.getAvailable()) * 100;
+
+    score = score + 100/(1+Math.exp(10*weightpercent-5));
+
+    // calculate uptime score
+    score = score + 100+(-100)/(1+Math.pow(account.uptime/85,38));
+
+    account.score = Math.round(score);
+    console.log(account.account + ": " + score);
+    
+    account.save(function (err) {
+      if (err) {
+        console.log("Cron - updateScoreAccount - Error saving account", err);
+      }
+    });
+  }
+
+  cron.schedule('*/10 * * * *', updateScore);
+  updateScore();
+
 } // end exports
