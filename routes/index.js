@@ -18,7 +18,7 @@ module.exports = function (nanorpc) {
       }
     })
     .where('votingweight').gt(0)
-    .where('uptime').gte(95)
+    .where('score').gte(100)
     .sort('-score')
     .populate('owner')
     .exec(function (err, accounts) {

@@ -311,8 +311,9 @@ module.exports = function (nanorpc) {
     // calculate uptime score
     score = score + 100+(-100)/(1+Math.pow(account.uptime/85,38));
 
+    // round the final score
     account.score = Math.round(score);
-    console.log(account.account + ": " + score);
+    //console.log(account.account + ": " + score);
     
     account.save(function (err) {
       if (err) {
@@ -322,6 +323,6 @@ module.exports = function (nanorpc) {
   }
 
   cron.schedule('*/10 * * * *', updateScore);
-  updateScore();
+  //updateScore();
 
 } // end exports

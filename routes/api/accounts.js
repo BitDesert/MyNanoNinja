@@ -57,9 +57,9 @@ router.get('/verified', function (req, res) {
     }
   })
     .where('votingweight').gt(0)
-    .where('uptime').gte(95)
-    .sort('votingweight')
-    .select('-_id account alias uptime votingweight delegators')
+    .where('score').gte(100)
+    .sort('-score')
+    .select('-_id account alias uptime votingweight delegators score')
     .exec(function (err, accounts) {
       if (err) {
         console.log("API - All Reps", err);
