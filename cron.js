@@ -145,11 +145,11 @@ module.exports = function (nanorpc) {
 
   function updateNodeMonitors() {
     Account.find({
-        'monitor.url': {
-          $exists: true,
-          $ne: null
-        }
-      })
+      'monitor.url': {
+        $exists: true,
+        $ne: null
+      }
+    })
       .exec(function (err, accounts) {
         if (err) {
           console.error('CRON - updateNodeMonitors', err);
@@ -213,7 +213,7 @@ module.exports = function (nanorpc) {
       for (var rep in reps.representatives) {
         updateVoteSimple(rep);
       };
-  
+
     });
   }
 
@@ -221,16 +221,16 @@ module.exports = function (nanorpc) {
     console.log('Updating Uptime via distributed RPC...');
 
     var provider = JSON.parse(process.env.DRPC_REPSONLINE);
-  
+
     var onlinereps = [];
-  
+
     async.forEachOf(provider, (value, key, callback) => {
-  
+
       request.get({
         url: value,
         json: true
       }, function (err, response, data) {
-        if(err){
+        if (err) {
           // error getting data
           console.error('updateUptimeDistributed', err);
           callback();
@@ -243,21 +243,21 @@ module.exports = function (nanorpc) {
         };
         callback()
       });
-  
-  
+
+
     }, err => {
       if (err) {
         console.error(err.message);
         return
       }
       console.log(onlinereps.length + ' reps via dRPC');
-      
+
       for (var rep of onlinereps) {
         updateVoteSimple(rep);
       };
     });
   }
-  
+
   function updateVoteSimple(myaccount) {
     Account.findOne(
       {
@@ -266,19 +266,19 @@ module.exports = function (nanorpc) {
         if (err) {
           return;
         }
-  
+
         if (!account) {
           var account = new Account();
           account.account = myaccount;
         }
-  
+
         account.lastVoted = Date.now();
         account.save(function (err) {
           if (err) {
             console.log("Cron - updateVoteSimple - Error saving account", err);
           }
         });
-  
+
       });
   }
 
@@ -301,20 +301,30 @@ module.exports = function (nanorpc) {
   }
 
   function updateScoreAccount(account) {
+    console.log('Updating Scores...');
+    
     var score = 0;
 
     // calculate weight score
     var weightpercent = (account.votingweight / nanorpc.getAvailable()) * 100;
 
-    score = score + 100/(1+Math.exp(10*weightpercent-5));
+    score = score + 100 / (1 + Math.exp(10 * weightpercent - 5));
 
     // calculate uptime score
-    score = score + 100+(-100)/(1+Math.pow(account.uptime/85,38));
+    score = score + 100 + (-100) / (1 + Math.pow(account.uptime / 85, 38));
+
+    // calculate days since creation score
+    var dayssincecreation = moment().diff(moment(account.created), 'days');
+
+    score = score + (100 - Math.exp(5 - dayssincecreation / 50));
+
+    // divide through the score count so we get a smooth max 100 points
+    //score = score / 3;
 
     // round the final score
     account.score = Math.round(score);
-    //console.log(account.account + ": " + score);
-    
+    //console.log(account.account + ": " + account.score);
+
     account.save(function (err) {
       if (err) {
         console.log("Cron - updateScoreAccount - Error saving account", err);
