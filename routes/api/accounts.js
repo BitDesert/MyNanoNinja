@@ -73,7 +73,7 @@ router.get('/:account', function (req, res) {
   Account.findOne({
     'account': req.params.account
   })
-    .select('-_id account alias uptime lastVoted votingweight delegators description website location monitor')
+    .select('-_id account alias uptime lastVoted votingweight delegators description website location monitor score')
     .exec(function (err, account) {
       if (err || !account) {
         console.log("API - Account", err);
