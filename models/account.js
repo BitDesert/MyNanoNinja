@@ -27,7 +27,6 @@ var accountSchema = mongoose.Schema({
     blocks: Number,
     sync: Number
   },
-  location: String,
   description: String,
   website: String,
   server: {
@@ -54,7 +53,14 @@ var accountSchema = mongoose.Schema({
   },
   network: {
     ip: String,
-    port: Number
+    port: Number,
+    provider: String
+  },
+  location: {
+    country: String,
+    city: String,
+    latitude: Number,
+    longitude: Number
   },
   score: {
     type: Number,

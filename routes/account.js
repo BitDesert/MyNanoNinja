@@ -3,8 +3,6 @@ module.exports = function (nanorpc) {
   var router = express.Router();
   var Account = require('../models/account');
   var moment = require('moment');
-  var maxmind = require('maxmind');
-  var orgLookup = maxmind.openSync('./utils/GeoLite2-ASN.mmdb');
 
   /* GET users listing. */
   router.get('/:address', function (req, res, next) {
@@ -40,7 +38,6 @@ module.exports = function (nanorpc) {
         res.render('account', {
           title: title,
           loggedin: req.isAuthenticated(),
-          orgLookup: orgLookup,
           user: req.user,
           nanorpc: nanorpc,
           moment: moment,

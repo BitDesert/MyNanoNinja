@@ -169,11 +169,11 @@
         </span>
       </li>
       <% } %>
-      <% if(account.location){ %>
+      <% if(account.location.country){ %>
       <li class="list-group-item">
         Location
         <span class="float-right">
-          <%= account.location %>
+          <% if(account.location.city){ %><%= account.location.city %>, <% } %><%= account.location.country %>
         </span>
       </li>
       <% } %>
@@ -208,11 +208,11 @@
         </span>
       </li>
       <% } %>
-      <% if(account.network.ip){ %>
+      <% if(account.network.provider){ %>
       <li class="list-group-item">
         Server Provider
         <span class="float-right">
-          <%= orgLookup.get(account.network.ip).autonomous_system_organization %>
+          <%= account.network.provider %>
         </span>
       </li>
       <% } %>

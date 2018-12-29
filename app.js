@@ -27,6 +27,7 @@ if(process.env.NODE_INTERNAL != ''){
 var nanorpc = require('./nano/rpc_client');
 
 // Cron
+require('./cron/peers');
 require('./cron/statistics');
 require('./cron')(nanorpc);
 
