@@ -283,7 +283,7 @@ module.exports = function (nanorpc) {
   }
 
   function updateScore() {
-    console.log('Updating Node Uptime...');
+    console.log('Updating Scores...');
     Account.find()
       .where('votingweight').gt(0)
       .populate('owner')
@@ -301,8 +301,7 @@ module.exports = function (nanorpc) {
   }
 
   function updateScoreAccount(account) {
-    console.log('Updating Scores...');
-    
+    // initial score    
     var score = 0;
 
     // calculate weight score
