@@ -67,7 +67,6 @@ module.exports = function (nanorpc) {
         console.log(account);
 
         account.alias = req.body.account_alias;
-        account.location = req.body.account_location;
         account.description = req.body.account_description;
         account.website = req.body.account_website;
 

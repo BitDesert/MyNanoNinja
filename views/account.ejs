@@ -270,12 +270,6 @@
             <small class="form-text text-muted">Write a short text why you run this representative.</small>
           </div>
           <div class="form-group">
-            <label>Geographic location</label>
-            <input type="text" class="form-control" name="account_location" id="account_location" placeholder="Berlin, Germany"
-              value="<% if (account.location) { %><%= account.location %><% } %>">
-            <small class="form-text text-muted">Add a country, city etc.</small>
-          </div>
-          <div class="form-group">
             <label>Server Type</label>
             <select class="form-control" id="server_type" name="server_type">
               <option<% if (account.server && account.server.type=='VPS' ) { %> selected
