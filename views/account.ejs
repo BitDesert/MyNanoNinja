@@ -169,14 +169,6 @@
         </span>
       </li>
       <% } %>
-      <% if(account.location.country){ %>
-      <li class="list-group-item">
-        Location
-        <span class="float-right">
-          <% if(account.location.city){ %><%= account.location.city %>, <% } %><%= account.location.country %>
-        </span>
-      </li>
-      <% } %>
       <% if(account.server && account.server.type){ %>
       <li class="list-group-item">
         Server Type
@@ -185,6 +177,22 @@
           <% if(account.server.renewable){ %>
           <i class="fas fa-leaf" style="color: #8BC34A" title="Renewable Energy"></i>
           <% } %>
+        </span>
+      </li>
+      <% } %>
+      <% if(account.location.country){ %>
+      <li class="list-group-item">
+        Location
+        <span class="float-right">
+          <% if(account.location.city){ %><%= account.location.city %>, <% } %><%= account.location.country %>
+        </span>
+      </li>
+      <% } %>
+      <% if(account.network.provider){ %>
+      <li class="list-group-item">
+        Server Provider
+        <span class="float-right">
+          <%= account.network.provider %>
         </span>
       </li>
       <% } %>
@@ -205,14 +213,6 @@
           <a href="<%= account.monitor.url %>" target="_blank">
             <%= account.monitor.sync %> %
           </a>
-        </span>
-      </li>
-      <% } %>
-      <% if(account.network.provider){ %>
-      <li class="list-group-item">
-        Server Provider
-        <span class="float-right">
-          <%= account.network.provider %>
         </span>
       </li>
       <% } %>
