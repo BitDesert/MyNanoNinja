@@ -18,8 +18,13 @@
     $.getJSON('/api/accounts/geo', function (data) {
       for (const account of data) {
 
-        L.marker([account.location.latitude, account.location.longitude]).addTo(map)
-          .bindPopup(account.account)
+        var marker = L.marker([account.location.latitude, account.location.longitude]).addTo(map)
+
+        if (account.alias) {
+          marker.bindPopup('<a href="/account/' + account.account + '">' + account.alias + '</a>')
+        } else {
+          marker.bindPopup('<a href="/account/' + account.account + '">' + account.account + '</a>')
+        }
       }
     });
   });
