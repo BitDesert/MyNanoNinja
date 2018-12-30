@@ -4,7 +4,7 @@ var app = new Vue({
     return {
       account: account,
       history: null,
-      pending: null
+      pending: {}
     }
   },
   mounted() {
