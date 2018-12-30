@@ -43,6 +43,24 @@ router.get('/active/online', function (req, res) {
     });
 });
 
+router.get('/geo', function (req, res) {
+  Account.find({
+    'location.latitude': {
+      $exists: true,
+      $ne: null
+    }})
+    .where('votingweight').gte(133248289218203497353846153999000000)
+    .sort('-votingweight')
+    .select('-_id account alias location')
+    .exec(function (err, accounts) {
+      if (err) {
+        console.log("API - All Reps", err);
+        return;
+      }
+      res.json(accounts);
+    });
+});
+
 router.get('/verified', function (req, res) {
   Account.find({
     'owner': {
@@ -51,13 +69,10 @@ router.get('/verified', function (req, res) {
     },
     'lastVoted': {
       $gt: moment().subtract(1, 'hours').toDate()
-    },
-    'created': {
-      $lt: moment().subtract(1, 'weeks').toDate()
     }
   })
     .where('votingweight').gt(0)
-    .where('score').gte(100)
+    .where('score').gte(50)
     .sort('-score')
     .select('-_id account alias uptime votingweight delegators score')
     .exec(function (err, accounts) {

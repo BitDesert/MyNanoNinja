@@ -12,13 +12,10 @@ module.exports = function (nanorpc) {
       'owner': { $exists: true, $ne: null },
       'lastVoted': {
         $gt: moment().subtract(1, 'hours').toDate()
-      },
-      'created': {
-        $lt: moment().subtract(1, 'weeks').toDate()
       }
     })
     .where('votingweight').gt(0)
-    .where('score').gte(100)
+    .where('score').gte(50)
     .sort('-score')
     .populate('owner')
     .exec(function (err, accounts) {
@@ -56,6 +53,13 @@ module.exports = function (nanorpc) {
     res.render('imprint', {
       loggedin: req.isAuthenticated(),
       title: 'Imprint'
+    });
+  });
+
+  router.get('/map', function (req, res, next) {
+    res.render('map', {
+      loggedin: req.isAuthenticated(),
+      title: 'Map'
     });
   });
 
