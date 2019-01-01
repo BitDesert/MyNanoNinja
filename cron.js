@@ -204,8 +204,8 @@ module.exports = function (nanorpc) {
    * Fallback rep vote via RPC
    */
 
-  cron.schedule('*/10 * * * *', updateOnlineRepsRPC);
-  cron.schedule('*/10 * * * *', updateUptimeDistributed);
+  cron.schedule('*/1 * * * *', updateOnlineRepsRPC);
+  cron.schedule('*/1 * * * *', updateUptimeDistributed);
 
   function updateOnlineRepsRPC() {
     console.log('Updating Uptime via RPC...');
