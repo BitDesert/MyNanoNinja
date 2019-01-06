@@ -310,7 +310,7 @@ module.exports = function (nanorpc) {
     score = score + 100 / (1 + Math.exp(20 * weightpercent - 15));
 
     // calculate uptime score
-    score = score + 100 + (-100) / (1 + Math.pow(account.uptime / 85, 38));
+    score = score + Math.pow(10, -6) * Math.pow(account.uptime, 4);
 
     // calculate days since creation score
     var dayssincecreation = moment().diff(moment(account.created), 'days');
