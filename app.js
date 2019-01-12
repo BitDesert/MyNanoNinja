@@ -14,6 +14,7 @@ var flash = require('connect-flash');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
+const matomo = require('./utils/matomo');
 
 // database
 var configDB = require('./config/database.js');
@@ -39,6 +40,17 @@ var app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+app.enable('trust proxy')
+
+if (process.env.MATOMO_URL) {
+  console.log('Matomo Analytics activated');
+  
+  app.use(matomo({
+    siteId: process.env.MATOMO_SITE,
+    matomoUrl: process.env.MATOMO_URL,
+    matomoToken: process.env.MATOMO_TOKEN
+  }));
+}
 
 app.use(logger('dev'));
 app.use(express.json());

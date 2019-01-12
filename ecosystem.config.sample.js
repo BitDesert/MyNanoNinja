@@ -36,6 +36,9 @@ module.exports = {
         BRAINBLOCKS_POD_KEY: 'mykey',
         DRPC_REPSONLINE: '[]',
         VERIFICATION_AMOUNT: '1',
+        MATOMO_URL: "https://piwik.org/piwik.php",
+        MATOMO_TOKEN: "yourtoken",
+        MATOMO_SITE: "1",
         PORT: 4000
       }
     }
