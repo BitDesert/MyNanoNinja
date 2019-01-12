@@ -6,17 +6,10 @@ exports = module.exports = function analytics(options) {
     return function track(req, res, next) {
         // get the domain and url
         var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
-
-        // get the API action
-        if(req.body.action){
-            var action = req.body.action;
-        } else {
-            var action = 'unkown'
-        }
         
         matomo.track({
             url: fullUrl,
-            action_name: action,
+            action_name: 'API',
             ua: req.header('User-Agent'),
             lang: req.header('Accept-Language'),
             cvar: JSON.stringify({
