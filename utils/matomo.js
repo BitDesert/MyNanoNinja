@@ -9,7 +9,7 @@ exports = module.exports = function analytics(options) {
         
         matomo.track({
             url: fullUrl,
-            action_name: 'API',
+            action_name: req.url,
             ua: req.header('User-Agent'),
             lang: req.header('Accept-Language'),
             cvar: JSON.stringify({
