@@ -18,13 +18,33 @@ Vue.component('account-alias', {
   template: '<a v-bind:href="\'/account/\'+ account"><span><b v-if="alias">{{alias}} - </b>{{ account }}</span></a>'
 })
 
+Vue.component('account-alias-sm', {
+  props: ['account'],
+  data: function () {
+    return {
+      alias: null
+    }
+  },
+  methods: {
+    getAlias() {
+      axios
+        .get('/api/accounts/' + this.account)
+        .then(response => (this.alias = response.data.alias))
+    }
+  },
+  created() {
+    this.getAlias();
+  },
+  template: '<a v-bind:href="\'/account/\'+ account"><b v-if="alias">{{alias}}</b><span v-if="!alias">{{account.substring(0,10)}}...</span></a>'
+})
+
 Vue.filter('toMnano', function (value) {
   if (!value) return ''
   value = value.toString()
 
   multNANO = Big('1000000000000000000000000000000');
 
-  return Big(value).div(multNANO).toFixed().toString()
+  return Big(value).div(multNANO).toFixed(6).toString()
 })
 
 Vue.filter('formatHash', function (hash) {
@@ -43,3 +63,16 @@ Vue.filter('formatHash', function (hash) {
 
   return first + middle + last;
 })
+
+Vue.filter('toCurrency', function (value) {
+  if (typeof value !== "number") {
+      return value;
+  }
+  var formatter = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 6
+  });
+  return formatter.format(value);
+});

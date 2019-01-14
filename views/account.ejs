@@ -17,16 +17,19 @@
         <% } %>
       </h2>
   </div>
+  <% if (account !== null && account.votingweight > 0) { %>
   <div class="col">
 
       <button class="btn btn-primary float-right mb-3" data-toggle="modal" data-target="#setRepresentative">
         Set as my representative
       </button>
   </div>
+  <% } %>
 </div>
 
-<% if (account !== null) { %>
-<% if (account.votingweight > 0) { %>
+<div id="app">
+
+<% if (account !== null && account.votingweight > 0) { %>
 
 <div class="modal fade" id="setRepresentative" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -151,14 +154,16 @@
 
   <div class="col-lg-4 mb-4">
     <h3>Information</h3>
-    <ul class="list-group mb-3">
+    <ul class="list-group mb-3" v-if="info">
+      <% if(account !== null){ %>
       <li class="list-group-item">
         Created
         <span class="float-right">
           <%= moment(account.created).fromNow() %>
         </span>
       </li>
-      <% if(account.website){ %>
+      <% } %>
+      <% if(account !== null && account.website){ %>
       <li class="list-group-item">
         Website
         <span class="float-right">
@@ -168,7 +173,7 @@
         </span>
       </li>
       <% } %>
-      <% if(account.server && account.server.type){ %>
+      <% if(account !== null && account.server && account.server.type){ %>
       <li class="list-group-item">
         Server Type
         <span class="float-right">
@@ -179,7 +184,7 @@
         </span>
       </li>
       <% } %>
-      <% if(account.location.country){ %>
+      <% if(account !== null && account.location.country){ %>
       <li class="list-group-item">
         Location
         <span class="float-right">
@@ -187,7 +192,7 @@
         </span>
       </li>
       <% } %>
-      <% if(account.network.provider){ %>
+      <% if(account !== null && account.network.provider){ %>
       <li class="list-group-item">
         Server Provider
         <span class="float-right">
@@ -195,7 +200,7 @@
         </span>
       </li>
       <% } %>
-      <% if(account.monitor.version){ %>
+      <% if(account !== null && account.monitor.version){ %>
       <li class="list-group-item">
         Node Version
         <span class="float-right">
@@ -205,7 +210,7 @@
         </span>
       </li>
       <% } %>
-      <% if(account.monitor.sync){ %>
+      <% if(account !== null && account.monitor.sync){ %>
       <li class="list-group-item">
         Sync Status
         <span class="float-right">
@@ -215,6 +220,38 @@
         </span>
       </li>
       <% } %>
+      <li class="list-group-item" v-if="info.balance">
+        Balance
+        <span class="float-right">
+          {{ info.balance | toMnano }} NANO
+        </span>
+      </li>
+      <li class="list-group-item" v-if="info.pending">
+        Pending
+        <span class="float-right">
+          {{ info.pending | toMnano }} NANO
+        </span>
+      </li>
+      <li class="list-group-item" v-if="info.representative">
+        <div class="float-left">
+          Representative
+        </div>
+        <div class="float-right truncate">
+          <account-alias-sm :account="info.representative"></account-alias-sm>
+        </div>
+      </li>
+      <li class="list-group-item" v-if="info.account_version">
+        Account Version
+        <span class="float-right">
+          {{ info.account_version }}
+        </span>
+      </li>
+      <li class="list-group-item" v-if="info.block_count">
+        Block Count
+        <span class="float-right">
+          {{ Number.parseInt(info.block_count).toLocaleString() }}
+        </span>
+      </li>
     </ul>
 
     <!--
@@ -230,7 +267,7 @@
     <h3>Description</h3>
     <ul class="list-group mb-4">
       <li class="list-group-item">
-        <% if(account.description){ %>
+        <% if(account !== null && account.description){ %>
         <%= account.description %>
         <% } else { %>
         <i>No description</i>
@@ -240,7 +277,6 @@
   </div>
 
 </div>
-<% } %>
 
 <h3>Account Owner</h3>
 <% if (account) { %>
@@ -523,7 +559,6 @@
 </div>
 <% } %>
 
-<div id="app">
   <div>
     <h3 v-if="pending.blocks">Pending Transactions</h3>
     <div class="table-responsive">

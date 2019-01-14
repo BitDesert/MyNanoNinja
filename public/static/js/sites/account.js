@@ -4,7 +4,8 @@ var app = new Vue({
     return {
       account: account,
       history: null,
-      pending: {}
+      pending: {},
+      info: null
     }
   },
   mounted() {
@@ -16,5 +17,9 @@ var app = new Vue({
     axios
       .get('/api/accounts/' + this.account + '/pending')
       .then(response => (this.pending = response.data))
+
+    axios
+      .get('/api/accounts/' + this.account + '/info')
+      .then(response => (this.info = response.data))
   }
 })

@@ -48,7 +48,8 @@ router.get('/geo', function (req, res) {
     'location.latitude': {
       $exists: true,
       $ne: null
-    }})
+    }
+  })
     .where('votingweight').gte(133248289218203497353846153999000000)
     .sort('-votingweight')
     .select('-_id account alias location')
@@ -101,31 +102,48 @@ router.get('/:account', function (req, res) {
 
 router.get('/:account/history', function (req, res) {
   nano.accounts.history(req.params.account, 50)
-  .then(history => {
-    if(!history) return res.status(404).json({ error: 'Not found' });
+    .then(history => {
+      if (!history) return res.status(404).json({ error: 'Not found' });
 
-    res.json(history);
-  })
-  .catch(reason => {
-    res.status(500).json({ error: 'Not found' });
-  });
+      res.json(history);
+    })
+    .catch(reason => {
+      res.status(500).json({ error: 'Not found' });
+    });
 });
 
 router.get('/:account/pending', function (req, res) {
-  nano.rpc('pending', { 
+  nano.rpc('pending', {
     account: req.params.account,
     threshold: '1000000000000000000000000',
     source: true,
     include_active: true
-   })
-  .then(history => {
-    if(!history) return res.status(404).json({ error: 'Not found' });
-
-    res.json(history);
   })
-  .catch(reason => {
-    res.status(500).json({ error: 'Not found' });
-  });
+    .then(history => {
+      if (!history) return res.status(404).json({ error: 'Not found' });
+
+      res.json(history);
+    })
+    .catch(reason => {
+      res.status(500).json({ error: 'Not found' });
+    });
+});
+
+router.get('/:account/info', function (req, res) {
+  nano.rpc('account_info', {
+    account: req.params.account,
+    representative: true,
+    weight: true,
+    pending: true
+  })
+    .then(response => {
+      if (!response) return res.status(404).json({ error: 'Not found' });
+
+      res.json(response);
+    })
+    .catch(reason => {
+      res.status(500).json({ error: 'Not found' });
+    });
 });
 
 module.exports = router;
