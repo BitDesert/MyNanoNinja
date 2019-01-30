@@ -43,7 +43,7 @@ function updatePeer(peer) {
 
         var geo_asn_response = geo_asn.get(peer.ip);
 
-        if(geo_asn_response.autonomous_system_organization){
+        if(geo_asn_response && geo_asn_response.autonomous_system_organization){
           account.network.provider = geo_asn_response.autonomous_system_organization;
         }
 

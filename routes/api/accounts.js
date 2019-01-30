@@ -9,6 +9,7 @@ const nano = new Nano({
 });
 var router = express.Router();
 var Account = require('../../models/account');
+var cache = require('../../utils/cache');
 
 router.get('/active', function (req, res) {
   Account.find()
@@ -18,6 +19,40 @@ router.get('/active', function (req, res) {
     .exec(function (err, accounts) {
       if (err) {
         console.log("API - All Reps", err);
+        return;
+      }
+      res.json(accounts);
+    });
+});
+
+router.get('/aliases', cache(60), function (req, res) {
+  Account.find({
+    'alias': {
+      $exists: true,
+      $ne: null
+    }
+  })
+    .select('-_id account alias')
+    .exec(function (err, accounts) {
+      if (err) {
+        console.log("API - Aliases", err);
+        return;
+      }
+      res.json(accounts);
+    });
+});
+
+router.get('/monitors', cache(60), function (req, res) {
+  Account.find({
+    'monitor.url': {
+      $exists: true,
+      $ne: null
+    }
+  })
+    .select('-_id account monitor')
+    .exec(function (err, accounts) {
+      if (err) {
+        console.log("API - Aliases", err);
         return;
       }
       res.json(accounts);

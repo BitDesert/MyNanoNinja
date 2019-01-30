@@ -25,6 +25,7 @@
     "http-errors": "~1.6.2",
     "matomo-tracker": "^2.2.0",
     "maxmind": "^2.11.0",
+    "memory-cache": "^0.2.0",
     "method-override": "~2.3.6",
     "moment": "^2.21.0",
     "mongoose": "~4.13.1",
