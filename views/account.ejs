@@ -8,7 +8,7 @@
         <%= myaccount %><br>
         <small>No alias</small>
         <% } else if (account.alias) { %>
-        <%= account.alias %><% if (account.verified) { %> <i class="fas fa-check-circle text-primary"></i><% } %><br>
+        <%= account.alias %><% if (account.verified) { %> <i class="fas fa-check-circle text-primary" title="Verified"></i><% } %><br>
         <small>
           <%= account.account %></small>
         <% } else { %>
