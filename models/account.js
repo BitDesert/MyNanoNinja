@@ -20,6 +20,10 @@ var accountSchema = mongoose.Schema({
   },
   lastVoted: Date,
   alias: String,
+  verified: {
+    type: Boolean,
+    default: false
+  },
   created: { type: Date, default: Date.now },
   monitor: {
     url: String,
