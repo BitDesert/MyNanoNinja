@@ -20,7 +20,6 @@ function getBlockcount(){
 
 function updateLocalVars(){
   updateBlockcount();
-  updateNodesOnline();
   updateAvailable();
 }
 
