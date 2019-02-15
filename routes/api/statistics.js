@@ -48,7 +48,7 @@ router.get('/blockcounts', function (req, res) {
     'monitor.blocks': {
       $exists: true,
       $ne: null,
-      $gte: (nodeclient.getBlockcount() - 10000)
+      $gte: (nodeclient.getBlockcount() - 100000)
     }
   })
   .select('-_id account alias monitor')
