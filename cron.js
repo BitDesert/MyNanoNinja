@@ -84,6 +84,7 @@ module.exports = function (nanorpc) {
       if (err) {
         console.log("CRON - checkNodeUptime - Error saving account", err);
       }
+      account.updateUptimeFor('day')
     });
   }
 
@@ -292,7 +293,6 @@ module.exports = function (nanorpc) {
     console.log('Updating Scores...');
     Account.find()
       .where('votingweight').gt(0)
-      .populate('owner')
       .exec(function (err, accounts) {
         if (err) {
           console.error('CRON - updateScore', err);
@@ -343,5 +343,47 @@ module.exports = function (nanorpc) {
 
   cron.schedule('*/10 * * * *', updateScore);
   //updateScore();
+
+  function updateUptime() {
+    console.log('Updating Uptime...');
+    Account.find()
+      .where('votingweight').gt(0)
+      .exec(function (err, accounts) {
+        if (err) {
+          console.error('CRON - updateUptime', err);
+          return
+        }
+        console.log('Uptime: ' + accounts.length + " accounts");
+
+        async.forEachOfSeries(accounts, (account, key, callback) => {
+          
+          updateUptimeAccount(account, callback)
+
+        }, err => {
+          if (err) {
+            console.error(err.message);
+            return
+          }
+          console.log('Uptime updated.');
+        });
+      });
+  }
+
+  function updateUptimeAccount(account, callback) {
+    var types = ['week', 'month', 'year'];
+
+    async.forEachOfSeries(types, (type, key, callback) => {
+
+      account.updateUptimeFor(type, callback)
+
+    }, err => {
+      if (err) {
+        console.error(err.message);
+      }
+      callback();
+    });
+  }
+
+  cron.schedule('0 * * * *', updateUptime);
 
 } // end exports

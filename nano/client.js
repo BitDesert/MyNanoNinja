@@ -26,9 +26,7 @@ function updateLocalVars(){
 function updateAvailable(){
   nano.available()
   .then((data) => {
-    console.log(data);
     available = data;
-    console.log('Available Supply: ' + available);
   })
   .catch( reason => {
     console.error( 'onRejected function called: ', reason );
@@ -36,11 +34,9 @@ function updateAvailable(){
 }
 
 function updateBlockcount(){
-  console.log('Updating Blockcount...');
   nano.blocks.count()
   .then((blocks) => {
     blockcount = blocks.count;
-    console.log('Current Blockcount: ' + blockcount);
   })
   .catch( reason => {
     console.error( 'onRejected function called: ', reason );

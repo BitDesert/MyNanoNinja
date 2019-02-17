@@ -98,7 +98,7 @@ accountSchema.methods.updateUptime = function (callback) {
   self.getStatsForPeriod(begin, end, function (err, stats) {
     if (err) return
     console.log('DAY', stats[0].uptime);
-    
+
     self.uptime_over.day = stats[0].uptime;
     self.markModified('uptime_over.day')
     self.save()
@@ -132,6 +132,41 @@ accountSchema.methods.updateUptime = function (callback) {
     self.uptime_over.year = stats[0].uptime;
     self.markModified('uptime_over.year')
     self.save()
+  })
+
+  callback();
+};
+
+accountSchema.methods.updateUptimeFor = function (type, callback) {
+  var self = this;
+
+  switch (type) {
+    case 'day':
+      var begin = new Date(Date.now() - 24 * 60 * 60 * 1000);
+      break;
+    case 'week':
+      var begin = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+      break;
+    case 'month':
+      var begin = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+      break;
+    case 'year':
+      var begin = new Date(Date.now() - 365 * 24 * 60 * 60 * 1000);
+      break;
+    default:
+      return
+      break;
+  }
+
+  var end = new Date(Date.now());
+
+  self.getStatsForPeriod(begin, end, function (err, stats) {
+    if (err) return
+    //console.log(type, stats[0].uptime);
+
+    self.uptime_over[type] = stats[0].uptime;
+    self.markModified('uptime_over.'+type)
+    self.save(callback)
   })
 };
 
