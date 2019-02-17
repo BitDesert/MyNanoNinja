@@ -7,6 +7,7 @@ module.exports = function (nanorpc) {
   var tools = require('./tools');
 
   var Account = require('./models/account');
+  var Check = require('./models/check');
 
   let transporter = nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
@@ -50,6 +51,11 @@ module.exports = function (nanorpc) {
       account.uptime_data.last = false;
     }
     account.uptime = ((account.uptime_data.up / (account.uptime_data.up + account.uptime_data.down)) * 100);
+
+    var check = new Check();
+    check.account = account._id;
+    check.isUp = account.uptime_data.last;
+    check.save();
 
     if (account.alias) {
       var title = account.alias;

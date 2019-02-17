@@ -135,6 +135,30 @@ router.get('/:account', function (req, res) {
     });
 });
 
+router.get('/:account/uptime', function (req, res) {
+  Account.findOne({
+    'account': req.params.account
+  })
+    .exec(function (err, account) {
+      if (err || !account) {
+        console.log("API - Account", err);
+        res.status(404).json({ error: 'Not found' });
+        return;
+      }
+
+      var begin = req.query.begin || new Date(Date.now() - 60 * 60 * 1000); //7 * 24 * 60 * 60 * 1000
+      var end = req.query.end || new Date(Date.now());
+
+      account.getStatsForPeriod(begin, end, function (err, stats) {
+        if (err) return next(err);
+        res.json(stats);
+      });
+
+      
+
+    });
+});
+
 router.get('/:account/history', function (req, res) {
   nano.accounts.history(req.params.account, 50)
     .then(history => {

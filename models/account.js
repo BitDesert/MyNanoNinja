@@ -1,6 +1,9 @@
 // load the things we need
 var mongoose = require('mongoose');
 
+// dependencies
+var Check = require('./check');
+
 // define the schema for our user model
 var accountSchema = mongoose.Schema({
 
@@ -34,7 +37,7 @@ var accountSchema = mongoose.Schema({
   description: String,
   website: String,
   server: {
-    type: {type: String},
+    type: { type: String },
     renewable: Boolean
   },
   uptime: {
@@ -53,7 +56,7 @@ var accountSchema = mongoose.Schema({
     last: {
       type: Boolean,
       default: true
-    }
+    },
   },
   network: {
     ip: String,
@@ -76,8 +79,112 @@ var accountSchema = mongoose.Schema({
   }
 
 }, {
-  autoIndex: true
-});
+    autoIndex: true
+  });
+
+accountSchema.methods.updateUptime = function (callback) {
+  var self = this;
+  Check
+    .findOne()
+    .where('account', self)
+    .sort({ timestamp: -1 })
+    .exec(function (err, latestPing) {
+      if (err) return callback(err);
+      if (!latestPing) return;
+      self.lastTested = latestPing.timestamp;
+      self.isUp = latestPing.isUp;
+      if (latestPing.isUp) {
+        // check is up
+        // lastChanged is the latest down ping
+        self.downtime = 0;
+        Check
+          .findOne()
+          .where('account', self)
+          .where('isUp', false)
+          .where('timestamp').lt(latestPing.timestamp)
+          .sort({ timestamp: -1 })
+          .exec(function (err, latestDownPing) {
+            if (err) return callback(err);
+            if (latestDownPing) {
+              self.uptime_data.lastChanged = latestDownPing.timestamp;
+              self.uptime_data.uptime = latestPing.timestamp.getTime() - latestDownPing.timestamp.getTime();
+              self.save(callback);
+            } else {
+              // check never went down, last changed is the date of the first ping
+              Check
+                .findOne()
+                .where('account', self)
+                .sort({ timestamp: 1 })
+                .exec(function (err, firstPing) {
+                  if (err) return callback(err);
+                  self.uptime_data.lastChanged = firstPing.timestamp;
+                  self.uptime_data.uptime = latestPing.timestamp.getTime() - firstPing.timestamp.getTime();
+                  self.save(callback);
+                });
+            }
+          });
+      } else {
+        // check is down
+        // lastChanged is the latest up ping
+        self.uptime_data.uptime = 0;
+        Check
+          .findOne()
+          .where('account', self)
+          .where('isUp', true)
+          .where('timestamp').lt(latestPing.timestamp)
+          .sort({ timestamp: -1 })
+          .exec(function (err, latestUpPing) {
+            if (err) return callback(err);
+            if (latestUpPing) {
+              self.uptime_data.lastChanged = latestUpPing.timestamp;
+              self.uptime_data.downtime = latestPing.timestamp.getTime() - latestUpPing.timestamp.getTime();
+              self.save(callback);
+            } else {
+              // check never went up, last changed is the date of the first ping
+              Check
+                .findOne()
+                .where('account', self)
+                .sort({ timestamp: 1 })
+                .exec(function (err, firstPing) {
+                  if (err) return callback(err);
+                  self.uptime_data.lastChanged = firstPing.timestamp;
+                  self.uptime_data.downtime = latestPing.timestamp.getTime() - firstPing.timestamp.getTime();
+                  self.save(callback);
+                });
+            }
+          });
+      }
+    });
+};
+
+accountSchema.methods.getStatsForPeriod = function (begin, end, callback) {
+  var self = this;
+  Check.aggregate(
+    {
+      $match: {
+        account: self._id,
+        timestamp: { $gte: begin, $lte: end }
+      }
+    },
+    {
+      $project: {
+        address: 1,
+        uptime: { $cond: [{ $and: ["$isUp"] }, 100, 0] },
+        time: 1,
+      }
+    },
+    {
+      $group: {
+        _id: "$address",
+        count: { $sum: 1 },
+        uptime: { $avg: "$uptime" },
+        begin: { $first: begin.valueOf() }, // dunno any other way to set a constant
+        end: { $first: end.valueOf() }
+      }
+    },
+    callback
+  );
+};
 
 // create the model for users and expose it to our app
 var Account = mongoose.model('Account', accountSchema);
