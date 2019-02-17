@@ -44,6 +44,12 @@ var accountSchema = mongoose.Schema({
     type: Number,
     default: 0
   },
+  uptime_over: {
+    day: { type: Number, default: 0 },
+    week: { type: Number, default: 0 },
+    month: { type: Number, default: 0 },
+    year: { type: Number, default: 0 }
+  },
   uptime_data: {
     up: {
       type: Number,
@@ -84,77 +90,49 @@ var accountSchema = mongoose.Schema({
 
 accountSchema.methods.updateUptime = function (callback) {
   var self = this;
-  Check
-    .findOne()
-    .where('account', self)
-    .sort({ timestamp: -1 })
-    .exec(function (err, latestPing) {
-      if (err) return callback(err);
-      if (!latestPing) return;
-      self.lastTested = latestPing.timestamp;
-      self.isUp = latestPing.isUp;
-      if (latestPing.isUp) {
-        // check is up
-        // lastChanged is the latest down ping
-        self.downtime = 0;
-        Check
-          .findOne()
-          .where('account', self)
-          .where('isUp', false)
-          .where('timestamp').lt(latestPing.timestamp)
-          .sort({ timestamp: -1 })
-          .exec(function (err, latestDownPing) {
-            if (err) return callback(err);
-            if (latestDownPing) {
-              self.uptime_data.lastChanged = latestDownPing.timestamp;
-              self.uptime_data.uptime = latestPing.timestamp.getTime() - latestDownPing.timestamp.getTime();
-              self.save(callback);
-            } else {
-              // check never went down, last changed is the date of the first ping
-              Check
-                .findOne()
-                .where('account', self)
-                .sort({ timestamp: 1 })
-                .exec(function (err, firstPing) {
-                  if (err) return callback(err);
-                  self.uptime_data.lastChanged = firstPing.timestamp;
-                  self.uptime_data.uptime = latestPing.timestamp.getTime() - firstPing.timestamp.getTime();
-                  self.save(callback);
-                });
-            }
-          });
-      } else {
-        // check is down
-        // lastChanged is the latest up ping
-        self.uptime_data.uptime = 0;
-        Check
-          .findOne()
-          .where('account', self)
-          .where('isUp', true)
-          .where('timestamp').lt(latestPing.timestamp)
-          .sort({ timestamp: -1 })
-          .exec(function (err, latestUpPing) {
-            if (err) return callback(err);
-            if (latestUpPing) {
-              self.uptime_data.lastChanged = latestUpPing.timestamp;
-              self.uptime_data.downtime = latestPing.timestamp.getTime() - latestUpPing.timestamp.getTime();
-              self.save(callback);
-            } else {
-              // check never went up, last changed is the date of the first ping
-              Check
-                .findOne()
-                .where('account', self)
-                .sort({ timestamp: 1 })
-                .exec(function (err, firstPing) {
-                  if (err) return callback(err);
-                  self.uptime_data.lastChanged = firstPing.timestamp;
-                  self.uptime_data.downtime = latestPing.timestamp.getTime() - firstPing.timestamp.getTime();
-                  self.save(callback);
-                });
-            }
-          });
-      }
-    });
+
+  var end = new Date(Date.now());
+
+  var begin = new Date(Date.now() - 24 * 60 * 60 * 1000); //7 * 24 * 60 * 60 * 1000
+
+  self.getStatsForPeriod(begin, end, function (err, stats) {
+    if (err) return
+    console.log('DAY', stats[0].uptime);
+    
+    self.uptime_over.day = stats[0].uptime;
+    self.markModified('uptime_over.day')
+    self.save()
+  })
+
+  var begin = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000); //7 * 24 * 60 * 60 * 1000
+
+  self.getStatsForPeriod(begin, end, function (err, stats) {
+    if (err) return
+    console.log('WEEK', stats[0].uptime);
+    self.uptime_over.week = stats[0].uptime;
+    self.markModified('uptime_over.week')
+    self.save()
+  })
+
+  var begin = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000); //7 * 24 * 60 * 60 * 1000
+
+  self.getStatsForPeriod(begin, end, function (err, stats) {
+    if (err) return
+    console.log('MONTH', stats[0].uptime);
+    self.uptime_over.month = stats[0].uptime;
+    self.markModified('uptime_over.month')
+    self.save()
+  })
+
+  var begin = new Date(Date.now() - 365 * 24 * 60 * 60 * 1000); //7 * 24 * 60 * 60 * 1000
+
+  self.getStatsForPeriod(begin, end, function (err, stats) {
+    if (err) return
+    console.log('YEAR', stats[0].uptime);
+    self.uptime_over.year = stats[0].uptime;
+    self.markModified('uptime_over.year')
+    self.save()
+  })
 };
 
 accountSchema.methods.getStatsForPeriod = function (begin, end, callback) {

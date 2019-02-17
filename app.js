@@ -18,7 +18,9 @@ const matomo = require('./utils/matomo');
 
 // database
 var configDB = require('./config/database.js');
-mongoose.connect(configDB.url);
+mongoose.connect(configDB.url, {
+  useMongoClient: true,
+});
 
 // nano node
 if(process.env.NODE_INTERNAL != ''){

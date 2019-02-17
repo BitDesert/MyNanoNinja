@@ -146,6 +146,8 @@ router.get('/:account/uptime', function (req, res) {
         return;
       }
 
+      account.updateUptime();
+
       var begin = req.query.begin || new Date(Date.now() - 60 * 60 * 1000); //7 * 24 * 60 * 60 * 1000
       var end = req.query.end || new Date(Date.now());
 
