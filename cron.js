@@ -385,6 +385,5 @@ module.exports = function (nanorpc) {
   }
 
   cron.schedule('0 * * * *', updateUptime);
-  updateUptime();
 
 } // end exports

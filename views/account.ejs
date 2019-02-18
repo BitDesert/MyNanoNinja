@@ -150,6 +150,18 @@
 </div>
 <% } %>
 
+<% if(account !== null && account.description){ %>
+<div class="row">
+  <div class="col">
+      <ul class="list-group mb-4">
+        <li class="list-group-item">
+          <%= account.description %>
+        </li>
+      </ul>
+  </div>
+</div>
+<% } %>
+
 <div class="row">
 
   <div class="col-lg-4 mb-4">
@@ -220,6 +232,20 @@
         </span>
       </li>
       <% } %>
+    </ul>
+
+    <!--
+    <h3>Badges</h3>
+    <img src="https://cdn.discordapp.com/attachments/527568603554381827/528723955641745408/image2.jpg" style="height: 3rem;">
+    <img src="https://cdn.discordapp.com/attachments/527568603554381827/528723955641745408/image2.jpg" style="height: 3rem;">
+    <img src="https://cdn.discordapp.com/attachments/527568603554381827/528723955641745408/image2.jpg" style="height: 3rem;">
+    -->
+    
+  </div>
+
+  <div class="col-lg-4 mb-4">
+    <h3>Account</h3>
+    <ul class="list-group mb-3" v-if="info">
       <li class="list-group-item" v-if="info.balance">
         Balance
         <span class="float-right">
@@ -253,28 +279,40 @@
         </span>
       </li>
     </ul>
-
-    <!--
-    <h3>Badges</h3>
-    <img src="https://cdn.discordapp.com/attachments/527568603554381827/528723955641745408/image2.jpg" style="height: 3rem;">
-    <img src="https://cdn.discordapp.com/attachments/527568603554381827/528723955641745408/image2.jpg" style="height: 3rem;">
-    <img src="https://cdn.discordapp.com/attachments/527568603554381827/528723955641745408/image2.jpg" style="height: 3rem;">
-    -->
     
   </div>
 
-  <div class="col-lg-8">
-    <h3>Description</h3>
-    <ul class="list-group mb-4">
+<% if (account !== null && account.votingweight > 0) { %>
+  <div class="col-lg-4 mb-4">
+    <h3>Uptime</h3>
+    <ul class="list-group mb-3">
       <li class="list-group-item">
-        <% if(account !== null && account.description){ %>
-        <%= account.description %>
-        <% } else { %>
-        <i>No description</i>
-        <% } %>
+        Last 24 hours
+        <span class="float-right">
+          <%= account.uptime_over.day %> %
+        </span>
+      </li>
+      <li class="list-group-item">
+        Last 7 days
+        <span class="float-right">
+          <%= account.uptime_over.week %> %
+        </span>
+      </li>
+      <li class="list-group-item">
+        Last 30 days
+        <span class="float-right">
+          <%= account.uptime_over.month %> %
+        </span>
+      </li>
+      <li class="list-group-item">
+        Last year
+        <span class="float-right">
+          <%= account.uptime_over.year %> %
+        </span>
       </li>
     </ul>
   </div>
+<% } %>
 
 </div>
 
