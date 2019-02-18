@@ -345,7 +345,7 @@ module.exports = function (nanorpc) {
   //updateScore();
 
   function updateUptime() {
-    console.log('Updating Uptime...');
+    console.log('== Updating Uptime...');
     Account.find()
       .where('votingweight').gt(0)
       .exec(function (err, accounts) {
@@ -353,7 +353,7 @@ module.exports = function (nanorpc) {
           console.error('CRON - updateUptime', err);
           return
         }
-        console.log('Uptime: ' + accounts.length + " accounts");
+        console.log('== Uptime: ' + accounts.length + " accounts");
 
         async.forEachOfSeries(accounts, (account, key, callback) => {
           
@@ -364,7 +364,7 @@ module.exports = function (nanorpc) {
             console.error(err.message);
             return
           }
-          console.log('Uptime updated.');
+          console.log('== Uptime updated.');
         });
       });
   }
@@ -385,5 +385,6 @@ module.exports = function (nanorpc) {
   }
 
   cron.schedule('0 * * * *', updateUptime);
+  updateUptime();
 
 } // end exports
