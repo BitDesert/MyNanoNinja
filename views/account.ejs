@@ -289,25 +289,25 @@
       <li class="list-group-item">
         Last 24 hours
         <span class="float-right">
-          <%= account.uptime_over.day %> %
+          <%= round(account.uptime_over.day, 3) %> %
         </span>
       </li>
       <li class="list-group-item">
         Last 7 days
         <span class="float-right">
-          <%= account.uptime_over.week %> %
+          <%= round(account.uptime_over.week, 3) %> %
         </span>
       </li>
       <li class="list-group-item">
         Last 30 days
         <span class="float-right">
-          <%= account.uptime_over.month %> %
+          <%= round(account.uptime_over.month, 3) %> %
         </span>
       </li>
       <li class="list-group-item">
         Last year
         <span class="float-right">
-          <%= account.uptime_over.year %> %
+          <%= round(account.uptime_over.year, 3) %> %
         </span>
       </li>
     </ul>
