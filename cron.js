@@ -372,9 +372,9 @@ module.exports = function (nanorpc) {
   function updateUptimeAccount(account, callback) {
     var types = ['week', 'month', 'year'];
 
-    async.forEachOfSeries(types, (type, key, callback) => {
+    async.forEachOfSeries(types, (type, key, cb) => {     
 
-      account.updateUptimeFor(type, callback)
+      account.updateUptimeFor(type, cb)
 
     }, err => {
       if (err) {

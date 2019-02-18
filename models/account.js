@@ -161,7 +161,17 @@ accountSchema.methods.updateUptimeFor = function (type, callback) {
   var end = new Date(Date.now());
 
   self.getStatsForPeriod(begin, end, function (err, stats) {
-    if (err || !stats[0].uptime) return
+    if (err){
+      console.error(err);
+      callback()
+      return
+    } 
+
+    if (!stats){
+      console.error(err, 'No Uptime', stats);
+      callback()
+      return
+    } 
     //console.log(type, stats[0].uptime);
 
     self.uptime_over[type] = stats[0].uptime;
