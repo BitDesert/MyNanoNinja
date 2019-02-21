@@ -212,12 +212,12 @@ module.exports = function (nanorpc) {
    */
 
   cron.schedule('*/1 * * * *', updateOnlineRepsRPC);
-  cron.schedule('*/1 * * * *', updateUptimeDistributed);
+  //cron.schedule('*/1 * * * *', updateUptimeDistributed);
 
   function updateOnlineRepsRPC() {
     console.log('Updating Uptime via RPC...');
     nanorpc.rpc.rpc('representatives_online').then(function (reps) {
-      for (var rep in reps.representatives) {
+      for (var rep of reps.representatives) {
         updateVoteSimple(rep);
       };
 
@@ -245,7 +245,7 @@ module.exports = function (nanorpc) {
         }
 
         try {
-          for (var rep in data.representatives) {
+          for (var rep of data.representatives) {
             if (!onlinereps.includes(rep)) {
               onlinereps.push(rep)
             }
