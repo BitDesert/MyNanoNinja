@@ -4,6 +4,9 @@ var chartColors = ['#f44336', '#9C27B0', '#3F51B5', '#03A9F4', '#009688', '#8BC3
 '#CDDC39', '#FFC107', '#FF5722'
 ];
 
+var version_min = 1;
+var version_max = 1;
+
 init.push(getVersionsData);
 
 function getVersionsData() {
@@ -13,8 +16,29 @@ $.get("/api/statistics/nodeversions", function (data) {
     datasets: []
   };
 
-  for (var i = 1; i <= version_max; i++) {
-    console.log(i);
+  var lastdataset = data[data.length-1].nodeversions;
+  var nodeversions = Object.keys(lastdataset);
+
+  for (let i = 0; i < nodeversions.length; i++) {
+    const nodecount = lastdataset[nodeversions[i]];    
+    if (nodecount > 0){
+      version_min = i;
+      break;
+    }    
+  }
+
+  for (let i = nodeversions.length; i > 0; i--) {
+    const nodecount = lastdataset[nodeversions[i-1]];
+    if (nodecount > 0){
+      version_max = i;
+      break;
+    }    
+  }
+
+  console.log('MIN', version_min, 'MAX', version_max);
+  
+
+  for (var i = version_min; i <= version_max; i++) {
     chartdata.datasets.push({
       label: 'Version ' + i,
       data: [],
@@ -27,8 +51,8 @@ $.get("/api/statistics/nodeversions", function (data) {
   data.forEach(function (element) {
     chartdata.labels.push(formatDate(element.date));
 
-    for (var i = 1; i <= version_max; i++) {
-      chartdata.datasets[i - 1].data.push(element.nodeversions[i]);
+    for (var i = 1; i <= chartdata.datasets.length; i++) {
+      chartdata.datasets[i - 1].data.push(element.nodeversions[i-1+version_min]);
     }
   });
 
