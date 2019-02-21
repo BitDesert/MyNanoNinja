@@ -243,11 +243,16 @@ module.exports = function (nanorpc) {
           callback();
           return;
         }
-        for (var rep in data.representatives) {
-          if (!onlinereps.includes(rep)) {
-            onlinereps.push(rep)
-          }
-        };
+
+        try {
+          for (var rep in data.representatives) {
+            if (!onlinereps.includes(rep)) {
+              onlinereps.push(rep)
+            }
+          };
+        } catch (error) {
+          console.error(error);          
+        }
         callback()
       });
 
