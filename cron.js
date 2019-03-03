@@ -325,12 +325,7 @@ module.exports = function (nanorpc) {
 
     // calculate days since creation score
     var dayssincecreation = moment().diff(moment(account.created), 'days');
-    var dayssincecreation_score = (100 - Math.exp(5 - dayssincecreation / 50));
-
-    // this value can be negative, set to 0
-    dayssincecreation_score = dayssincecreation_score < 0 ? 0 : dayssincecreation_score;
-
-    score = score + dayssincecreation_score;
+    score = score + (100 + (-100 / (1 + Math.pow(dayssincecreation / 60, 4))));
 
     // divide through the score count so we get a smooth max 100 points
     score = score / 3;
