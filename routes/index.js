@@ -15,7 +15,7 @@ module.exports = function (nanorpc) {
       }
     })
     .where('votingweight').gt(0)
-    .where('score').gte(90)
+    .where('score').gte(80)
     .sort('-score')
     .populate('owner')
     .exec(function (err, accounts) {
