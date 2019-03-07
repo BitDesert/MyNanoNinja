@@ -312,23 +312,20 @@ module.exports = function (nanorpc) {
   }
 
   function updateScoreAccount(account) {
-    // initial score    
-    var score = 0;
-
     // calculate weight score
     var weightpercent = (account.votingweight / nanorpc.getAvailable()) * 100;
 
-    score = score + 100 / (1 + Math.exp(20 * weightpercent - 15));
+    var score_weight = 100 / (1 + Math.exp(20 * weightpercent - 15));
 
     // calculate uptime score
-    score = score + Math.pow(10, -6) * Math.pow(account.uptime, 4);
+    var score_uptime = Math.pow(10, -6) * Math.pow(account.uptime, 4);
 
     // calculate days since creation score
     var dayssincecreation = moment().diff(moment(account.created), 'days');
-    score = score + (100 + (-100 / (1 + Math.pow(dayssincecreation / 100, 4))));
+    var score_age = (100 + (-100 / (1 + Math.pow(dayssincecreation / 100, 4))));
 
-    // divide through the score count so we get a smooth max 100 points
-    score = score / 3;
+    // divide so we get a smooth max 100 points
+    score = (score_weight * score_uptime * score_age) / 10000;
 
     // round the final score
     account.score = Math.round(score);
