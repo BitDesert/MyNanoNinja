@@ -9,7 +9,10 @@ module.exports = function (nanorpc) {
     var myaccount = req.params.address;
 
     Account.findOne({
-      'account': myaccount
+      $or: [
+        { 'account': myaccount },
+        { 'slug': myaccount }
+      ]
     })
       .populate('owner')
       .exec(function (err, account) {
@@ -23,6 +26,10 @@ module.exports = function (nanorpc) {
         }
 
         if (account) {
+
+          if (account.slug && account.slug != myaccount) {
+            res.redirect('/account/' + account.slug)
+          }
           if (account.alias) {
             var title = account.alias;
           } else {

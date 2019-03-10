@@ -69,7 +69,7 @@ userSchema.methods.getEmails = function(){
 // create the model for users and expose it to our app
 var User = mongoose.model('User', userSchema);
 
-User.ensureIndexes(function (err) {
+User.createIndexes(function (err) {
   if (err) console.log('User Model', err);
 });
 

@@ -19,7 +19,7 @@ var statisticsQuorumSchema = mongoose.Schema({
 // create the model for users and expose it to our app
 var StatisticsQuorum = mongoose.model('StatisticsQuorum', statisticsQuorumSchema);
 
-StatisticsQuorum.ensureIndexes(function (err) {
+StatisticsQuorum.createIndexes(function (err) {
     if (err) console.log('StatisticsQuorum Model', err);
 });
 

@@ -2,7 +2,11 @@
 var mongoose = require('mongoose');
 
 // dependencies
+var slug = require('mongoose-slug-updater');
 var Check = require('./check');
+
+// load slug
+mongoose.plugin(slug)
 
 // define the schema for our user model
 var accountSchema = mongoose.Schema({
@@ -23,6 +27,7 @@ var accountSchema = mongoose.Schema({
   },
   lastVoted: Date,
   alias: String,
+  slug: { type: String, slug: "alias", unique: true, sparse: true },
   verified: {
     type: Boolean,
     default: false
@@ -182,7 +187,7 @@ accountSchema.methods.updateUptimeFor = function (type, callback) {
 
 accountSchema.methods.getStatsForPeriod = function (begin, end, callback) {
   var self = this;
-  Check.aggregate(
+  Check.aggregate([
     {
       $match: {
         account: self._id,
@@ -204,7 +209,7 @@ accountSchema.methods.getStatsForPeriod = function (begin, end, callback) {
         begin: { $first: begin.valueOf() }, // dunno any other way to set a constant
         end: { $first: end.valueOf() }
       }
-    },
+    }],
     callback
   );
 };

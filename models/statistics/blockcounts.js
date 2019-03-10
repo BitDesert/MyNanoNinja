@@ -20,7 +20,7 @@ var statisticsBlockcountsSchema = mongoose.Schema({
 // create the model for users and expose it to our app
 var StatisticsBlockcounts = mongoose.model('StatisticsBlockcounts', statisticsBlockcountsSchema);
 
-StatisticsBlockcounts.ensureIndexes(function (err) {
+StatisticsBlockcounts.createIndexes(function (err) {
     if (err) console.log('StatisticsBlockcounts Model', err);
 });
 

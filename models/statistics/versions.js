@@ -33,7 +33,7 @@ var statisticsVersionsSchema = mongoose.Schema({
 // create the model for users and expose it to our app
 var StatisticsVersions = mongoose.model('StatisticsVersions', statisticsVersionsSchema);
 
-StatisticsVersions.ensureIndexes(function (err) {
+StatisticsVersions.createIndexes(function (err) {
     if (err) console.log('StatisticsVersions Model', err);
 });
 
