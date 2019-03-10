@@ -303,15 +303,23 @@ module.exports = function (nanorpc) {
           console.error('CRON - updateScore', err);
           return
         }
-        console.log(accounts.length + " accounts");
+        console.log('== Score: ' + accounts.length + " accounts");
 
-        for (var i = 0; i < accounts.length; i++) {
-          updateScoreAccount(accounts[i]);
-        }
+        async.forEachOfSeries(accounts, (account, key, callback) => {
+          
+          updateScoreAccount(account, callback)
+
+        }, err => {
+          if (err) {
+            console.error(err.message);
+            return
+          }
+          console.log('== Scores updated');
+        });
       });
   }
 
-  function updateScoreAccount(account) {
+  function updateScoreAccount(account, callback) {
     // calculate weight score
     var weightpercent = (account.votingweight / nanorpc.getAvailable()) * 100;
 
@@ -335,10 +343,11 @@ module.exports = function (nanorpc) {
       if (err) {
         console.log("Cron - updateScoreAccount - Error saving account", err);
       }
+      callback();
     });
   }
 
-  cron.schedule('*/10 * * * *', updateScore);
+  cron.schedule('5 * * * *', updateScore);
   //updateScore();
 
   function updateUptime() {
