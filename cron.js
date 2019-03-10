@@ -97,7 +97,7 @@ module.exports = function (nanorpc) {
     });
   }
 
-  cron.schedule('* * * * *', updateNodeUptime);
+  cron.schedule('*/30 * * * *', updateNodeUptime);
 
   function sendUpMail(account, email) {
 
@@ -157,7 +157,7 @@ module.exports = function (nanorpc) {
    * UPDATE NODE MONITORS
    */
 
-  cron.schedule('*/5 * * * *', updateNodeMonitors);
+  cron.schedule('*/15 * * * *', updateNodeMonitors);
 
   function updateNodeMonitors() {
     Account.find({
@@ -224,17 +224,27 @@ module.exports = function (nanorpc) {
   //cron.schedule('*/1 * * * *', updateUptimeDistributed);
 
   function updateOnlineRepsRPC() {
-    console.log('Updating Uptime via RPC...');
+    console.log('Updating Votes via RPC...');
     nanorpc.rpc.rpc('representatives_online').then(function (reps) {
-      for (var rep of reps.representatives) {
-        updateVoteSimple(rep);
-      };
+      console.log('== Votes: ' + reps.representatives.length + " reps are online");      
+
+      async.forEachOfSeries(reps.representatives, (rep, key, callback) => {
+                
+        updateVoteSimple(rep, callback);
+
+      }, err => {
+        if (err) {
+          console.error(err.message);
+          return
+        }
+        console.log('== Votes updated.');
+      });
 
     });
   }
 
   function updateUptimeDistributed() {
-    console.log('Updating Uptime via distributed RPC...');
+    console.log('Updating Votes via distributed RPC...');
 
     var provider = JSON.parse(process.env.DRPC_REPSONLINE);
 
@@ -279,10 +289,10 @@ module.exports = function (nanorpc) {
     });
   }
 
-  function updateVoteSimple(myaccount) {
+  function updateVoteSimple(rep, callback) {
     Account.findOne(
       {
-        'account': myaccount
+        'account': rep
       }, function (err, account) {
         if (err) {
           return;
@@ -290,7 +300,7 @@ module.exports = function (nanorpc) {
 
         if (!account) {
           var account = new Account();
-          account.account = myaccount;
+          account.account = rep;
         }
 
         account.lastVoted = Date.now();
@@ -298,6 +308,7 @@ module.exports = function (nanorpc) {
           if (err) {
             console.log("Cron - updateVoteSimple - Error saving account", err);
           }
+          callback();
         });
 
       });
