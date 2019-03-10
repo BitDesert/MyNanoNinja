@@ -473,9 +473,7 @@
           </div>
           <div class="col">
             <p>
-              <a href="https://twitter.com/<%= account.owner.twitter.username %>" class="twitter-follow-button"
-                data-size="large" data-dnt="true" data-show-count="false">Follow @
-                <%= account.owner.twitter.username %></a>
+              @<%= account.owner.twitter.username %>
             </p>
             <a href="https://twitter.com/<%= account.owner.twitter.username %>" class="card-link" target="_blank"
               target="_blank">Visit profile</a>
@@ -484,7 +482,6 @@
       </div>
     </div>
   </div>
-  <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
   <% } %>
 
   <% if (account.owner.google.token) { %>
