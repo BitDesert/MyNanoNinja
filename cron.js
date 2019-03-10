@@ -33,15 +33,23 @@ module.exports = function (nanorpc) {
           console.error('CRON - updateNodeUptime', err);
           return
         }
-        console.log(accounts.length + " accounts");
+        console.log('== Uptime: ' + accounts.length + " accounts");
 
-        for (var i = 0; i < accounts.length; i++) {
-          checkNodeUptime(accounts[i]);
-        }
+        async.forEachOfSeries(accounts, (account, key, callback) => {
+          
+          checkNodeUptime(account, callback);
+
+        }, err => {
+          if (err) {
+            console.error(err.message);
+            return
+          }
+          console.log('== Uptime updated.');
+        });
       });
   }
 
-  function checkNodeUptime(account) {
+  function checkNodeUptime(account, callback) {
     var previous = account.uptime_data.last;
     if (account.lastVoted && moment(account.lastVoted).isAfter(moment().subtract(30, 'minutes').toDate())) {
       account.uptime_data.up++;
@@ -85,10 +93,11 @@ module.exports = function (nanorpc) {
         console.log("CRON - checkNodeUptime - Error saving account", err);
       }
       account.updateUptimeFor('day')
+      callback();
     });
   }
 
-  cron.schedule('*/30 * * * *', updateNodeUptime);
+  cron.schedule('* * * * *', updateNodeUptime);
 
   function sendUpMail(account, email) {
 
