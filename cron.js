@@ -343,7 +343,7 @@ module.exports = function (nanorpc) {
     // calculate weight score
     var weightpercent = (account.votingweight / nanorpc.getAvailable()) * 100;
 
-    var score_weight = 100 / (1 + Math.exp(20 * weightpercent - 15));
+    var score_weight = 100 / (1 + Math.exp(8 * weightpercent - 10));
 
     // calculate uptime score
     var score_uptime = Math.pow(10, -6) * Math.pow(account.uptime, 4);
