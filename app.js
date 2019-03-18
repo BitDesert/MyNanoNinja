@@ -83,6 +83,7 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 
 // routes
 var indexRouter = require('./routes/index')(nanorpc);
+var v1Router = require('./routes/v1');
 var apiRouter = require('./routes/api')(nanorpc);
 var accountRouter = require('./routes/account')(nanorpc);
 var blockRouter = require('./routes/block');
@@ -91,6 +92,7 @@ var authRouter = require('./routes/auth')(passport, nanorpc);
 var statisticsRouter = require('./routes/statistics');
 
 app.use('/', indexRouter);
+app.use('/v1', v1Router);
 app.use('/api', apiRouter);
 app.use('/account', accountRouter);
 app.use('/block', blockRouter);
