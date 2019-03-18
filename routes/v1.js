@@ -30,7 +30,7 @@ router.get('/addresses', function (req, res, next) {
       }
       res.json({
         "address_type": 300,
-        "address": account.address,
+        "address": account.account,
         "extensions": {}
       });
     });
