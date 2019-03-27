@@ -23,6 +23,13 @@ router.get('/addresses', function (req, res, next) {
     return;
   }
 
+  if(req.query.address_type && req.query.address_type !== '300'){
+    res.status(400).json({
+      "message": "Only Nano addresses are supported",
+    });
+    return 
+  }
+
   Account.findOne({
       'slug': alias
     })
@@ -34,11 +41,19 @@ router.get('/addresses', function (req, res, next) {
         });
         return;
       }
-      res.json({
-        "address_type": 300,
-        "address": account.account,
-        "extensions": {}
-      });
+      if(req.query.address_type && req.query.address_type == '300'){
+        res.json({
+          "address_type": 300,
+          "address": account.account,
+          "extensions": {}
+        });
+      } else {
+        res.json([{
+          "address_type": 300,
+          "address": account.account,
+          "extensions": {}
+        }]);
+      }
     });
 });
 
