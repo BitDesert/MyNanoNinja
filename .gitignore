@@ -59,7 +59,7 @@ typings/
 
 # next.js build output
 .next
-test.js
+test*.js
 
 # PM2 ecosystem config
 ecosystem.config.js

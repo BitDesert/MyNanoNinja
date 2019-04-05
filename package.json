@@ -44,6 +44,7 @@
     "passport-reddit": "^0.2.4",
     "passport-twitter": "~1.0.4",
     "popper.js": "^1.14.3",
+    "portscanner": "^2.2.0",
     "queue": "^4.4.2",
     "raven": "^2.6.3",
     "request": "^2.88.0",
