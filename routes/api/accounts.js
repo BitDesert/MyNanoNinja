@@ -127,7 +127,7 @@ router.get('/:account', function (req, res) {
     .select('-_id account alias slug uptime uptime_over lastVoted votingweight delegators description website location monitor score verified')
     .exec(function (err, account) {
       if (err || !account) {
-        console.log("API - Account", err);
+        console.log("API - Account", err, req.params.account);
         res.status(404).json({ error: 'Not found' });
         return;
       }
