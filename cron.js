@@ -240,6 +240,7 @@ function updateNodeMonitor(account) {
 cron.schedule('*/1 * * * *', updateOnlineRepsRPC);
 //cron.schedule('*/1 * * * *', updateUptimeDistributed);
 
+updateOnlineRepsRPC()
 function updateOnlineRepsRPC() {
   console.log('Updating Votes via RPC...');
   nanorpc.rpc.rpc('representatives_online').then(function (reps) {
