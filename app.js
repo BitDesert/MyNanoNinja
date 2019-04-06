@@ -15,7 +15,6 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 const matomo = require('./utils/matomo');
-const { fork } = require('child_process');
 
 // database
 var configDB = require('./config/database.js');
@@ -33,7 +32,7 @@ var nanorpc = require('./nano/rpc_client');
 // Cron
 require('./cron/peers');
 require('./cron/statistics');
-const cron = fork('./cron');
+require('./cron');
 
 // passport
 require('./config/passport')(passport); // pass passport for configuration

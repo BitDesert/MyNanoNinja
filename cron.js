@@ -7,17 +7,10 @@ var moment = require('moment');
 var async = require("async");
 const nodemailer = require('nodemailer');
 var request = require('request');
-var mongoose = require('mongoose');
 var tools = require('./tools');
 
 var Account = require('./models/account');
 var Check = require('./models/check');
-
-// database
-var configDB = require('./config/database.js');
-mongoose.connect(configDB.url,
-  { useNewUrlParser: true }
-);
 
 // mail
 let transporter = nodemailer.createTransport({
@@ -238,16 +231,17 @@ function updateNodeMonitor(account) {
  */
 
 cron.schedule('*/1 * * * *', updateOnlineRepsRPC);
-//cron.schedule('*/1 * * * *', updateUptimeDistributed);
+cron.schedule('*/1 * * * *', updateUptimeDistributed);
 
 updateOnlineRepsRPC()
+updateUptimeDistributed()
 function updateOnlineRepsRPC() {
   console.log('Updating Votes via RPC...');
-  nanorpc.rpc.rpc('representatives_online').then(function (reps) {
+  nano.rpc('representatives_online').then(function (reps) {
     console.log('== Votes: ' + reps.representatives.length + " reps are online");
 
     async.forEachOfSeries(reps.representatives, (rep, key, callback) => {
-
+      
       updateVoteSimple(rep, callback);
 
     }, err => {
@@ -301,9 +295,17 @@ function updateUptimeDistributed() {
     }
     console.log(onlinereps.length + ' reps via dRPC');
 
-    for (var rep of onlinereps) {
-      updateVoteSimple(rep);
-    };
+    async.forEachOfSeries(onlinereps, (rep, key, callback) => {
+      
+      updateVoteSimple(rep, callback);
+
+    }, err => {
+      if (err) {
+        console.error(err.message);
+        return
+      }
+      console.log('== Votes updated via dRPC.');
+    });
   });
 }
 
