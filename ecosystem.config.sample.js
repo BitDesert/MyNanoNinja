@@ -9,6 +9,7 @@ module.exports = {
     {
       name      : 'My Nano Ninja',
       script    : 'bin/www',
+      "log_date_format" : "YYYY-MM-DD HH:mm:ss",
       env: {
         NODE_ENV: 'production',
         DOMAIN: 'https://mynano.ninja',
