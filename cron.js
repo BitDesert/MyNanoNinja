@@ -183,20 +183,30 @@ function updateNodeMonitors() {
       }
       console.log(accounts.length + " accounts with a monitor");
 
-      for (var i = 0; i < accounts.length; i++) {
-        updateNodeMonitor(accounts[i]);
-      }
+      async.eachOfLimit(accounts, 4, (account, key, callback) => {
+
+        updateNodeMonitor(account, callback);
+
+      }, err => {
+        if (err) {
+          console.error(err.message);
+          return
+        }
+        console.log('== Monitors updated.');
+      });
     });
 }
 
-function updateNodeMonitor(account) {
+function updateNodeMonitor(account, callback) {  
   request.get({
     url: account.monitor.url + '/api.php',
-    json: true
+    json: true,
+    timeout: 10
   }, function (err, response, data) {
     try {
       if (err || response.statusCode !== 200) {
         console.log('CRON - updateNodeMonitor - Could not contact monitor for ' + account.account);
+        callback();
         return;
 
       } else if (data.nanoNodeAccount != account.account) {
@@ -219,9 +229,11 @@ function updateNodeMonitor(account) {
         if (err) {
           console.error('CRON - updateNodeMonitor', err);
         }
+        callback();
       });
     } catch (error) {
       console.error('Problem with updateNodeMonitor')
+      callback();
     }
   });
 }
