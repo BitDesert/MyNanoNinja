@@ -26,15 +26,15 @@
       </div>
       <div class="modal-body">
         <p class="text-center">
-          <a href="nanorep:<%= account.account %>">
-            <img src="https://chart.googleapis.com/chart?chs=250x250&amp;cht=qr&amp;chl=<%= account.account %>&amp;choe=UTF-8">
+          <a href="nanorep:<% if (account === null) { %><%= myaccount %><% } else { %><%= account.account %><% } %>">
+            <img src="https://chart.googleapis.com/chart?chs=250x250&amp;cht=qr&amp;chl=<% if (account === null) { %><%= myaccount %><% } else { %><%= account.account %><% } %>&amp;choe=UTF-8">
           </a>
         </p>
       </div>
       <div class="modal-footer">
         <div class="btn-group" role="group" aria-label="Basic example">
-          <a href="nano:<%= account.account %>" class="btn btn-secondary">Pay</a>
-          <a href="nanorep:<%= account.account %>" class="btn btn-secondary">Representative</a>
+          <a href="nano:<% if (account === null) { %><%= myaccount %><% } else { %><%= account.account %><% } %>" class="btn btn-secondary">Pay</a>
+          <a href="nanorep:<% if (account === null) { %><%= myaccount %><% } else { %><%= account.account %><% } %>" class="btn btn-secondary">Representative</a>
         </div>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
@@ -242,25 +242,25 @@
       <li class="list-group-item">
         Last 24 hours
         <span class="float-right">
-          <%= round(account.uptime_over.day, 3) %> %
+          {{ round(account.uptime_over.day, 3) }} %
         </span>
       </li>
       <li class="list-group-item">
         Last 7 days
         <span class="float-right">
-          <%= round(account.uptime_over.week, 3) %> %
+            {{ round(account.uptime_over.week, 3) }} %
         </span>
       </li>
       <li class="list-group-item">
         Last 30 days
         <span class="float-right">
-          <%= round(account.uptime_over.month, 3) %> %
+            {{ round(account.uptime_over.month, 3) }} %
         </span>
       </li>
       <li class="list-group-item">
         Last year
         <span class="float-right">
-          <%= round(account.uptime_over.year, 3) %> %
+            {{ round(account.uptime_over.year, 3) }} %
         </span>
       </li>
     </ul>
@@ -601,7 +601,7 @@
 <script src="/static/js/moment.min.js"></script>
 <script src="/static/js/big.min.js"></script>
 <script>
-  const address = "<%= account.account %>";
+  const address = "<% if (account === null) { %><%= myaccount %><% } else { %><%= account.account %><% } %>";
 </script>
 <script src="/static/js/sites/account.js?v=3"></script>
 
