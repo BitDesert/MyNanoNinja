@@ -1,89 +1,125 @@
 <% include ../partials/header.ejs %>
 
-<div class="row">
-  <div class="col">
+<div id="app" v-cloak>
 
-      <h2 class="truncate mb-3">
-        <% if (account === null) { %>
-        <%= myaccount %><br>
-        <small>No alias</small>
-        <% } else if (account.alias) { %>
-        <%= account.alias %><% if (account.verified) { %> <i class="fas fa-check-circle text-primary" title="Verified"></i><% } %><br>
-        <small>
-            <% if (account.slug) { %><code>@<%= account.slug %></code><br><% } %>
-          <%= account.account %>
-        </small>
-        <% } else { %>
-        <%= account.account %><br>
-        <small>No alias</small>
-        <% } %>
-      </h2>
-  </div>
-  <% if (account !== null && account.votingweight > 0) { %>
-  <div class="col">
-
-      <button class="btn btn-primary float-right mb-3" data-toggle="modal" data-target="#setRepresentative">
-        Set as my representative
-      </button>
-  </div>
-  <% } %>
+<div class="d-flex">
+  <h1 class="truncate mb-3 flex-grow-1">
+    <% if (account === null) { %>
+      No alias
+    <% } else if (account.alias) { %>
+      <%= account.alias %><% if (account.verified) { %> <i class="fas fa-check-circle text-primary" title="Verified"></i><% } %>
+    <% } else { %>
+      No alias
+    <% } %>
+  </h1>
+  <i class="fas fa-qrcode h1" title="Verified" data-toggle="modal" data-target="#setRepresentative"></i>
 </div>
-
-<div id="app">
-
-<% if (account !== null && account.votingweight > 0) { %>
 
 <div class="modal fade" id="setRepresentative" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Set as representative</h5>
+        <h5 class="modal-title" id="exampleModalLabel">QR code</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        <p>1. Copy the address or scan the QR code</p>
-        <div class="input-group mb-3">
-          <input type="text" class="form-control" id="copyaddress" value="<%= account.account %>" readonly>
-          <div class="input-group-append">
-            <button class="btn btn-secondary btn-copy" type="button" data-clipboard-target="#copyaddress">
-              Copy
-            </button>
-          </div>
-        </div>
         <p class="text-center">
-          <img src="https://chart.googleapis.com/chart?chs=150x150&amp;cht=qr&amp;chl=xrb:<%= account.account %>&amp;choe=UTF-8">
-        </p>
-        <p>
-          2. Change your representative in your wallet.
-          <a href="https://nanotools.github.io/Change-Nano-Representative/#how-do-i-change-my-nano-representative"
-            target="_blank">How do I do that?</a>
+          <a href="nanorep:<%= account.account %>">
+            <img src="https://chart.googleapis.com/chart?chs=250x250&amp;cht=qr&amp;chl=<%= account.account %>&amp;choe=UTF-8">
+          </a>
         </p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Done!</button>
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <a href="nano:<%= account.account %>" class="btn btn-secondary">Pay</a>
+          <a href="nanorep:<%= account.account %>" class="btn btn-secondary">Representative</a>
+        </div>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
 </div>
-<script src="/static/js/clipboard.min.js"></script>
-<script>
-  init.push(function () {
-    var clipboard = new ClipboardJS('.btn-copy');
-    clipboard.on('success', function (e) {
-      setTooltip(e.trigger, 'Copied!');
-      hideTooltip(e.trigger);
-    });
 
-    clipboard.on('error', function (e) {
-      setTooltip(e.trigger, 'Failed!');
-      hideTooltip(e.trigger);
-    });
-  });
-</script>
+<div class="card elegant-color mb-3" v-if="info">
+  <div class="card-body d-flex flex-wrap truncate">
+    <div class="flex-grow-1 px-3 truncate">
+      <div class="flex items-center grey-text mb-1">
+        <span>Address</span>
+      </div>
+      <div class="flex">
+        <div class="text-lg text-white semibold mr-2">
+          <span class="mr-2">{{ address }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="px-3">
+      <div class="flex items-center grey-text mb-1">
+        <span>Voting for</span>
+      </div>
+      <div class="flex">
+        <div class="text-lg text-white semibold truncate">
+          <account-alias-sm :account="info.representative" v-if="info"></account-alias-sm>
+        </div>
+      </div>
+    </div>
+    <div class="px-3" v-if="info.pending > 0">
+      <div class="flex items-center grey-text mb-1">
+        <span>Pending</span>
+      </div>
+      <div class="flex">
+        <div class="text-lg text-white semibold truncate">
+          {{ info.pending | toMnano | toLocaleString }} NANO
+        </div>
+      </div>
+    </div>
+    <div class="px-3">
+      <div class="flex items-center grey-text mb-1">
+        <span>Balance</span>
+      </div>
+      <div class="flex">
+        <div class="text-lg text-white semibold truncate">
+          <span class="mr-2">{{ info.balance | toMnano | toLocaleString }} NANO</span>
+        </div>
+      </div>
+    </div>
+    <div class="px-3">
+      <div class="flex items-center grey-text mb-1">
+        <span>Blocks</span>
+      </div>
+      <div class="flex">
+        <div class="text-lg text-white semibold truncate">
+          <span class="mr-2">{{ info.block_count | toLocaleString }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-<div class="modal fade" id="repscore" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="card mb-3" v-if="account && account.votingweight > 0">
+  <div class="card-body d-flex flex-column px-5">
+    <div class="d-flex border-bottom py-2">
+      <div class="flex-grow-1">Voting Weight</div>
+      <div>{{ account.votingweight | toMnano | toLocaleString }} NANO</div>
+    </div>
+    <div class="d-flex border-bottom py-2">
+      <div class="flex-grow-1">Uptime</div>
+      <div>{{ Number((account.uptime).toFixed(3)) }} %</div>
+    </div>
+    <div class="d-flex border-bottom py-2">
+      <div class="flex-grow-1">Last voted</div>
+      <div v-if="account.lastVoted">{{ account.lastVoted | momentFromNow }}</div>
+      <div v-else>Never voted</div>
+    </div>
+    <div class="d-flex py-2">
+      <div class="flex-grow-1">Score <i class="fas fa-question-circle" data-toggle="modal" data-target="#repscore"></i></div>
+      <div>{{ account.score }} / 100</div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="repscore" tabindex="-1" role="dialog" aria-hidden="true" v-if="account && account.votingweight > 0">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -106,51 +142,6 @@
     </div>
   </div>
 </div>
-
-<div class="card-deck text-center">
-  <div class="card mb-4 box-shadow">
-    <div class="card-header">
-      <h4 class="my-0 font-weight-normal">Voting weight</h4>
-    </div>
-    <div class="card-body">
-      <h3 class="card-title">
-        <%= votingWeight %> Nano<br>
-        <h6>(
-          <%= Math.round((account.votingweight / nanorpc.getAvailable())*100000)/1000 %> %)</h6>
-      </h3>
-    </div>
-  </div>
-  <div class="card mb-4 box-shadow">
-    <div class="card-header">
-      <h4 class="my-0 font-weight-normal">Score <i class="fas fa-question-circle float-right" data-toggle="modal" data-target="#repscore"></i></h4>
-    </div>
-    <div class="card-body">
-      <h3 class="card-title">
-        <%= account.score %> / 100<br>
-        <h6>Ninja Points</h6>
-      </h3>
-    </div>
-  </div>
-  <div class="card mb-4 box-shadow">
-    <div class="card-header">
-      <h4 class="my-0 font-weight-normal">Uptime</h4>
-    </div>
-    <div class="card-body">
-      <h3 class="card-title">
-        <%= round(account.uptime, 3) %> %<br>
-        <h6>
-          <% if(account.lastVoted) { %>
-          Last voted
-          <%= moment(account.lastVoted).fromNow() %>
-          <% } else { %>
-          Never voted
-          <% } %>
-        </h6>
-      </h3>
-    </div>
-  </div>
-</div>
-<% } %>
 
 <% if(account !== null && account.description){ %>
 <div class="row">
@@ -187,6 +178,13 @@
         </span>
       </li>
       <% } %>
+    </ul>
+    
+  </div>
+
+  <div class="col-lg-4 mb-4" v-if="account && account.votingweight > 0">
+    <h3>Node</h3>
+    <ul class="list-group mb-3">
       <% if(account !== null && account.server && account.server.type){ %>
       <li class="list-group-item">
         Server Type
@@ -235,57 +233,10 @@
       </li>
       <% } %>
     </ul>
-
-    <!--
-    <h3>Badges</h3>
-    <img src="https://cdn.discordapp.com/attachments/527568603554381827/528723955641745408/image2.jpg" style="height: 3rem;">
-    <img src="https://cdn.discordapp.com/attachments/527568603554381827/528723955641745408/image2.jpg" style="height: 3rem;">
-    <img src="https://cdn.discordapp.com/attachments/527568603554381827/528723955641745408/image2.jpg" style="height: 3rem;">
-    -->
     
   </div>
 
-  <div class="col-lg-4 mb-4">
-    <h3>Account</h3>
-    <ul class="list-group mb-3" v-if="info">
-      <li class="list-group-item" v-if="info.balance">
-        Balance
-        <span class="float-right">
-          {{ info.balance | toMnano }} NANO
-        </span>
-      </li>
-      <li class="list-group-item" v-if="info.pending">
-        Pending
-        <span class="float-right">
-          {{ info.pending | toMnano }} NANO
-        </span>
-      </li>
-      <li class="list-group-item" v-if="info.representative">
-        <div class="float-left">
-          Representative
-        </div>
-        <div class="float-right truncate">
-          <account-alias-sm :account="info.representative"></account-alias-sm>
-        </div>
-      </li>
-      <li class="list-group-item" v-if="info.account_version">
-        Account Version
-        <span class="float-right">
-          {{ info.account_version }}
-        </span>
-      </li>
-      <li class="list-group-item" v-if="info.block_count">
-        Block Count
-        <span class="float-right">
-          {{ Number.parseInt(info.block_count).toLocaleString() }}
-        </span>
-      </li>
-    </ul>
-    
-  </div>
-
-<% if (account !== null && account.votingweight > 0) { %>
-  <div class="col-lg-4 mb-4">
+  <div class="col-lg-4 mb-4" v-if="account && account.votingweight > 0">
     <h3>Uptime</h3>
     <ul class="list-group mb-3">
       <li class="list-group-item">
@@ -314,7 +265,6 @@
       </li>
     </ul>
   </div>
-<% } %>
 
 </div>
 
@@ -646,12 +596,13 @@
 </div>
 
 <script src="/static/js/vue.min.js"></script>
-<script src="/static/js/main-vue.js?v=2"></script>
+<script src="/static/js/main-vue.js?v=3"></script>
 <script src="/static/js/axios.min.js"></script>
+<script src="/static/js/moment.min.js"></script>
 <script src="/static/js/big.min.js"></script>
 <script>
-  const account = "<%= myaccount %>";
+  const address = "<%= myaccount %>";
 </script>
-<script src="/static/js/sites/account.js?v=2"></script>
+<script src="/static/js/sites/account.js?v=3"></script>
 
 <% include ../partials/footer.ejs %>

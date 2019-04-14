@@ -10,6 +10,7 @@ Vue.component('account-alias', {
       axios
         .get('/api/accounts/' + this.account)
         .then(response => (this.alias = response.data.alias))
+        .catch(reason => {});
     }
   },
   created() {
@@ -30,6 +31,7 @@ Vue.component('account-alias-sm', {
       axios
         .get('/api/accounts/' + this.account)
         .then(response => (this.alias = response.data.alias))
+        .catch(reason => {});
     }
   },
   created() {
@@ -76,3 +78,12 @@ Vue.filter('toCurrency', function (value) {
   });
   return formatter.format(value);
 });
+
+Vue.filter('toLocaleString', function (value) {
+  if(isNaN(value)) return '0';
+  return Number.parseFloat(value).toLocaleString()
+})
+
+Vue.filter('momentFromNow', function (value) {
+  return moment(value).fromNow();
+})

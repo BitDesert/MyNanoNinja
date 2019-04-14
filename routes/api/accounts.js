@@ -136,7 +136,7 @@ router.get('/:account', function (req, res) {
 });
 
 router.get('/:account/history', function (req, res) {
-  nano.accounts.history(req.params.account, 50)
+  nano.accounts.history(req.params.account, 20)
     .then(history => {
       if (!history) return res.status(404).json({ error: 'Not found' });
 
