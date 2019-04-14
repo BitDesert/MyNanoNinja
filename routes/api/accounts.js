@@ -143,7 +143,7 @@ router.get('/:account/history', function (req, res) {
       res.json(history);
     })
     .catch(reason => {
-      res.status(500).json({ error: 'Not found' });
+      res.status(500).json({ error: 'Not found', message: reason });
     });
 });
 
@@ -160,7 +160,7 @@ router.get('/:account/pending', function (req, res) {
       res.json(history);
     })
     .catch(reason => {
-      res.status(500).json({ error: 'Not found' });
+      res.status(500).json({ error: 'Not found', message: reason });
     });
 });
 
@@ -177,7 +177,7 @@ router.get('/:account/info', function (req, res) {
       res.json(response);
     })
     .catch(reason => {
-      res.status(500).json({ error: 'Not found' });
+      res.status(500).json({ error: 'Not found', message: reason });
     });
 });
 
