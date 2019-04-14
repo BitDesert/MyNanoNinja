@@ -42,7 +42,7 @@
   </div>
 </div>
 
-<div class="card elegant-color mb-3" v-if="info">
+<div class="card elegant-color mb-3">
   <div class="card-body d-flex flex-wrap truncate">
     <div class="flex-grow-1 px-3 truncate">
       <div class="flex items-center grey-text mb-1">
@@ -59,7 +59,7 @@
         <span>Voting for</span>
       </div>
       <div class="flex">
-        <div class="text-lg text-white semibold truncate">
+        <div class="text-lg text-white semibold truncate" v-if="info">
           <account-alias-sm :account="info.representative" v-if="info"></account-alias-sm>
         </div>
       </div>
@@ -79,7 +79,7 @@
         <span>Balance</span>
       </div>
       <div class="flex">
-        <div class="text-lg text-white semibold truncate">
+        <div class="text-lg text-white semibold truncate" v-if="info">
           <span class="mr-2">{{ info.balance | toMnano | toLocaleString }} NANO</span>
         </div>
       </div>
@@ -89,7 +89,7 @@
         <span>Blocks</span>
       </div>
       <div class="flex">
-        <div class="text-lg text-white semibold truncate">
+        <div class="text-lg text-white semibold truncate" v-if="info">
           <span class="mr-2">{{ info.block_count | toLocaleString }}</span>
         </div>
       </div>
