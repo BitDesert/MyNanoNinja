@@ -64,7 +64,7 @@
         </div>
       </div>
     </div>
-    <div class="px-3" v-if="info.pending > 0">
+    <div class="px-3" v-if="info && info.pending > 0">
       <div class="flex items-center grey-text mb-1">
         <span>Pending</span>
       </div>
@@ -242,25 +242,25 @@
       <li class="list-group-item">
         Last 24 hours
         <span class="float-right">
-          {{ round(account.uptime_over.day, 3) }} %
+          {{ account.uptime_over.day | round(3) }} %
         </span>
       </li>
       <li class="list-group-item">
         Last 7 days
         <span class="float-right">
-            {{ round(account.uptime_over.week, 3) }} %
+            {{ account.uptime_over.week | round(3) }} %
         </span>
       </li>
       <li class="list-group-item">
         Last 30 days
         <span class="float-right">
-            {{ round(account.uptime_over.month, 3) }} %
+            {{ account.uptime_over.month | round(3) }} %
         </span>
       </li>
       <li class="list-group-item">
         Last year
         <span class="float-right">
-            {{ round(account.uptime_over.year, 3) }} %
+            {{ account.uptime_over.year | round(3) }} %
         </span>
       </li>
     </ul>
@@ -593,10 +593,10 @@
       </tbody>
     </table>
   </div>
-</div>
+<div>
 
 <script src="/static/js/vue.min.js"></script>
-<script src="/static/js/main-vue.js?v=3"></script>
+<script src="/static/js/main-vue.js?v=4"></script>
 <script src="/static/js/axios.min.js"></script>
 <script src="/static/js/moment.min.js"></script>
 <script src="/static/js/big.min.js"></script>
