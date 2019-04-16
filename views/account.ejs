@@ -320,23 +320,16 @@
                 </div>
               </div>
               <div class="modal-footer">
-                <button type="submit" class="btn btn-primary">Save changes</button>
+                <button type="submit" class="btn btn-primary">{{ editAccount.button_submit }}</button>
               </div>
             </div>
           </div>
-          <input type="hidden" name="account" value="<%= account.account %>" required>
         </form>
       </div>
     </div>
   </transition>
 </div>
 
-<% if(account.votingweight > 0 && account.score < 80){ %>
-<div class="alert alert-dismissible alert-warning">
-  <button type="button" class="close" data-dismiss="alert">&times;</button>
-  <strong>Heads up!</strong> Your account has a low score (below 80). It will not appear in the lists.
-</div>
-<% } %>
 <% } %>
 
 <div class="row">

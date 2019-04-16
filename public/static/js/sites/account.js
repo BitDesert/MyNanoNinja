@@ -11,6 +11,7 @@ var app = new Vue({
         editAccount: false
       },
       editAccount: {
+        button_submit: 'Save',
         account_alias: '',
         account_description: '',
         server_type: '',
@@ -58,6 +59,7 @@ var app = new Vue({
   methods: {
     submitEditAccount: function (e) {
       e.preventDefault();
+      this.editAccount.button_submit = 'Saving...';
 
       axios
         .post('/api/editAccount', {
@@ -68,9 +70,14 @@ var app = new Vue({
           account_monitorUrl: '' + this.editAccount.account_monitorUrl,
         }).then(response => {
           console.log('OK', response);
+          this.editAccount.button_submit = 'Done!';
+          setTimeout(function(){
+            location.reload();
+          }, 1000)
           
         }).catch(error => {
           console.log('CATCH', error.response);
+          this.editAccount.button_submit = error.response.msg;
           
         })
     }
