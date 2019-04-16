@@ -84,6 +84,10 @@ Vue.filter('toLocaleString', function (value) {
   return Number.parseFloat(value).toLocaleString()
 })
 
+Vue.filter('momentFromNow', function (value) {
+  return moment(value).fromNow();
+})
+
 Vue.filter('round', function (value, precision) {
   if (Number.isInteger(precision)) {
     var shift = Math.pow(10, precision);

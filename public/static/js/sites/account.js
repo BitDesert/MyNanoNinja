@@ -6,28 +6,73 @@ var app = new Vue({
       account: null,
       history: null,
       pending: {},
-      info: null
+      info: null,
+      modal: {
+        editAccount: false
+      },
+      editAccount: {
+        account_alias: '',
+        account_description: '',
+        server_type: '',
+        server_renewable: '',
+        account_website: '',
+        account_monitorUrl: ''
+      }
     }
   },
   mounted() {
     axios
       .get("/api/accounts/" + this.address)
-      .then(response => (this.account = response.data))
-      .catch(reason => {});
+      .then(response => {
+        this.account = response.data;
+
+        if (response.data.alias)
+          this.editAccount.account_alias = response.data.alias;
+
+        if (response.data.description)
+          this.editAccount.account_description = response.data.description;
+
+        if (response.data.website)
+          this.editAccount.account_website = response.data.website;
+
+        if (response.data.monitor.url)
+          this.editAccount.account_monitorUrl = response.data.monitor.url;
+      })
+      .catch(reason => { });
 
     axios
       .get('/api/accounts/' + this.address + '/history')
       .then(response => (this.history = response.data))
-      .catch(reason => {});
+      .catch(reason => { });
 
     axios
       .get('/api/accounts/' + this.address + '/pending')
       .then(response => (this.pending = response.data))
-      .catch(reason => {});
+      .catch(reason => { });
 
     axios
       .get('/api/accounts/' + this.address + '/info')
       .then(response => (this.info = response.data))
-      .catch(reason => {});
+      .catch(reason => { });
+  },
+  methods: {
+    submitEditAccount: function (e) {
+      e.preventDefault();
+
+      axios
+        .post('/api/editAccount', {
+          account: this.address,
+          account_alias: '' + this.editAccount.account_alias,
+          account_description: '' + this.editAccount.account_alias,
+          account_website: '' + this.editAccount.account_website,
+          account_monitorUrl: '' + this.editAccount.account_monitorUrl,
+        }).then(response => {
+          console.log('OK', response);
+          
+        }).catch(error => {
+          console.log('CATCH', error.response);
+          
+        })
+    }
   }
 })

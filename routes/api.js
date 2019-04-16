@@ -44,7 +44,7 @@ module.exports = function (nanorpc) {
     });
   });
 
-  router.post('/editAccount', ensureAuthenticated, function (req, res) {
+  router.post('/editAccount', ensureAuthenticated, function (req, res) {    
     Account.findOne({
         'account': req.body.account
       })
@@ -85,12 +85,12 @@ module.exports = function (nanorpc) {
             if (err || response.statusCode !== 200) {
               output.status = 'error';
               output.msg = 'Couldn\'t contact Node Monitor!';
-              res.json(output);
+              res.status(400).json(output);
 
             } else if (data.nanoNodeAccount != account.account) {
               output.status = 'error';
               output.msg = 'Node Monitor account mismatch!';
-              res.json(output);
+              res.status(400).json(output);
 
             } else {
               account.monitor.url = req.body.account_monitorUrl;

@@ -275,111 +275,61 @@
 <% if (loggedin && account.owner._id.toString() == user._id.toString()) { %>
 <div class="alert alert-dismissible alert-primary">
   <button type="button" class="close" data-dismiss="alert">&times;</button>
-  <strong>Welcome!</strong> You are the owner of this account. <a href="#" class="alert-link" data-toggle="modal"
-    data-target="#editAccountModal">Edit it here</a>!
+  <strong>Welcome!</strong> You are the owner of this account. <a href="#" class="alert-link" @click="modal.editAccount = true">Edit it here</a>!
 </div>
 
-<div class="modal fade" id="editAccountModal" tabindex="-1" role="dialog" aria-hidden="true">
-  <form id="editAccountForm" action="/api/editAccount">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Edit account</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <div class="form-group">
-            <label>Account alias</label>
-            <input type="text" class="form-control" name="account_alias" id="account_alias" placeholder="My Nano node"
-              value="<% if (account.alias) { %><%= account.alias %><% } %>">
-            <small class="form-text text-muted">This will be shown instead of the full address.</small>
+<div v-if="modal.editAccount">
+  <transition name="modal">
+    <div class="modal-mask">
+        <div class="modal-wrapper">
+        <form @submit="submitEditAccount">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Edit account</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true" @click="modal.editAccount = false">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div class="form-group">
+                  <label>Account alias</label>
+                  <input type="text" class="form-control" name="account_alias" id="account_alias" v-model="editAccount.account_alias" placeholder="My Nano node"
+                    value="<% if (account.alias) { %><%= account.alias %><% } %>">
+                  <small class="form-text text-muted">This will be shown instead of the full address.</small>
+                </div>
+                <div class="form-group">
+                  <label>Introduction</label>
+                  <input type="text" class="form-control" name="account_description" id="account_description" v-model="editAccount.account_description" placeholder="I run this representative because..."
+                    value="<% if (account.description) { %><%= account.description %><% } %>" maxlength="500">
+                  <small class="form-text text-muted">Write a short text why you run this representative.</small>
+                </div>
+                <div class="form-group">
+                  <label>Website</label>
+                  <input type="text" class="form-control" name="account_website" id="account_website" v-model="editAccount.account_website" placeholder="https://ilovenano.com"
+                    pattern="(http(s)?:\/\/.)(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,8}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)"
+                    value="<% if (account.website) { %><%= account.website %><% } %>">
+                  <small class="form-text text-muted">Your project / personal website</small>
+                </div>
+                <div class="form-group">
+                  <label>Nano Node Monitor URL</label>
+                  <input type="text" class="form-control" name="account_monitorUrl" id="account_monitorUrl" v-model="editAccount.account_monitorUrl" placeholder="https://monitor.mynanonode.com"
+                    value="<% if (account.monitor.url) { %><%= account.monitor.url %><% } %>">
+                  <small class="form-text text-muted">Add the full URL to your <a href="https://github.com/NanoTools/nanoNodeMonitor"
+                      target="_blank">Nano Node Monitor</a></small>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Save changes</button>
+              </div>
+            </div>
           </div>
-          <div class="form-group">
-            <label>Introduction</label>
-            <input type="text" class="form-control" name="account_description" id="account_description" placeholder="I run this representative because..."
-              value="<% if (account.description) { %><%= account.description %><% } %>" maxlength="500">
-            <small class="form-text text-muted">Write a short text why you run this representative.</small>
-          </div>
-          <div class="form-group">
-            <label>Server Type</label>
-            <select class="form-control" id="server_type" name="server_type">
-              <option<% if (account.server && account.server.type=='VPS' ) { %> selected
-                <% } %>>VPS</option>
-                <option<% if (account.server && account.server.type=='Dedicated' ) { %> selected
-                  <% } %>>Dedicated</option>
-                  <option<% if (account.server && account.server.type=='Desktop' ) { %> selected
-                    <% } %>>Desktop</option>
-                    <option<% if (account.server && account.server.type=='BrainBlocks Pod' ) { %> selected
-                      <% } %>>BrainBlocks Pod</option>
-                      <option<% if (account.server && account.server.type=='Other' ) { %> selected
-                        <% } %>>Other</option>
-            </select>
-            <small class="form-text text-muted">Select the server your node is running on</small>
-          </div>
-          <div class="form-group">
-            <label>Server Renewable Energy</label>
-            <select class="form-control" id="server_renewable" name="server_renewable">
-              <option value="true" <% if (account.server && account.server.renewable) { %> selected
-                <% } %>>Yes</option>
-              <option value="false" <% if (account.server && !account.server.renewable) { %> selected
-                <% } %>>No</option>
-            </select>
-            <small class="form-text text-muted">Is your server running on green power?</small>
-          </div>
-          <div class="form-group">
-            <label>Website</label>
-            <input type="text" class="form-control" name="account_website" id="account_website" placeholder="https://ilovenano.com"
-              pattern="(http(s)?:\/\/.)(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,8}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)"
-              value="<% if (account.website) { %><%= account.website %><% } %>">
-            <small class="form-text text-muted">Your project / personal website</small>
-          </div>
-          <div class="form-group">
-            <label>Nano Node Monitor URL</label>
-            <input type="text" class="form-control" name="account_monitorUrl" id="account_monitorUrl" placeholder="https://monitor.mynanonode.com"
-              value="<% if (account.monitor.url) { %><%= account.monitor.url %><% } %>">
-            <small class="form-text text-muted">Add the full URL to your <a href="https://github.com/NanoTools/nanoNodeMonitor"
-                target="_blank">Nano Node Monitor</a></small>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Save changes</button>
-        </div>
+          <input type="hidden" name="account" value="<%= account.account %>" required>
+        </form>
       </div>
     </div>
-    <input type="hidden" name="account" value="<%= account.account %>" required>
-  </form>
+  </transition>
 </div>
-<script>
-  init.push(function () {
-    $("#editAccountForm").submit(function (e) {
-      e.preventDefault();
-      var form = $(this);
-      var formaction = $(this).attr('action');
-      var formbutton = $(this).find("button[type=submit]").first();
-
-      formbutton.html('<i class="fas fa-spinner fa-spin"></i>');
-
-      $.ajax({
-        type: "POST",
-        url: formaction,
-        data: form.serialize(), // serializes the form's elements.
-        success: function (data) {
-          if (data.status == 'success') {
-            formbutton.attr('class', 'btn btn-success');
-            setTimeout(function () {
-              location = '/account/<%= account.account %>';
-            }, 500);
-          } else if (data.status == 'error') {
-            formbutton.attr('class', 'btn btn-danger');
-          }
-          formbutton.text(data.msg);
-        }
-      });
-    });
-  });
-</script>
 
 <% if(account.votingweight > 0 && account.score < 80){ %>
 <div class="alert alert-dismissible alert-warning">
@@ -595,7 +545,7 @@
   </div>
 <div>
 
-<script src="/static/js/vue.min.js"></script>
+<script src="/static/js/vue.js"></script>
 <script src="/static/js/main-vue.js?v=4"></script>
 <script src="/static/js/axios.min.js"></script>
 <script src="/static/js/moment.min.js"></script>
