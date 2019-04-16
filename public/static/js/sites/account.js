@@ -9,7 +9,7 @@ var app = new Vue({
       info: null
     }
   },
-  created() {
+  mounted() {
     axios
       .get("/api/accounts/" + this.address)
       .then(response => (this.account = response.data))
