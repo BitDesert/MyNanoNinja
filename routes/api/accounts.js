@@ -97,7 +97,7 @@ router.get('/geo', function (req, res) {
     });
 });
 
-app.get('/recommended', function(req, res) {
+router.get('/recommended', function(req, res) {
   res.redirect('/api/accounts/verified');
 });
 
