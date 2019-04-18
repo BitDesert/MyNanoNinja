@@ -147,7 +147,8 @@ router.get('/:account/history', function (req, res) {
       res.json(history);
     })
     .catch(reason => {
-      res.status(500).json({ error: 'Not found', message: reason });
+      res.status(500).json({ error: 'Not found' });
+      console.log('API - Account history', reason)
     });
 });
 
@@ -164,7 +165,8 @@ router.get('/:account/pending', function (req, res) {
       res.json(history);
     })
     .catch(reason => {
-      res.status(500).json({ error: 'Not found', message: reason });
+      res.status(500).json({ error: 'Not found' });
+      console.log('API - Account pending', reason)
     });
 });
 
@@ -181,7 +183,8 @@ router.get('/:account/info', function (req, res) {
       res.json(response);
     })
     .catch(reason => {
-      res.status(500).json({ error: 'Not found', message: reason });
+      res.status(500).json({ error: 'Not found' });
+      console.log('API - Account info', reason)
     });
 });
 
