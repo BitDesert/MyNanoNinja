@@ -1,9 +1,23 @@
 // load the things we need
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt-nodejs');
+var randtoken = require('rand-token');
 
 // define the schema for our user model
 var userSchema = mongoose.Schema({
+  api: {
+    key: {
+      type: String,
+      default: function() {
+          return randtoken.generate(64);
+      },
+      unique: true
+    },
+    calls_remaining: {
+      type: Number,
+      default: 100
+    }
+  },
   facebook: {
     id: String,
     token: String,

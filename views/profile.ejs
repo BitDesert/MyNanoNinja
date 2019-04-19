@@ -194,6 +194,15 @@
   <p>No email addresses from social profiles.</p>
 <% } %>
 
+<h2 class="mt-3">API Key</h2>
+
+<% if (user.api.key) { %>
+  <p>Calls remaining: <%= user.api.calls_remaining %></p>
+<code><%= user.api.key %></code>
+<% } else { %>
+  <p>No API key.</p>
+<% } %>
+
 <h2 class="mt-3">Stay up to date!</h2>
 <p>Follow My Nano Ninja at Discord for feature updates and a chat with other node operators!</p>
 <a href="https://discord.me/nanonodeninja" target="_blank"><img src="https://discordapp.com/api/guilds/431555900432580619/widget.png?style=banner2"></a>
