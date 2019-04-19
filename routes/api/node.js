@@ -43,8 +43,8 @@ isApiAuthorized = (req, res, next) => {
   const authHeader = req.headers.authorization
 
   if (!authHeader) {
+    console.log('NODE API - No header')
     return res.status(403).json({
-      status: 403,
       message: 'FORBIDDEN'
     })
   } else {
@@ -55,8 +55,8 @@ isApiAuthorized = (req, res, next) => {
     .select('api')
     .exec(function (err, user) {
       if (err || !user) {
+        console.log('NODE API - Insufficient funds / User not found')
         return res.status(403).json({
-          status: 403,
           message: 'FORBIDDEN'
         })
       }
@@ -73,13 +73,13 @@ router.post('/', isApiAuthorized, function (req, res) {
   const action = req.body.action;
 
   if(!action){
-    return res.status(403).json({
-      status: 403,
+    console.log('NODE API - No action')
+    return res.status(400).json({
       message: 'No action provided'
     })
   } else if(!allowed_actions.includes(action)){
-    return res.status(403).json({
-      status: 403,
+    console.log('NODE API - Action not supported')
+    return res.status(400).json({
       message: 'Action is not supported'
     })
   }
