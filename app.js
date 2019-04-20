@@ -55,9 +55,9 @@ if (process.env.MATOMO_URL) {
     matomoUrl: process.env.MATOMO_URL,
     matomoToken: process.env.MATOMO_TOKEN
   }));
-
-  express.use(ua.middleware("UA-115902726-4", {cookieName: '_ga'}));
 }
+
+express.use(ua.middleware("UA-115902726-4", {cookieName: '_ga'}));
 
 app.use(logger('dev'));
 app.use(express.json());
