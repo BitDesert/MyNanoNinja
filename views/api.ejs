@@ -8,6 +8,46 @@
 
 <h2>General</h2>
 
+<h3>Direct RPC Access</h3>
+<p>With this endpoint you can communicate with the Nano Node directly.</p>
+<pre>/node</pre>
+<p>
+  The following actions are available:
+  <code>'account_balance',
+  'account_info',
+  'account_history',
+  'account_key',
+  'account_representative',
+  'account_weight',
+  'available_supply',
+  'block_info',
+  'block_account',
+  'block_count',
+  'block_count_type',
+  'chain',
+  'confirmation_active',
+  'confirmation_history',
+  'confirmation_info',
+  'confirmation_quorum',
+  'frontier_count',
+  'process',
+  'representatives',
+  'representatives_online',
+  'successors',
+  'version',
+  'peers',
+  'pending',
+  'pending_exists',
+  'work_validate'</code>
+</p>
+<p>
+  You need a API key which you send via a <code>Authorization: yourapikey</code> HTTP header.<br>
+  The <a href="https://github.com/BitDesert/nano-node-rpc">nano-node-rpc</a> NodeJS library does that for you.<br>
+</p>
+<p>
+  <a href="/profile#apikey">Get you API key here!</a>
+</p>
+
 <h3>Blockcount</h3>
 <p>Returns the current block count</p>
 <pre>/blockcount</pre>

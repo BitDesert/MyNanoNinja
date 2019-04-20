@@ -65,7 +65,7 @@ var app = new Vue({
         .post('/api/editAccount', {
           account: this.address,
           account_alias: '' + this.editAccount.account_alias,
-          account_description: '' + this.editAccount.account_alias,
+          account_description: '' + this.editAccount.account_description,
           account_website: '' + this.editAccount.account_website,
           account_monitorUrl: '' + this.editAccount.account_monitorUrl,
         }).then(response => {

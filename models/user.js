@@ -1,9 +1,24 @@
 // load the things we need
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt-nodejs');
+var randtoken = require('rand-token');
 
 // define the schema for our user model
 var userSchema = mongoose.Schema({
+  api: {
+    key: {
+      type: String,
+      default: function () {
+        return randtoken.generate(64);
+      },
+      unique: true,
+      sparse: true
+    },
+    calls_remaining: {
+      type: Number,
+      default: 100
+    }
+  },
   facebook: {
     id: String,
     token: String,
@@ -48,21 +63,21 @@ var userSchema = mongoose.Schema({
 
 });
 
-userSchema.methods.getEmails = function(){
+userSchema.methods.getEmails = function () {
   var emails = [];
   var user = this.toObject();
 
-  Object.keys(user).forEach(function(key) {
-    if(typeof user[key].token !== 'undefined' && user[key].email){
+  Object.keys(user).forEach(function (key) {
+    if (typeof user[key].token !== 'undefined' && user[key].email) {
       emails.push(user[key].email);
     }
   });
 
   // remove duplicates
-  emails = emails.filter(function(item, pos) {
+  emails = emails.filter(function (item, pos) {
     return emails.indexOf(item) == pos;
   });
-  
+
   return emails;
 };
 

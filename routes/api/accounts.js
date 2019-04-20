@@ -97,6 +97,10 @@ router.get('/geo', function (req, res) {
     });
 });
 
+router.get('/recommended', function(req, res) {
+  res.redirect('/api/accounts/verified');
+});
+
 router.get('/verified', function (req, res) {
   Account.find({
     'owner': {
@@ -124,7 +128,7 @@ router.get('/:account', function (req, res) {
   Account.findOne({
     'account': req.params.account
   })
-    .select('-_id account alias slug uptime uptime_over lastVoted votingweight delegators description website location monitor score verified')
+    .select('-_id account alias slug uptime uptime_over created lastVoted votingweight delegators description website server network.provider location monitor score verified')
     .exec(function (err, account) {
       if (err || !account) {
         console.log("API - Account", err, req.params.account);
@@ -143,7 +147,8 @@ router.get('/:account/history', function (req, res) {
       res.json(history);
     })
     .catch(reason => {
-      res.status(500).json({ error: 'Not found', message: reason });
+      res.status(500).json({ error: 'Not found' });
+      console.log('API - Account history', reason)
     });
 });
 
@@ -160,7 +165,8 @@ router.get('/:account/pending', function (req, res) {
       res.json(history);
     })
     .catch(reason => {
-      res.status(500).json({ error: 'Not found', message: reason });
+      res.status(500).json({ error: 'Not found' });
+      console.log('API - Account pending', reason)
     });
 });
 
@@ -177,7 +183,8 @@ router.get('/:account/info', function (req, res) {
       res.json(response);
     })
     .catch(reason => {
-      res.status(500).json({ error: 'Not found', message: reason });
+      res.status(500).json({ error: 'Not found' });
+      console.log('API - Account info', reason)
     });
 });
 
