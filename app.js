@@ -57,7 +57,7 @@ if (process.env.MATOMO_URL) {
   }));
 }
 
-express.use(ua.middleware("UA-115902726-4", {cookieName: '_ga'}));
+app.use(ua.middleware("UA-115902726-4", {cookieName: '_ga'}));
 
 app.use(logger('dev'));
 app.use(express.json());
