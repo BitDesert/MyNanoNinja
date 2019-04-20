@@ -49,6 +49,7 @@
     "raven": "^2.6.3",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
+    "universal-analytics": "^0.4.20",
     "vue": "^2.5.17"
   }
 }

@@ -14,7 +14,10 @@ var flash = require('connect-flash');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
+
+// analytics
 const matomo = require('./utils/matomo');
+var ua = require("universal-analytics");
 
 // database
 var configDB = require('./config/database.js');
@@ -52,6 +55,8 @@ if (process.env.MATOMO_URL) {
     matomoUrl: process.env.MATOMO_URL,
     matomoToken: process.env.MATOMO_TOKEN
   }));
+
+  express.use(ua.middleware("UA-115902726-4", {cookieName: '_ga'}));
 }
 
 app.use(logger('dev'));
