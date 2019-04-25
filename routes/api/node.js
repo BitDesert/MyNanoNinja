@@ -139,7 +139,7 @@ router.get('/payment/:token/verify', isLoggedIn, function (req, res) {
       res.send(output);
 
     } else {
-      var paidcalls = Math.floor(data.amount * 100000);
+      var paidcalls = Math.floor(data.amount * 100);
       user.api.calls_remaining = user.api.calls_remaining + paidcalls;
 
       user.save(function (err) {
