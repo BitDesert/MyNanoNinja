@@ -1,4 +1,5 @@
 var express = require('express');
+var request = require('request');
 const {
   Nano
 } = require('nanode');
@@ -51,33 +52,42 @@ isApiAuthorized = (req, res, next) => {
     User.findOne({
       'api.key': authHeader
     })
-    .where('api.calls_remaining').gt(0)
-    .select('api')
-    .exec(function (err, user) {
-      if (err || !user) {
-        console.log('NODE API - Insufficient funds / User not found')
-        return res.status(403).json({
-          message: 'FORBIDDEN'
-        })
-      }
-      user.api.calls_remaining--;
-      res.set('X-API-Calls', user.api.calls_remaining)
-      user.save();
-      next();
-    });
+      .where('api.calls_remaining').gt(0)
+      .select('api')
+      .exec(function (err, user) {
+        if (err || !user) {
+          console.log('NODE API - Insufficient funds / User not found')
+          return res.status(403).json({
+            message: 'FORBIDDEN'
+          })
+        }
+        user.api.calls_remaining--;
+        res.set('X-API-Calls', user.api.calls_remaining)
+        user.save();
+        next();
+      });
   }
+}
+
+
+// route middleware to ensure user is logged in
+function isLoggedIn(req, res, next) {
+  if (req.isAuthenticated())
+    return next();
+
+  res.redirect('/');
 }
 
 router.post('/', isApiAuthorized, function (req, res) {
 
   const action = req.body.action;
 
-  if(!action){
+  if (!action) {
     console.log('NODE API - No action')
     return res.status(400).json({
       message: 'No action provided'
     })
-  } else if(!allowed_actions.includes(action)){
+  } else if (!allowed_actions.includes(action)) {
     console.log('NODE API - Action not supported')
     return res.status(400).json({
       message: 'Action is not supported'
@@ -88,25 +98,59 @@ router.post('/', isApiAuthorized, function (req, res) {
   delete params.action;
 
   nano.rpc(action, params)
-  .then(response => {
-    if(!response) return res.status(404).json({ error: 'Not found' });
+    .then(response => {
+      if (!response) return res.status(404).json({ error: 'Not found' });
 
-    res.json(response);
-  })
-  .catch(reason => {
-    res.status(500).json({ error: 'Not found', msg: reason });
-  });
+      res.json(response);
+    })
+    .catch(reason => {
+      res.status(500).json({ error: 'Not found', msg: reason });
+    });
 });
 
 router.get('/version', function (req, res) {
   nano.rpc('version')
-  .then(response => {
-    if(!response) return res.status(404).json({ error: 'Not found' });
+    .then(response => {
+      if (!response) return res.status(404).json({ error: 'Not found' });
 
-    res.json(response);
-  })
-  .catch(reason => {
-    res.status(500).json({ error: 'Not found', msg: reason });
+      res.json(response);
+    })
+    .catch(reason => {
+      res.status(500).json({ error: 'Not found', msg: reason });
+    });
+});
+
+router.get('/payment/:token/verify', isLoggedIn, function (req, res) {
+  var user = req.user;
+  var token = req.params.token;
+
+  var output = {};
+
+  request.get({
+    url: 'https://mynano.ninja/payment/api/verify?token=' + token,
+    json: true
+  }, function (err, response, data) {
+    if (err || response.statusCode !== 200) {
+      output.error = 'API error';
+      res.send(output);
+
+    } else if (data.fulfilled === false) {
+      output.error = 'not_fulfilled';
+      res.send(output);
+
+    } else {
+      var paidcalls = Math.floor(data.amount * 100000);
+      user.api.calls_remaining = user.api.calls_remaining + paidcalls;
+
+      user.save(function (err) {
+        if (err) {
+          console.log("API - Node more calls", err);
+        }
+        output.status = 'OK';
+        output.paidcalls = paidcalls;
+        res.send(output);
+      });
+    }
   });
 });
 

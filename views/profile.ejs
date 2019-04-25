@@ -6,27 +6,27 @@
 
   <div class="col">
     <div class="card mb-3">
-        <div class="card-body">
-          <h4 class="card-title">Nano Accounts</h4>
-          <p class="card-text"></p>
+      <div class="card-body">
+        <h4 class="card-title">Nano Accounts</h4>
+        <p class="card-text"></p>
+        <% if (accounts.length > 0) { %>
+        <!--<%= accounts.length %> Nano accounts<br>-->
+        <% for(var i=0; i < accounts.length; i++) { %>
+        <a href="/account/<%= accounts[i].account %>"><%= accounts[i].account %></a><br>
+        <% } %>
+        <% } else { %>
+        No Nano accounts connected
+        <% } %>
+        </p>
+        <a href="/auth/connect/nano" class="btn btn-primary">
           <% if (accounts.length > 0) { %>
-            <!--<%= accounts.length %> Nano accounts<br>-->
-            <% for(var i=0; i < accounts.length; i++) { %>
-              <a href="/account/<%= accounts[i].account %>"><%= accounts[i].account %></a><br>
-            <% } %>
+          Connect more
           <% } else { %>
-            No Nano accounts connected
+          Connect
           <% } %>
-          </p>
-          <a href="/auth/connect/nano" class="btn btn-primary">
-            <% if (accounts.length > 0) { %>
-              Connect more
-            <% } else { %>
-              Connect
-            <% } %>
-          </a>
-        </div>
+        </a>
       </div>
+    </div>
   </div>
 
 </div>
@@ -40,140 +40,148 @@
 
   <div class="col-sm-4">
     <div class="card mb-3">
-        <div class="card-body">
-          <h4 class="card-title">Facebook</h4>
-          <% if (user.facebook.token) { %>
-          <div class="row">
-            <div class="col-3">
-              <img class="img-fluid" src="/static/img/ninja-icon.png" alt="Avatar">
-            </div>
-            <div class="col">
-              <p>
-                <%= user.facebook.name %>
-              </p>
-              <a href="/auth/unlink/facebook" class="card-link">Unlink</a>
-            </div>
+      <div class="card-body">
+        <h4 class="card-title">Facebook</h4>
+        <% if (user.facebook.token) { %>
+        <div class="row">
+          <div class="col-3">
+            <img class="img-fluid" src="/static/img/ninja-icon.png" alt="Avatar">
           </div>
-          <% } else { %>
-          <a href="/auth/facebook" class="btn btn-primary">Connect</a>
-          <% } %>
+          <div class="col">
+            <p>
+              <%= user.facebook.name %>
+            </p>
+            <a href="/auth/unlink/facebook" class="card-link">Unlink</a>
+          </div>
         </div>
+        <% } else { %>
+        <a href="/auth/facebook" class="btn btn-primary">Connect</a>
+        <% } %>
       </div>
+    </div>
   </div>
 
   <div class="col-sm-4">
     <div class="card mb-3">
-        <div class="card-body">
-          <h4 class="card-title">Twitter</h4>
-          <% if (user.twitter.token) { %>
-          <div class="row">
-            <div class="col-3">
-                <img class="img-fluid" src="<% if(user.twitter.avatar){ %><%= user.twitter.avatar %><% } else { %>/static/img/ninja-icon.png<% } %>" alt="Avatar">
-            </div>
-            <div class="col">
-              <p>
-                <%= user.twitter.displayName %>
-              </p>
-              <a href="/auth/unlink/twitter" class="card-link">Unlink</a>
-            </div>
+      <div class="card-body">
+        <h4 class="card-title">Twitter</h4>
+        <% if (user.twitter.token) { %>
+        <div class="row">
+          <div class="col-3">
+            <img class="img-fluid"
+              src="<% if(user.twitter.avatar){ %><%= user.twitter.avatar %><% } else { %>/static/img/ninja-icon.png<% } %>"
+              alt="Avatar">
           </div>
-          <% } else { %>
-          <a href="/auth/twitter" class="btn btn-primary">Connect</a>
-          <% } %>
+          <div class="col">
+            <p>
+              <%= user.twitter.displayName %>
+            </p>
+            <a href="/auth/unlink/twitter" class="card-link">Unlink</a>
+          </div>
         </div>
+        <% } else { %>
+        <a href="/auth/twitter" class="btn btn-primary">Connect</a>
+        <% } %>
       </div>
+    </div>
   </div>
 
   <div class="col-sm-4">
     <div class="card mb-3">
-        <div class="card-body">
-          <h4 class="card-title">Google</h4>
-          <% if (user.google.token) { %>
-          <div class="row">
-            <div class="col-3">
-              <img class="img-fluid" src="/static/img/ninja-icon.png" alt="Avatar">
-            </div>
-            <div class="col">
-              <p>
-                <%= user.google.name %>
-              </p>
-              <a href="/auth/unlink/google" class="card-link">Unlink</a>
-            </div>
+      <div class="card-body">
+        <h4 class="card-title">Google</h4>
+        <% if (user.google.token) { %>
+        <div class="row">
+          <div class="col-3">
+            <img class="img-fluid" src="/static/img/ninja-icon.png" alt="Avatar">
           </div>
-          <% } else { %>
-          <!--<a href="/auth/google" class="btn btn-primary">Connect</a>-->
-          <% } %>
+          <div class="col">
+            <p>
+              <%= user.google.name %>
+            </p>
+            <a href="/auth/unlink/google" class="card-link">Unlink</a>
+          </div>
         </div>
+        <% } else { %>
+        <!--<a href="/auth/google" class="btn btn-primary">Connect</a>-->
+        <% } %>
       </div>
+    </div>
   </div>
 
   <div class="col-sm-4">
     <div class="card mb-3">
-        <div class="card-body">
-          <h4 class="card-title">GitHub</h4>
-          <% if (user.github.token) { %>
-          <div class="row">
-            <div class="col-3">
-              <img class="img-fluid" src="<% if(user.github.avatar){ %><%= user.github.avatar %><% } else { %>/static/img/ninja-icon.png<% } %>" alt="Avatar">
-            </div>
-            <div class="col">
-              <p>
-                <%= user.github.displayName %> (<%= user.github.username %>)
-              </p>
-              <a href="/auth/unlink/github" class="card-link">Unlink</a>
-            </div>
+      <div class="card-body">
+        <h4 class="card-title">GitHub</h4>
+        <% if (user.github.token) { %>
+        <div class="row">
+          <div class="col-3">
+            <img class="img-fluid"
+              src="<% if(user.github.avatar){ %><%= user.github.avatar %><% } else { %>/static/img/ninja-icon.png<% } %>"
+              alt="Avatar">
           </div>
-          <% } else { %>
-          <a href="/auth/github" class="btn btn-primary">Connect</a>
-          <% } %>
+          <div class="col">
+            <p>
+              <%= user.github.displayName %> (<%= user.github.username %>)
+            </p>
+            <a href="/auth/unlink/github" class="card-link">Unlink</a>
+          </div>
         </div>
+        <% } else { %>
+        <a href="/auth/github" class="btn btn-primary">Connect</a>
+        <% } %>
       </div>
+    </div>
   </div>
 
   <div class="col-sm-4">
     <div class="card mb-3">
-        <div class="card-body">
-          <h4 class="card-title">Reddit</h4>
-          <% if (user.reddit.token) { %>
-          <div class="row">
-            <div class="col-3">
-                <img class="img-fluid" src="<% if(user.reddit.avatar){ %><%= user.reddit.avatar %><% } else { %>/static/img/ninja-icon.png<% } %>" alt="Avatar">
-            </div>
-            <div class="col">
-              <p>
-                <%= user.reddit.name %>
-              </p>
-              <a href="/auth/unlink/reddit" class="card-link">Unlink</a>
-            </div>
+      <div class="card-body">
+        <h4 class="card-title">Reddit</h4>
+        <% if (user.reddit.token) { %>
+        <div class="row">
+          <div class="col-3">
+            <img class="img-fluid"
+              src="<% if(user.reddit.avatar){ %><%= user.reddit.avatar %><% } else { %>/static/img/ninja-icon.png<% } %>"
+              alt="Avatar">
           </div>
-          <% } else { %>
-          <a href="/auth/reddit" class="btn btn-primary">Connect</a>
-          <% } %>
+          <div class="col">
+            <p>
+              <%= user.reddit.name %>
+            </p>
+            <a href="/auth/unlink/reddit" class="card-link">Unlink</a>
+          </div>
         </div>
+        <% } else { %>
+        <a href="/auth/reddit" class="btn btn-primary">Connect</a>
+        <% } %>
       </div>
+    </div>
   </div>
 
   <div class="col-sm-4">
     <div class="card mb-3">
-        <div class="card-body">
-          <h4 class="card-title">Discord</h4>
-          <% if (user.discord.token) { %>
-          <div class="row">
-            <div class="col-3">
-              <img class="img-fluid" src="https://cdn.discordapp.com/avatars/<%= user.discord.id %>/<%= user.discord.avatar %>.png" alt="Avatar">
-            </div>
-            <div class="col">
-              <p>
-                <%= user.discord.username %>#<%= user.discord.discriminator %>
-              </p>
-              <a href="/auth/unlink/discord" class="card-link">Unlink</a>
-            </div>
+      <div class="card-body">
+        <h4 class="card-title">Discord</h4>
+        <% if (user.discord.token) { %>
+        <div class="row">
+          <div class="col-3">
+            <img class="img-fluid"
+              src="https://cdn.discordapp.com/avatars/<%= user.discord.id %>/<%= user.discord.avatar %>.png"
+              alt="Avatar">
           </div>
-          <% } else { %>
-          <a href="/auth/discord" class="btn btn-primary">Connect</a>
-          <% } %>
+          <div class="col">
+            <p>
+              <%= user.discord.username %>#<%= user.discord.discriminator %>
+            </p>
+            <a href="/auth/unlink/discord" class="card-link">Unlink</a>
+          </div>
         </div>
+        <% } else { %>
+        <a href="/auth/discord" class="btn btn-primary">Connect</a>
+        <% } %>
       </div>
+    </div>
   </div>
 
 </div>
@@ -184,27 +192,117 @@
 <p>We will send you notifications when your representative goes offline to:</p>
 
 <ul class="list-group">
-<% for(var i=0; i < emails.length; i++) { %>
+  <% for(var i=0; i < emails.length; i++) { %>
   <li class="list-group-item d-flex justify-content-between align-items-center">
     <%= emails[i] %>
   </li>
-<% } %>
+  <% } %>
 </ul>
 <% } else { %>
-  <p>No email addresses from social profiles.</p>
+<p>No email addresses from social profiles.</p>
 <% } %>
 
 <h2 class="mt-3" id="apikey">API Key</h2>
 
 <% if (user.api.key) { %>
-  <p>Calls remaining: <%= user.api.calls_remaining %></p>
-<code><%= user.api.key %></code>
+<p>
+  <code><%= user.api.key %></code>
+</p>
+<p>
+  Calls remaining: <%= user.api.calls_remaining %>
+</p>
+<div class="row">
+  <div class="col-4">
+    <label>Do you need more API calls?</label>
+    <div class="input-group mb-3">
+      <input type="text" class="form-control" placeholder="Enter a number" id="moreapicalls" pattern="[1-9][0-9]*">
+      <div class="input-group-append">
+        <button class="btn btn-primary" type="button" id="getmore">Get more</button>
+      </div>
+    </div>
+  </div>
+</div>
+<p id="statustext"></p>
 <% } else { %>
-  <p>No API key.</p>
+<p>No API key.</p>
 <% } %>
+
+<script src="/static/js/accept-nano/index.js"></script>
+
+<script>
+  window.acceptNano.setup({
+    apiURL: 'https://mynano.ninja/payment/api', // URL of your Accept NANO server (String, required)
+    debug: false, // used for enabling debug mode, (Bool, non-required, false by default)
+    pollInterval: 1500, // time period (ms) to check for verification of the payment sessions (Number, non-required, 1500 by default)
+  });
+
+  init.push(function () {
+    $("#getmore").click(
+      function () {
+        window.acceptNano.startPayment({
+          data: {
+            amount: ($('#moreapicalls').val() * 0.01),
+            currency: 'nano'
+          },
+          onStart: (paymentData) => {
+            console.log('onStart', paymentData)
+          },
+          onSuccess: (paymentData) => {
+            console.log('onSuccess', paymentData)
+            verifyPayment(paymentData.token)
+          },
+          onFailure: (failureReason) => {
+            console.log('onFailure', failureReason)
+            setPaymentStatus('Error: ' + failureReason);
+          },
+          onCancel: () => {
+            setPaymentStatus('Payment cancelled.');
+          }
+        })
+      }
+    )
+
+    $('#moreapicalls').blur(function (evt) {
+      evt.target.checkValidity();
+    }).bind('invalid', function (event) {
+      setPaymentStatus('Invalid amount');
+      $('#moreapicalls').val('')
+    });
+
+  });
+
+  function verifyPayment(token) {
+    setPaymentStatus('Verifying payment...');
+
+    $.getJSON('/api/node/payment/' + token + '/verify', function (verifydata) {
+      console.log(verifydata);
+
+      if (verifydata.status == 'OK') {
+        setPaymentStatus('Success! You get ' + verifydata.paidcalls + ' new calls.');
+        setTimeout(function () {
+          location.reload();
+        }, 1 * 1000);
+
+      } else if (verifydata.error == 'not_fulfilled') {
+        setPaymentStatus('Waiting for confimation...');
+        setTimeout(function () {
+          verifyPayment(token);
+        }, 3000);
+
+      } else {
+        setPaymentStatus('Error: ' + verifydata.error);
+      }
+    });
+  }
+
+  function setPaymentStatus(status) {
+    $("#statustext").text(status);
+  }
+</script>
 
 <h2 class="mt-3">Stay up to date!</h2>
 <p>Follow My Nano Ninja at Discord for feature updates and a chat with other node operators!</p>
-<a href="https://discord.me/nanonodeninja" target="_blank"><img src="https://discordapp.com/api/guilds/431555900432580619/widget.png?style=banner2"></a>
+<a href="https://discord.me/nanonodeninja" target="_blank"><img
+    src="https://discordapp.com/api/guilds/431555900432580619/widget.png?style=banner2"></a>
 
 <% include ../partials/footer.ejs %>
