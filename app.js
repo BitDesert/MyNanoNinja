@@ -26,8 +26,8 @@ mongoose.connect(configDB.url,
 );
 
 // nano node
-if(process.env.NODE_INTERNAL != ''){
-   var nanonode = require('./nano/node');
+if (process.env.NODE_INTERNAL != '') {
+  var nanonode = require('./nano/node');
 }
 
 var nanorpc = require('./nano/rpc_client');
@@ -49,7 +49,7 @@ app.enable('trust proxy')
 
 if (process.env.MATOMO_URL) {
   console.log('Matomo Analytics activated');
-  
+
   app.use(matomo({
     siteId: process.env.MATOMO_SITE,
     matomoUrl: process.env.MATOMO_URL,
@@ -57,7 +57,22 @@ if (process.env.MATOMO_URL) {
   }));
 }
 
-app.use(ua.middleware("UA-115902726-4", {cookieName: '_ga'}));
+app.use(ua.middleware("UA-115902726-4", { cookieName: '_ga' }));
+app.use(function (req, res, next) {
+  if (!req.headers['x-forwarded-for']) {
+      req.headers['x-forwarded-for'] = '0.0.0.0';
+  }
+  req.visitor.pageview({
+    dp: req.originalUrl,
+    dr: req.get('Referer'),
+    ua: req.headers['user-agent'],
+    uip: req.connection.remoteAddress
+      || req.socket.remoteAddress
+      || req.connection.remoteAddress
+      || req.headers['x-forwarded-for'].split(',').pop()
+  }).send()
+  next();
+});
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -80,7 +95,7 @@ app.use(session({
   secret: process.env.SESSION_SECRET, // session secret
   resave: true,
   saveUninitialized: true,
-  store: new MongoStore({url: configDB.sessionurl})
+  store: new MongoStore({ url: configDB.sessionurl })
 }));
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
@@ -106,12 +121,12 @@ app.use('/auth', authRouter);
 app.use('/statistics', statisticsRouter);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
