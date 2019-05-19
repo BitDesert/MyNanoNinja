@@ -63,6 +63,13 @@ module.exports = function (nanorpc) {
     });
   });
 
+  router.get('/faq', function (req, res, next) {
+    res.render('faq', {
+      loggedin: req.isAuthenticated(),
+      title: 'FAQ'
+    });
+  });
+
   function variableRound(value){
     if(value > 1){
       return round(value, 2);
