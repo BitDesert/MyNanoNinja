@@ -32,8 +32,8 @@
   init.push(setupActiveReps);
 
   function setupActiveReps(){
-    getDataActiveReps('chartrepsdecen', '/api/accounts/active');
-    getDataActiveReps('chartrepsdecenonline', '/api/accounts/active/online');
+    getDataActiveReps('chartrepsdecen', '/api/accounts/principals');
+    getDataActiveReps('chartrepsdecenonline', '/api/accounts/principals/online');
   }
 
   function getDataActiveReps(chartid, url) {
@@ -121,7 +121,7 @@
           hidden: true
         },
         {
-          label: 'Active',
+          label: 'Principals',
           data: [],
           borderColor: chartColors[1],
           backgroundColor: hexToRgbA(chartColors[1], '0.2'),

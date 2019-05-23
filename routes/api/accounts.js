@@ -11,7 +11,7 @@ var router = express.Router();
 var Account = require('../../models/account');
 var cache = require('../../utils/cache');
 
-router.get('/active', function (req, res) {
+router.get('/principals', function (req, res) {
   Account.find()
     .where('votingweight').gte(133248289218203497353846153999000000)
     .sort('-votingweight')
@@ -59,7 +59,7 @@ router.get('/monitors', cache(60), function (req, res) {
     });
 });
 
-router.get('/active/online', function (req, res) {
+router.get('/principals/online', function (req, res) {
   Account
     .find({
       'lastVoted': {

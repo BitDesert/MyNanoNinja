@@ -30,15 +30,15 @@ module.exports = function (nanorpc) {
   });
 
   /* GET home page. */
-  router.get('/active', function (req, res, next) {
+  router.get('/principals', function (req, res, next) {
     Account.find()
     .where('votingweight').gte(133248289218203497353846153999000000)
     .sort('-votingweight')
     .populate('owner')
     .exec(function (err, accounts) {
-      res.render('active', {
+      res.render('principals', {
         loggedin: req.isAuthenticated(),
-        title: 'Active Representatives',
+        title: 'Principal Representatives',
         moment: moment,
         accounts: accounts,
         nanorpc: nanorpc,
