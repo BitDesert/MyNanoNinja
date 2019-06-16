@@ -42,6 +42,22 @@ module.exports = {
         MATOMO_SITE: "1",
         PORT: 4000
       }
+    },
+    {
+      name      : 'My Nano Ninja',
+      script    : 'bin/www',
+      "log_date_format" : "YYYY-MM-DD HH:mm:ss",
+      env: {
+        NODE_ENV: 'production',
+        DOMAIN: 'https://mynano.ninja',
+        NODE_RPC: 'http://[::1]:7076',
+        MONGO_URL: 'mongodb://localhost:27017/mynanoninja',
+        SENTRY_URL: '',
+        EMAIL_HOST: 'smtp.myhost.com',
+        EMAIL_USER: 'alert@mynano.ninja',
+        EMAIL_PASS: 'mypassword',
+        DRPC_REPSONLINE: '[]'
+      }
     }
   ]
 };

@@ -1,3 +1,20 @@
+console.log('=== STARING NANO NINJA CRON ===');
+
+// global requirements
+var Raven = require('raven');
+Raven.config(process.env.SENTRY_URL).install();
+
+var mongoose = require('mongoose');
+mongoose.connect(process.env.MONGO_URL,
+  { useNewUrlParser: true }
+);
+
+// models
+var Account = require('./models/account');
+var User = require('./models/user');
+var Check = require('./models/check');
+
+// other requirements
 var nanorpc = require('./nano/rpc_client');
 const {
   Nano
@@ -9,8 +26,9 @@ const nodemailer = require('nodemailer');
 var request = require('request');
 var tools = require('./tools');
 
-var Account = require('./models/account');
-var Check = require('./models/check');
+// cron subtasks
+require('./cron/peers');
+require('./cron/statistics');
 
 // mail
 let transporter = nodemailer.createTransport({
@@ -26,8 +44,6 @@ let transporter = nodemailer.createTransport({
 const nano = new Nano({
   url: process.env.NODE_RPC
 });
-
-console.log('Started Cron');
 
 /*
  * Node Uptime 

@@ -172,12 +172,12 @@ accountSchema.methods.updateUptimeFor = function (type, callback) {
       return
     } 
 
-    if (!stats){
+    if (!stats || stats.length == 0){
       console.error(err, 'No Uptime', stats);
       callback()
       return
     } 
-    //console.log(type, stats[0].uptime);
+    //console.log(type, stats);
 
     self.uptime_over[type] = stats[0].uptime;
     self.markModified('uptime_over.'+type)

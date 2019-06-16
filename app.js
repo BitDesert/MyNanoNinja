@@ -25,17 +25,7 @@ mongoose.connect(configDB.url,
   { useNewUrlParser: true }
 );
 
-// nano node
-if (process.env.NODE_INTERNAL != '') {
-  var nanonode = require('./nano/node');
-}
-
 var nanorpc = require('./nano/rpc_client');
-
-// Cron
-require('./cron/peers');
-require('./cron/statistics');
-require('./cron');
 
 // passport
 require('./config/passport')(passport); // pass passport for configuration
