@@ -89,6 +89,9 @@ Vue.filter('momentFromNow', function (value) {
 })
 
 Vue.filter('momentUnixFromNow', function (value) {
+  if(value == 0){
+    return 'Unkown'
+  }
   return moment.unix(value).fromNow();
 })
 
