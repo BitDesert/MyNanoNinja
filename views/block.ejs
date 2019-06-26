@@ -28,6 +28,10 @@
           </td>
         </tr>
         <tr>
+          <th scope="row">Date</th>
+          <td>{{block.local_timestamp | momentUnixFromNow}} - {{block.local_timestamp | momentUnixFormat}}</td>
+        </tr>
+        <tr>
           <th scope="row">Amount</th>
           <td>{{block.amount | toMnano}} NANO</td>
         </tr>
@@ -61,6 +65,7 @@
 <script src="/static/js/vue.min.js"></script>
 <script src="/static/js/main-vue.js?v=6"></script>
 <script src="/static/js/axios.min.js"></script>
+<script src="/static/js/moment.min.js"></script>
 <script src="/static/js/big.min.js"></script>
 <script>
   const hash = "<%= hash %>";
