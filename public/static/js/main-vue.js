@@ -88,6 +88,14 @@ Vue.filter('momentFromNow', function (value) {
   return moment(value).fromNow();
 })
 
+Vue.filter('momentUnixFromNow', function (value) {
+  return moment.unix(value).fromNow();
+})
+
+Vue.filter('momentUnixFormat', function (value) {
+  return moment.unix(value).format('YYYY-MM-DD HH:mm:ss');
+})
+
 Vue.filter('round', function (value, precision) {
   if (Number.isInteger(precision)) {
     var shift = Math.pow(10, precision);
