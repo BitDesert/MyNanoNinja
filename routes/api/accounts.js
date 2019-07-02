@@ -125,8 +125,12 @@ router.get('/verified', function (req, res) {
 });
 
 router.get('/:account', function (req, res) {
+
+  // replace nano_ with xrb_ (for now)
+  var accountparam = req.params.account.replace(/nano_/g, "xrb_");
+
   Account.findOne({
-    'account': req.params.account
+    'account': accountparam
   })
     .select('-_id account alias slug uptime uptime_over created lastVoted votingweight delegators description website server network.provider location monitor score verified')
     .exec(function (err, account) {
