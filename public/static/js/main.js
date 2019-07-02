@@ -24,7 +24,7 @@ $(".form-search").submit(function (e) {
 
   var query = $(this).serializeArray()[0].value;
 
-  if (/^xrb_[a-z0-9]{60}$/.test(query)) {
+  if (/^(xrb|nano)_[a-z0-9]{60}$/.test(query)) {
     window.location = '/account/' + query;
   } else if (/^[A-Z0-9]{64}$/.test(query)) {
     window.location = '/block/' + query;
