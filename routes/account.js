@@ -10,7 +10,7 @@ module.exports = function (nanorpc) {
 
     Account.findOne({
       $or: [
-        { 'account': myaccount.replace(/nano_/g, "xrb_") },
+        { 'account': myaccount.replace(/xrb_/g, "nano_") },
         { 'slug': myaccount }
       ]
     })

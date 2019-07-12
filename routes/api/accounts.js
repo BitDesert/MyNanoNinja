@@ -127,7 +127,7 @@ router.get('/verified', function (req, res) {
 router.get('/:account', function (req, res) {
 
   // replace nano_ with xrb_ (for now)
-  var accountparam = req.params.account.replace(/nano_/g, "xrb_");
+  var accountparam = req.params.account.replace(/xrb_/g, "nano_");
 
   Account.findOne({
     'account': accountparam
