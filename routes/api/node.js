@@ -37,7 +37,8 @@ const allowed_actions = [
   'peers',
   'pending',
   'pending_exists',
-  'work_validate'
+  'work_validate',
+  'key_create'
 ]
 
 isApiAuthorized = (req, res, next) => {
