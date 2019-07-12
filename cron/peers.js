@@ -64,7 +64,7 @@ function updatePeer(peer) {
           }
         });
       } catch (error) {
-        console.error(error);
+        console.error(error, peer);
       }
     });
 }
