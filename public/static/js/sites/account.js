@@ -77,7 +77,7 @@ var app = new Vue({
           
         }).catch(error => {
           console.log('CATCH', error.response);
-          this.editAccount.button_submit = error.response.msg;
+          this.editAccount.button_submit = error.response.data.msg;
           
         })
     }

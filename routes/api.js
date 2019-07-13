@@ -64,8 +64,6 @@ module.exports = function (nanorpc) {
 
         var output = {};
 
-        console.log(account);
-
         account.alias = req.body.account_alias;
         account.description = req.body.account_description;
         account.website = req.body.account_website;
@@ -85,11 +83,13 @@ module.exports = function (nanorpc) {
             if (err || response.statusCode !== 200) {
               output.status = 'error';
               output.msg = 'Couldn\'t contact Node Monitor!';
+              console.log(output);
               res.status(400).json(output);
 
             } else if (data.nanoNodeAccount != account.account) {
               output.status = 'error';
               output.msg = 'Node Monitor account mismatch!';
+              console.log(output);
               res.status(400).json(output);
 
             } else {
@@ -109,6 +109,7 @@ module.exports = function (nanorpc) {
                   output.status = 'success';
                   output.msg = 'Success!';
                 }
+                console.log(output);
                 res.json(output);
               });
             }
