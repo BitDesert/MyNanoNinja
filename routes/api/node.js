@@ -19,9 +19,15 @@ const allowed_actions = [
   'account_key',
   'account_representative',
   'account_weight',
+  'accounts_balances',
+  'accounts_frontiers',
+  'accounts_pending',
+  'active_difficulty',
   'available_supply',
   'block_info',
   'block_account',
+  'block_create',
+  'block_confirm',
   'block_count',
   'block_count_type',
   'chain',
@@ -125,7 +131,7 @@ router.post('/', isApiAuthorized, function (req, res) {
         console.log('work_generate error', error);
         res.status(500).json({ error: 'Not found', msg: error });
       });
-      
+
   } else {
     nano.rpc(action, params)
       .then(response => {
