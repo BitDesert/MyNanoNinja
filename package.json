@@ -32,6 +32,7 @@
     "mongoose-slug-updater": "^3.1.4",
     "morgan": "^1.9.1",
     "nano-node": "0.0.7",
+    "nano-node-rpc": "^0.3.1",
     "nanode": "^2.3.3",
     "node-cron": "^1.2.1",
     "nodemailer": "^4.6.4",

@@ -35,6 +35,8 @@ module.exports = {
         EMAIL_USER: 'alert@mynano.ninja',
         EMAIL_PASS: 'mypassword',
         BRAINBLOCKS_POD_KEY: 'mykey',
+        DPOW_USER: 'user',
+        DPOW_KEY: 'longhash',
         DRPC_REPSONLINE: '[]',
         VERIFICATION_AMOUNT: '1',
         MATOMO_URL: "https://piwik.org/piwik.php",

@@ -1,5 +1,6 @@
 var express = require('express');
 var request = require('request');
+const axios = require('axios');
 const {
   Nano
 } = require('nanode');
@@ -38,6 +39,7 @@ const allowed_actions = [
   'pending',
   'pending_exists',
   'work_validate',
+  'work_generate',
   'key_create',
   'krai_from_raw',
   'krai_to_raw',
@@ -104,15 +106,37 @@ router.post('/', isApiAuthorized, function (req, res) {
   var params = Object.assign({}, req.body);
   delete params.action;
 
-  nano.rpc(action, params)
-    .then(response => {
-      if (!response) return res.status(404).json({ error: 'Not found' });
-
-      res.json(response);
-    })
-    .catch(reason => {
-      res.status(500).json({ error: 'Not found', msg: reason });
-    });
+  if(action == 'work_generate'){
+    console.log('work_generate via DPOW');
+    
+    axios.post('https://dpow.nanocenter.org/service/', {
+        "hash": params.hash,
+        "user": process.env.DPOW_USER, 
+        "api_key": process.env.DPOW_KEY
+      })
+      .then(function (response) {
+        console.log('work_generate success', response.data.work);
+        
+        res.json({
+          work: response.data.work
+        });
+      })
+      .catch(function (error) {
+        console.log('work_generate error', error);
+        res.status(500).json({ error: 'Not found', msg: error });
+      });
+      
+  } else {
+    nano.rpc(action, params)
+      .then(response => {
+        if (!response) return res.status(404).json({ error: 'Not found' });
+  
+        res.json(response);
+      })
+      .catch(reason => {
+        res.status(500).json({ error: 'Not found', msg: reason });
+      });
+  }
 });
 
 router.get('/version', function (req, res) {
