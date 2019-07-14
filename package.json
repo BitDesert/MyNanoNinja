@@ -32,7 +32,7 @@
     "mongoose-slug-updater": "^3.1.4",
     "morgan": "^1.9.1",
     "nano-node": "0.0.7",
-    "nanode": "^2.2.1",
+    "nanode": "^2.3.3",
     "node-cron": "^1.2.1",
     "nodemailer": "^4.6.4",
     "passport": "~0.3.2",
@@ -51,6 +51,7 @@
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
     "universal-analytics": "^0.4.20",
-    "vue": "^2.5.17"
+    "vue": "^2.5.17",
+    "ws": "^7.1.0"
   }
 }
