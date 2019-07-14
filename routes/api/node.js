@@ -38,7 +38,13 @@ const allowed_actions = [
   'pending',
   'pending_exists',
   'work_validate',
-  'key_create'
+  'key_create',
+  'krai_from_raw',
+  'krai_to_raw',
+  'mrai_from_raw',
+  'mrai_to_raw',
+  'rai_from_raw',
+  'rai_to_raw'
 ]
 
 isApiAuthorized = (req, res, next) => {
