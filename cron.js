@@ -594,7 +594,7 @@ function updateDelegators() {
 
 function updateAccountDelegators(account, callback) {
   console.log('Updating delegators of', account.account)
-  node.rpc('delegators_count', { account: account.account })
+  nano.rpc('delegators_count', { account: account.account })
     .then((delegators) => {
 
       console.log(account.account, delegators.count, 'delegators')
