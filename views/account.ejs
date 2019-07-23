@@ -94,6 +94,16 @@
         </div>
       </div>
     </div>
+    <div class="px-3" v-if="account && account.delegators > 0">
+      <div class="flex items-center grey-text mb-1">
+        <span>Delegators</span>
+      </div>
+      <div class="flex">
+        <div class="text-lg text-white semibold truncate">
+          {{ account.delegators | toLocaleString }}
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
