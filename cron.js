@@ -220,10 +220,15 @@ function updateNodeMonitor(account, callback) {
     timeout: 5000
   }, function (err, response, data) {
     try {
-      if (err || response.statusCode !== 200) {
-        console.log('CRON - updateNodeMonitor - Could not contact monitor for ' + account.account + ' (' + response.statusCode + ')', error);
+      if (err) {
+        console.log('CRON - updateNodeMonitor - Could not contact monitor for ' + account.account, error);
         callback();
         return;
+
+      } else if (response.statusCode !== 200) {
+          console.log('CRON - updateNodeMonitor - Could not contact monitor for ' + account.account + ' (' + response.statusCode + ')', error);
+          callback();
+          return;
 
       } else if (data.nanoNodeAccount != account.account) {
         console.log('CRON - updateNodeMonitor - Account mismatch: ' + account.account);

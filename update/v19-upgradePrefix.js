@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var async = require("async");
 
-mongoose.connect('mongodb://localhost:27017/dbname',
+mongoose.connect('mongodb://localhost:27017/nanonodeninja',
     { useNewUrlParser: true }
 );
 
