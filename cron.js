@@ -24,6 +24,7 @@ var moment = require('moment');
 var async = require("async");
 const nodemailer = require('nodemailer');
 var request = require('request');
+var rp = require('request-promise');
 var tools = require('./tools');
 
 // cron subtasks
