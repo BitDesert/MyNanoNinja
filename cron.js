@@ -226,6 +226,7 @@ function updateNodeMonitor(account, callback) {
         return;
 
       } else if (data.nanoNodeAccount != account.account) {
+        console.log('CRON - updateNodeMonitor - Account mismatch: ' + account.account);
 
         // remove the fields
         delete account.monitor.version;
