@@ -217,11 +217,11 @@ function updateNodeMonitor(account, callback) {
   request.get({
     url: account.monitor.url + '/api.php',
     json: true,
-    timeout: 10
+    timeout: 5000
   }, function (err, response, data) {
     try {
       if (err || response.statusCode !== 200) {
-        console.log('CRON - updateNodeMonitor - Could not contact monitor for ' + account.account);
+        console.log('CRON - updateNodeMonitor - Could not contact monitor for ' + account.account + ' (' + response.statusCode + ')', error);
         callback();
         return;
 
@@ -249,7 +249,7 @@ function updateNodeMonitor(account, callback) {
         callback();
       });
     } catch (error) {
-      console.error('Problem with updateNodeMonitor')
+      console.error('Problem with updateNodeMonitor', error)
       callback();
     }
   });
