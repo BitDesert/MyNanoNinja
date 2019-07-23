@@ -568,39 +568,48 @@ function updateAccountWeight(account, callback){
 // account delegators count
 // currently no cron
 // TODO: needs work when implemented again
+cron.schedule('0 3 * * *', updateDelegators);
+
 function updateDelegators() {
   console.log('Updating Delegators...');
-  if(q.length > 1000){
-    console.log('Queue is full ('+q.length+')');
-    //return;
-  }
 
   // only accounts with more than 1 NANO delegated
-  Account.find({'votingweight': {$gt:1000000000000000000000000000000}})
-  .exec(function (err, accounts) {
-    console.log('Reps found: '+accounts.length);
-    
-    for (var i = 0; i < accounts.length; i++) {
-      updateAccountDelegatorsQueue(accounts[i]);    
-    }
-  });
+  Account.find({ 'votingweight': { $gt: 133248289218203497353846153999000000 } })
+    .exec(function (err, accounts) {
+      console.log('Reps found: ' + accounts.length);
+
+      async.forEachOfSeries(accounts, (account, key, callback) => {
+
+        updateAccountDelegators(account, callback);
+
+      }, err => {
+        if (err) {
+          console.error(err.message);
+          return
+        }
+        console.log('== Delegators updated.');
+      });
+    });
 }
 
-function updateAccountDelegators(callback, account){
-  nano.rpc('delegators_count', { account: account.account })
-  .then((delegators) => {
+function updateAccountDelegators(account, callback) {
+  console.log('Updating delegators of', account.account)
+  node.rpc('delegators_count', { account: account.account })
+    .then((delegators) => {
 
-    account.delegators = delegators.count;
+      console.log(account.account, delegators.count, 'delegators')
 
-    account.save(function (err) {
-      if (err) {
-        console.log("RPC - updateAccountDelegators - Error saving account", err);
-      }
-      callback();
+      account.delegators = delegators.count;
+  
+      account.save(function (err) {
+        if (err) {
+          console.log("RPC - updateAccountDelegators - Error saving account", err);
+        }
+        callback();
+      });
+    })
+    .catch(reason => {
+      console.error('onRejected function called: ', reason);
+      callback(false);
     });
-  })
-  .catch( reason => {
-    console.error( 'onRejected function called: ', reason );
-    callback(false);
-  });
 }
