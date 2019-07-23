@@ -580,7 +580,7 @@ function updateDelegators() {
 
       async.forEachOfSeries(accounts, (account, key, callback) => {
 
-        updateAccountDelegators(account, callback);
+        updateAccountDelegatorsExternal(account, callback);
 
       }, err => {
         if (err) {
@@ -612,4 +612,30 @@ function updateAccountDelegators(account, callback) {
       console.error('onRejected function called: ', reason);
       callback(false);
     });
+}
+
+function updateAccountDelegatorsExternal(account, callback) {
+  console.log('Updating', account.account)
+
+  rp({
+    uri: 'https://api.nanocrawler.cc/v2/accounts/' + account.account + '/delegators',
+    json: true
+  })
+    .then((data) => {
+      console.log(account.account, Object.keys(data.delegators).length, 'delegators')
+
+      account.delegators = Object.keys(data.delegators).length;
+  
+      account.save(function (err) {
+        if (err) {
+          console.log("RPC - updateAccountDelegators - Error saving account", err);
+        }
+        callback();
+      });
+      callback()
+
+    }).catch((error) => {
+      console.error(error)
+      callback()
+    })
 }
