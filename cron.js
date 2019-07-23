@@ -230,7 +230,15 @@ function updateNodeMonitor(account, callback) {
           callback();
           return;
 
-      } else if (data.nanoNodeAccount != account.account) {
+      }
+      
+      // check for old prefix
+      var nanoNodeAccount = data.nanoNodeAccount;
+      if ((nanoNodeAccount.startsWith('xrb_1') || nanoNodeAccount.startsWith('xrb_3')) && nanoNodeAccount.length === 64) {
+        nanoNodeAccount = 'nano_' + nanoNodeAccount.substring(4,64);
+      }
+      
+      if (nanoNodeAccount != account.account) {
         console.log('CRON - updateNodeMonitor - Account mismatch: ' + account.account);
 
         // remove the fields
