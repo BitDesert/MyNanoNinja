@@ -633,7 +633,6 @@ function updateAccountDelegatorsExternal(account, callback) {
         }
         callback();
       });
-      callback()
 
     }).catch((error) => {
       console.error(error)
