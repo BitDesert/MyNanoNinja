@@ -17,6 +17,7 @@ module.exports = function (nanorpc) {
   router.use('/blocks', require('./api/blocks'));
   router.use('/confirmation', require('./api/confirmation'));
   router.use('/node', require('./api/node'));
+  router.use('/general', require('./api/general'));
 
   router.get('/', function (req, res, next) {
     res.render('api', {

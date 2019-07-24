@@ -7,7 +7,16 @@ var chartColors = ['#f44336', '#9C27B0', '#3F51B5', '#03A9F4', '#009688', '#8BC3
 var version_min = 1;
 var version_max = 1;
 
-init.push(getVersionsData);
+var protomap = {}
+
+init.push(getProtomap);
+
+function getProtomap() {
+  $.get("/api/general/protomap", function (data) {
+    protomap = data;
+    getVersionsData();
+  })
+}
 
 function getVersionsData() {
 $.get("/api/statistics/nodeversions", function (data) {
@@ -40,7 +49,7 @@ $.get("/api/statistics/nodeversions", function (data) {
 
   for (var i = version_min; i <= version_max; i++) {
     chartdata.datasets.push({
-      label: 'Version ' + i,
+      label: protomap[i] ? protomap[i] : 'Protocol ' + i,
       data: [],
       borderColor: chartColors[i - 1],
       backgroundColor: chartColors[i - 1],
