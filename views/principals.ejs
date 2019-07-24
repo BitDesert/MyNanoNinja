@@ -47,13 +47,22 @@
                 <% } %>
               </h4>
             </a>
-            <h6 class="card-subtitle text-muted">
+            <h5 class="card-subtitle text-muted">
               <% if(accounts[i].lastVoted) { %>
-              Last voted <%= moment(accounts[i].lastVoted).fromNow() %> (<%= round(accounts[i].uptime, 3) %> %)
+                <% if(moment(accounts[i].lastVoted).add(10, 'minutes').isAfter(/*now*/)) { %>
+                  <span class="badge badge-success" title="Last voted <%= moment(accounts[i].lastVoted).fromNow() %>">Online</span>
+                <% } else if(moment(accounts[i].lastVoted).add(1, 'day').isAfter(/*now*/)) { %>
+                  <span class="badge badge-warning" title="Last voted <%= moment(accounts[i].lastVoted).fromNow() %>">Unstable</span>
+                <% } else { %>
+                  <span class="badge badge-danger" title="Last voted <%= moment(accounts[i].lastVoted).fromNow() %>">Offline</span>
+                <% } %>
               <% } else { %>
-                Never voted
+                <span class="badge badge-danger" title="Never voted">Offline</span>
               <% } %>
-            </h6>
+              <% if(accounts[i].monitor.version) { %>
+                <span class="badge badge-secondary"><%= accounts[i].monitor.version %></span>
+              <% } %>
+            </h5>
           </div>
           <div class="col-auto ml-auto">
             <span class="h1"><%= variableRound((accounts[i].votingweight / nanorpc.getAvailable()) * 100, 3) %> %</span>
