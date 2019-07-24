@@ -7,7 +7,9 @@ mongoose.connect('mongodb://localhost:27017/nanonodeninja',
 
 var Account = require('../models/account');
 
-Account.find()
+Account.find({
+  account: {$regex: /xrb_.+/}
+})
 .exec(function (err, accounts) {
   if (err) {
     console.error('Update Prefix', err);
@@ -16,7 +18,7 @@ Account.find()
   console.log('== Update Prefix: ' + accounts.length + " accounts");
 
   async.forEachOfSeries(accounts, (account, key, callback) => {
-
+    
     updatePrefix(account, callback);
 
   }, err => {
@@ -32,6 +34,12 @@ Account.find()
 function updatePrefix(account, callback) {
 
     account.account = account.account.replace(/xrb_/g, "nano_");
+
+    Account.findOneAndDelete({
+      account: account.account
+    }, function(){
+      console.log('deleted');
+    })
 
     console.log(account.account)
     account.save(function (err) {
