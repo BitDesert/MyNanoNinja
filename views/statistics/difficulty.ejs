@@ -1,0 +1,62 @@
+<% include ../../partials/header.ejs %>
+
+<h1>Statistics</h1>
+
+<h2>Difficulty</h2>
+
+<div id="app">
+  <div v-if="diff">
+    <div class="row">
+      <div class="col-lg-4 mb-4">
+        <h3>General</h3>
+        <ul class="list-group mb-3">
+          <li class="list-group-item">
+            Minimum
+            <span class="float-right">
+              {{diff.network_minimum}}
+            </span>
+          </li>
+          <li class="list-group-item">
+            Current
+            <span class="float-right">
+              {{diff.network_current}}
+            </span>
+          </li>
+          <li class="list-group-item">
+            Growth
+            <span class="float-right">
+              {{growth}}
+            </span>
+          </li>
+          <li class="list-group-item">
+            Multiplier
+            <span class="float-right">
+              {{diff.multiplier}}
+              <span v-if="growth > 0">UP</span>
+              <span v-else>DOWN</span>
+            </span>
+          </li>
+        </ul>
+      </div>
+      <div class="col-lg-4 mb-4">
+        <h3>Last Values</h3>
+        <ul class="list-group mb-3">
+          <li class="list-group-item" v-for="(trend, index) in diff.difficulty_trend">
+            {{index}}
+            <span class="float-right">
+              {{trend}}
+            </span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/static/js/vue.js"></script>
+<script src="/static/js/main-vue.js?v=6"></script>
+<script src="/static/js/axios.min.js"></script>
+<script src="/static/js/moment.min.js"></script>
+<script src="/static/js/sites/statistics/difficulty.js?v=1"></script>
+
+<% include ../../partials/footer.ejs %>

@@ -17,11 +17,17 @@ router.get('/blockcount', function (req, res) {
   });
 });
 
-
 router.get('/versions', function (req, res) {    
   res.render('statistics/versions', {
     loggedin: req.isAuthenticated(),
     title: 'Version Statistics'
+  });
+});
+
+router.get('/difficulty', function (req, res) {    
+  res.render('statistics/difficulty', {
+    loggedin: req.isAuthenticated(),
+    title: 'Difficulty Statistics'
   });
 });
 
