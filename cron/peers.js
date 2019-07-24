@@ -1,5 +1,7 @@
 var cron = require('node-cron');
 var async = require("async");
+var _ = require('lodash');
+var protomap = require('../nano/protomap');
 var maxmind = require('maxmind');
 var geo_asn = maxmind.openSync('./utils/GeoLite2-ASN.mmdb');
 var geo_city = maxmind.openSync('./utils/GeoLite2-City.mmdb');
@@ -16,6 +18,7 @@ const node = new Nano({
 
 var Account = require('../models/account');
 
+/*
 function updatePeers() {
   console.log('== Updating Peers...');
 
@@ -47,13 +50,14 @@ function updatePeers() {
       console.error(reason);
     });
 }
+*/
 
-function updatePeer(peer, ip, callback) {
+function updatePeer(peeraccount, ip, protoversion, callback) {
   Account.findOne(
     {
-      'account': peer.account
+      'account': peeraccount
     }, function (err, account) {
-      if (err || !account){
+      if (err || !account) {
         callback()
         return;
       }
@@ -63,25 +67,32 @@ function updatePeer(peer, ip, callback) {
 
         var geo_asn_response = geo_asn.get(ip);
 
-        if(geo_asn_response && geo_asn_response.autonomous_system_organization){
+        if (geo_asn_response && geo_asn_response.autonomous_system_organization) {
           account.network.provider = geo_asn_response.autonomous_system_organization;
         }
 
         var geo_city_response = geo_city.get(ip);
 
-        if(geo_city_response){
+        if (geo_city_response) {
           account.location.country = geo_city_response.country.iso_code;
-  
-          if(geo_city_response.city){
+
+          if (geo_city_response.city) {
             account.location.city = geo_city_response.city.names.en;
           }
-  
+
           account.location.latitude = geo_city_response.location.latitude;
           account.location.longitude = geo_city_response.location.longitude;
         } else {
-          console.log('No city for ' + peer.ip + ' / ' + peer.account)
+          console.log('No city for ' + ip + ' / ' + peeraccount)
         }
-        
+
+        var nodeversion = protomap[protoversion];
+        if (nodeversion && !account.monitor.url) {
+          account.monitor.version = protomap[protoversion];
+          console.log('Update Node Version without Monitor: ', account.monitor.version, account.account);
+
+        }
+
         account.save(function (err) {
           if (err) {
             console.log("CRON - updatePeer - Error saving account", err);
@@ -89,10 +100,59 @@ function updatePeer(peer, ip, callback) {
           callback()
         });
       } catch (error) {
-        console.error(error, peer);
+        console.error(error, peeraccount);
         callback()
       }
     });
+}
+
+async function getAdvancedPeers() {
+  const quorumPeers = (await node.rpc("confirmation_quorum", {
+    peer_details: true
+  })).peers;
+
+  const allPeers = (await node.rpc("peers", { peer_details: true }))
+    .peers;
+
+  return _.map(allPeers, (peer, address) => {
+    const repInfo = quorumPeers.find(p => p.ip === address);
+
+    return {
+      ip: address,
+      account: repInfo ? repInfo.account : null,
+      weight: repInfo ? repInfo.weight : null,
+      protocol_version: peer.protocol_version,
+      type: peer.type
+    };
+  }).filter(peer => peer.account !== null);
+
+}
+
+function updatePeers() {
+  console.log('== Updating Peer Protos...');
+
+
+  getAdvancedPeers().then((peers) => {
+
+    async.forEachOfSeries(peers, (peer, key, callback) => {
+
+      var match = regex_ip.exec(peer.ip)
+
+      if (match) {
+        updatePeer(peer.account, match[1], peer.protocol_version, callback)
+      } else {
+        callback()
+      }
+
+    }, err => {
+      if (err) {
+        console.error(err.message);
+        return
+      }
+      console.log('== Peers updated.');
+    });
+  })
+
 }
 
 cron.schedule('*/5 * * * *', updatePeers);
