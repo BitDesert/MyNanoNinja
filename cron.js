@@ -50,8 +50,10 @@ const nano = new Nano({
  * Node Uptime 
  */
 
+cron.schedule('*/30 * * * *', updateNodeUptime);
+
 function updateNodeUptime() {
-  console.log('Updating Node Uptime...');
+  console.log('== Updating Node Uptime...');
   Account.find()
     .where('votingweight').gt(0)
     .populate('owner')
@@ -123,8 +125,6 @@ function checkNodeUptime(account, callback) {
     callback();
   });
 }
-
-cron.schedule('*/30 * * * *', updateNodeUptime);
 
 function sendUpMail(account, email) {
 

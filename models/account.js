@@ -174,7 +174,10 @@ accountSchema.methods.updateUptimeFor = function (type, callback) {
 
     if (!stats || stats.length == 0){
       console.error(err, 'No Uptime', stats);
-      callback()
+      
+      if(typeof callback === "function")
+        callback()
+      
       return
     } 
     //console.log(type, stats);

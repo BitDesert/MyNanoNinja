@@ -89,7 +89,7 @@ function updatePeer(peeraccount, ip, protoversion, callback) {
         var nodeversion = protomap[protoversion];
         if (nodeversion && !account.monitor.url) {
           account.monitor.version = protomap[protoversion];
-          console.log('Update Node Version without Monitor: ', account.monitor.version, account.account);
+          //console.log('Update Node Version without Monitor: ', account.monitor.version, account.account);
 
         }
 

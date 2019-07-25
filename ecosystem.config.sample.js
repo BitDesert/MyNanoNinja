@@ -46,8 +46,8 @@ module.exports = {
       }
     },
     {
-      name      : 'My Nano Ninja',
-      script    : 'bin/www',
+      name      : 'My Nano Ninja - CRON',
+      script    : 'cron',
       "log_date_format" : "YYYY-MM-DD HH:mm:ss",
       env: {
         NODE_ENV: 'production',
