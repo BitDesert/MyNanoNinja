@@ -159,7 +159,7 @@ function updateStatisticsQuorum() {
   });
 }
 
-cron.schedule('*/15 * * * *', updateStatistics);
+cron.schedule('0 * * * *', updateStatistics);
 
 function updateStatistics() {
   console.log('Updating Statistics...');
