@@ -17,6 +17,8 @@ cron.schedule('* * * * *', updateOnlineReps);
 updateOnlineReps()
 
 function updateOnlineReps() {
+  console.log('VOTES: Started');
+  
 
   var provider = JSON.parse(process.env.DRPC_REPSONLINE);
   provider.push('local')
