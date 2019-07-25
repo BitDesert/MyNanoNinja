@@ -222,12 +222,12 @@ function updateNodeMonitor(account, callback) {
   }, function (err, response, data) {
     try {
       if (err) {
-        console.log('CRON - updateNodeMonitor - Could not contact monitor for ' + account.account, err);
+        console.log('CRON - updateNodeMonitor - Could not contact monitor for ' + account.account);
         callback();
         return;
 
       } else if (response.statusCode !== 200) {
-          console.log('CRON - updateNodeMonitor - Could not contact monitor for ' + account.account + ' (' + response.statusCode + ')', err);
+          console.log('CRON - updateNodeMonitor - Could not contact monitor for ' + account.account + ' (' + response.statusCode + ')');
           callback();
           return;
 
