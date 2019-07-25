@@ -85,7 +85,8 @@ function getRepsOnline(provider, callback) {
   } else {
     request.get({
       url: provider,
-      json: true
+      json: true,
+      timeout: 10000
     }, function (err, response, data) {
       if (err) {
         // error getting data
