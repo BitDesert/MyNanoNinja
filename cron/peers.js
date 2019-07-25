@@ -18,39 +18,57 @@ const node = new Nano({
 
 var Account = require('../models/account');
 
-/*
+cron.schedule('*/5 * * * *', updatePeers);
+updatePeers();
+
 function updatePeers() {
-  console.log('== Updating Peers...');
+  console.log('PEERS: Started');
 
-  node.rpc('confirmation_quorum', {
-    peer_details: true
-  })
-    .then(response => {
-      if (!response) return;
 
-      async.forEachOfSeries(response.peers, (peer, key, callback) => {
+  getAdvancedPeers().then((peers) => {
 
-        var match = regex_ip.exec(peer.ip)
-        
-        if (match) {
-            updatePeer(peer, match[1], callback)
-        } else {
-          callback()
-        }
+    async.forEachOfSeries(peers, (peer, key, callback) => {
 
-      }, err => {
-        if (err) {
-          console.error(err.message);
-          return
-        }
-        console.log('== Peers updated.');
-      });
-    })
-    .catch(reason => {
-      console.error(reason);
+      var match = regex_ip.exec(peer.ip)
+
+      if (match) {
+        updatePeer(peer.account, match[1], peer.protocol_version, callback)
+      } else {
+        callback()
+      }
+
+    }, err => {
+      if (err) {
+        console.error(err.message);
+        return
+      }
+      console.log('PEERS: Done');
     });
+  })
+
 }
-*/
+
+async function getAdvancedPeers() {
+  const quorumPeers = (await node.rpc("confirmation_quorum", {
+    peer_details: true
+  })).peers;
+
+  const allPeers = (await node.rpc("peers", { peer_details: true }))
+    .peers;
+
+  return _.map(allPeers, (peer, address) => {
+    const repInfo = quorumPeers.find(p => p.ip === address);
+
+    return {
+      ip: address,
+      account: repInfo ? repInfo.account : null,
+      weight: repInfo ? repInfo.weight : null,
+      protocol_version: peer.protocol_version,
+      type: peer.type
+    };
+  }).filter(peer => peer.account !== null);
+
+}
 
 function updatePeer(peeraccount, ip, protoversion, callback) {
   Account.findOne(
@@ -83,7 +101,7 @@ function updatePeer(peeraccount, ip, protoversion, callback) {
           account.location.latitude = geo_city_response.location.latitude;
           account.location.longitude = geo_city_response.location.longitude;
         } else {
-          console.log('No city for ' + ip + ' / ' + peeraccount)
+          console.log('PEERS: No city for ' + ip + ' / ' + peeraccount)
         }
 
         var nodeversion = protomap[protoversion];
@@ -95,65 +113,13 @@ function updatePeer(peeraccount, ip, protoversion, callback) {
 
         account.save(function (err) {
           if (err) {
-            console.log("CRON - updatePeer - Error saving account", err);
+            console.log("PEERS: updatePeer - Error saving account", err);
           }
           callback()
         });
       } catch (error) {
-        console.error(error, peeraccount);
+        console.error('PEERS: ', error, peeraccount);
         callback()
       }
     });
 }
-
-async function getAdvancedPeers() {
-  const quorumPeers = (await node.rpc("confirmation_quorum", {
-    peer_details: true
-  })).peers;
-
-  const allPeers = (await node.rpc("peers", { peer_details: true }))
-    .peers;
-
-  return _.map(allPeers, (peer, address) => {
-    const repInfo = quorumPeers.find(p => p.ip === address);
-
-    return {
-      ip: address,
-      account: repInfo ? repInfo.account : null,
-      weight: repInfo ? repInfo.weight : null,
-      protocol_version: peer.protocol_version,
-      type: peer.type
-    };
-  }).filter(peer => peer.account !== null);
-
-}
-
-function updatePeers() {
-  console.log('== Updating Peer Protos...');
-
-
-  getAdvancedPeers().then((peers) => {
-
-    async.forEachOfSeries(peers, (peer, key, callback) => {
-
-      var match = regex_ip.exec(peer.ip)
-
-      if (match) {
-        updatePeer(peer.account, match[1], peer.protocol_version, callback)
-      } else {
-        callback()
-      }
-
-    }, err => {
-      if (err) {
-        console.error(err.message);
-        return
-      }
-      console.log('== Peers updated.');
-    });
-  })
-
-}
-
-cron.schedule('*/5 * * * *', updatePeers);
-updatePeers();

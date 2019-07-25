@@ -2,11 +2,13 @@
 
 var request = require('request');
 var async = require("async");
-var cron = require('node-cron');const {
-  Nano
-} = require('nanode');
+var cron = require('node-cron');
 
 var Account = require('../models/account');
+
+const {
+  Nano
+} = require('nanode');
 
 const nano = new Nano({
   url: process.env.NODE_RPC
