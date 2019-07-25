@@ -30,6 +30,7 @@ var tools = require('./tools');
 // cron subtasks
 require('./cron/peers');
 require('./cron/statistics');
+require('./cron/votes');
 
 // mail
 let transporter = nodemailer.createTransport({
@@ -269,114 +270,6 @@ function updateNodeMonitor(account, callback) {
       callback();
     }
   });
-}
-
-/*
- * Fallback rep vote via RPC
- */
-
-cron.schedule('*/1 * * * *', updateOnlineRepsRPC);
-cron.schedule('*/1 * * * *', updateUptimeDistributed);
-
-updateOnlineRepsRPC()
-updateUptimeDistributed()
-function updateOnlineRepsRPC() {
-  console.log('VOTES: Started');
-  nano.rpc('representatives_online').then(function (reps) {
-    console.log('VOTES: ' + reps.representatives.length + " reps are online");
-
-    async.forEachOfSeries(reps.representatives, (rep, key, callback) => {
-      
-      updateVoteSimple(rep, callback);
-
-    }, err => {
-      if (err) {
-        console.error('VOTES:', err.message);
-        return
-      }
-      console.log('VOTES: Done');
-    });
-
-  });
-}
-
-function updateUptimeDistributed() {
-  console.log('VOTES DRPC: Started');
-
-  var provider = JSON.parse(process.env.DRPC_REPSONLINE);
-
-  var onlinereps = [];
-
-  async.forEachOf(provider, (value, key, callback) => {
-
-    request.get({
-      url: value,
-      json: true
-    }, function (err, response, data) {
-      if (err) {
-        // error getting data
-        console.error('VOTES DRPC:', err);
-        callback();
-        return;
-      }
-
-      try {
-        for (var rep of data.representatives) {
-          if (!onlinereps.includes(rep)) {
-            onlinereps.push(rep)
-          }
-        };
-      } catch (error) {
-        console.error('VOTES DRPC:', error);
-      }
-      callback()
-    });
-
-
-  }, err => {
-    if (err) {
-      console.error('VOTES DRPC:', err.message);
-      return
-    }
-    console.log('VOTES DRPC: ' + onlinereps.length + ' reps via dRPC');
-
-    async.forEachOfSeries(onlinereps, (rep, key, callback) => {
-      
-      updateVoteSimple(rep, callback);
-
-    }, err => {
-      if (err) {
-        console.error('VOTES DRPC:', err.message);
-        return
-      }
-      console.log('VOTES DRPC: Done');
-    });
-  });
-}
-
-function updateVoteSimple(rep, callback) {
-  Account.findOne(
-    {
-      'account': rep
-    }, function (err, account) {
-      if (err) {
-        return;
-      }
-
-      if (!account) {
-        var account = new Account();
-        account.account = rep;
-      }
-
-      account.lastVoted = Date.now();
-      account.save(function (err) {
-        if (err) {
-          console.log("updateVoteSimple - Error saving account", err);
-        }
-        callback();
-      });
-
-    });
 }
 
 function updateScore() {
