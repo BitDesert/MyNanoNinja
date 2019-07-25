@@ -34,9 +34,9 @@ function updateOnlineReps() {
         return;
       }
 
-      console.log('VOTES:', currentprovider, data.representatives.length)
-
       try {
+        console.log('VOTES:', currentprovider, data.representatives.length)
+
         for (var rep of data.representatives) {
           if (!onlinereps.includes(rep)) {
             onlinereps.push(rep)
@@ -44,6 +44,8 @@ function updateOnlineReps() {
         };
       } catch (error) {
         console.error('VOTES:', error);
+        callback()
+        return
       }
       callback()
     });
@@ -54,7 +56,7 @@ function updateOnlineReps() {
       console.error('VOTES:', err.message);
       return
     }
-    console.log('VOTES: ' + onlinereps.length + ' reps online');
+    console.log('VOTES: ' + onlinereps.length + ' individual reps online');
 
     async.forEachOfSeries(onlinereps, (rep, key, callback) => {
 
