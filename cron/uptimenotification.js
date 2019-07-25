@@ -4,6 +4,7 @@ const nodemailer = require('nodemailer');
 var moment = require('moment');
 
 var Account = require('../models/account');
+var User = require('../models/user');
 var Check = require('../models/check');
 
 // mail
