@@ -43,7 +43,7 @@ function updateOnlineReps() {
           }
         };
       } catch (error) {
-        console.error('VOTES:', error);
+        console.error('VOTES:', currentprovider, error);
         callback()
         return
       }

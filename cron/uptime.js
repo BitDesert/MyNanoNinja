@@ -151,5 +151,11 @@ function sendMail(subject, body, email) {
     subject: subject,
     html: body
   }
-  transporter.sendMail(data);
+  transporter.sendMail(data, function(err) {
+    if (err) {
+        console.error('UPTIME: sendMail', err)
+    }
+    console.log('UPTIME: Mail sent');
+    
+  });
 }
