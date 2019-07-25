@@ -43,7 +43,6 @@ function updateLocalVars(){
 function updateAvailable(){
   nano.available()
   .then((data) => {
-    console.log(data);
     available = data;
     console.log('Available Supply: ' + available);
   })

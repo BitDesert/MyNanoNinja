@@ -53,6 +53,8 @@ var accountSchema = mongoose.Schema({
     day: { type: Number, default: 0 },
     week: { type: Number, default: 0 },
     month: { type: Number, default: 0 },
+    "3_months": { type: Number, default: 0 },
+    "6_months": { type: Number, default: 0 },
     year: { type: Number, default: 0 }
   },
   uptime_data: {
@@ -98,7 +100,7 @@ accountSchema.methods.updateUptime = function (callback) {
 
   var end = new Date(Date.now());
 
-  var begin = new Date(Date.now() - 24 * 60 * 60 * 1000); //7 * 24 * 60 * 60 * 1000
+  var begin = new Date(Date.now() - 24 * 60 * 60 * 1000);
 
   self.getStatsForPeriod(begin, end, function (err, stats) {
     if (err) return
@@ -109,7 +111,7 @@ accountSchema.methods.updateUptime = function (callback) {
     self.save()
   })
 
-  var begin = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000); //7 * 24 * 60 * 60 * 1000
+  var begin = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
 
   self.getStatsForPeriod(begin, end, function (err, stats) {
     if (err) return
@@ -119,7 +121,7 @@ accountSchema.methods.updateUptime = function (callback) {
     self.save()
   })
 
-  var begin = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000); //7 * 24 * 60 * 60 * 1000
+  var begin = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
 
   self.getStatsForPeriod(begin, end, function (err, stats) {
     if (err) return
@@ -129,7 +131,7 @@ accountSchema.methods.updateUptime = function (callback) {
     self.save()
   })
 
-  var begin = new Date(Date.now() - 365 * 24 * 60 * 60 * 1000); //7 * 24 * 60 * 60 * 1000
+  var begin = new Date(Date.now() - 365 * 24 * 60 * 60 * 1000);
 
   self.getStatsForPeriod(begin, end, function (err, stats) {
     if (err) return
@@ -155,6 +157,12 @@ accountSchema.methods.updateUptimeFor = function (type, callback) {
     case 'month':
       var begin = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
       break;
+    case '3_months':
+      var begin = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000);
+      break;
+    case '6_months':
+      var begin = new Date(Date.now() - 180 * 24 * 60 * 60 * 1000);
+      break;
     case 'year':
       var begin = new Date(Date.now() - 365 * 24 * 60 * 60 * 1000);
       break;
@@ -173,7 +181,7 @@ accountSchema.methods.updateUptimeFor = function (type, callback) {
     } 
 
     if (!stats || stats.length == 0){
-      console.error(err, 'No Uptime', stats);
+      console.error(self.account, 'No Uptime', stats);
       
       if(typeof callback === "function")
         callback()

@@ -53,16 +53,16 @@ const nano = new Nano({
 cron.schedule('*/30 * * * *', updateNodeUptime);
 
 function updateNodeUptime() {
-  console.log('== Updating Node Uptime...');
+  console.log('UPTIME: Started');
   Account.find()
     .where('votingweight').gt(0)
     .populate('owner')
     .exec(function (err, accounts) {
       if (err) {
-        console.error('CRON - updateNodeUptime', err);
+        console.error('UPTIME:', err);
         return
       }
-      console.log('== Uptime: ' + accounts.length + " accounts");
+      console.log('UPTIME: ' + accounts.length + " accounts");
 
       async.forEachOfSeries(accounts, (account, key, callback) => {
 
@@ -73,7 +73,7 @@ function updateNodeUptime() {
           console.error(err.message);
           return
         }
-        console.log('== Uptime updated.');
+        console.log('UPTIME: Done');
       });
     });
 }
@@ -102,14 +102,14 @@ function checkNodeUptime(account, callback) {
 
   if (account.owner && process.env.NODE_ENV != 'development') {
     if (previous === true && account.uptime_data.last === false) {
-      console.log(account.account + ' went down!');
+      console.log('UPTIME: ' + account.account + ' went down!');
 
       account.owner.getEmails().forEach(function (email) {
         sendDownMail(account, email);
       });
 
     } else if (previous === false && account.uptime_data.last === true) {
-      console.log(account.account + ' went up!');
+      console.log('UPTIME: ' + account.account + ' went up!');
 
       account.owner.getEmails().forEach(function (email) {
         sendUpMail(account, email);
@@ -119,7 +119,7 @@ function checkNodeUptime(account, callback) {
 
   account.save(function (err) {
     if (err) {
-      console.log("CRON - checkNodeUptime - Error saving account", err);
+      console.log("UPTIME: Error saving account", err);
     }
     account.updateUptimeFor('day')
     callback();
@@ -187,6 +187,8 @@ function sendMail(subject, body, email) {
 cron.schedule('*/15 * * * *', updateNodeMonitors);
 
 function updateNodeMonitors() {
+  console.log('MONITORS: Started');
+  
   Account.find({
     'monitor.url': {
       $exists: true,
@@ -195,10 +197,10 @@ function updateNodeMonitors() {
   })
     .exec(function (err, accounts) {
       if (err) {
-        console.error('CRON - updateNodeMonitors', err);
+        console.error('MONITORS: ', err);
         return
       }
-      console.log(accounts.length + " accounts with a monitor");
+      console.log('MONITORS: ' + accounts.length + " accounts with a monitor");
 
       async.eachOfLimit(accounts, 4, (account, key, callback) => {
 
@@ -209,7 +211,7 @@ function updateNodeMonitors() {
           console.error(err.message);
           return
         }
-        console.log('== Monitors updated.');
+        console.log('MONITORS: Done');
       });
     });
 }
@@ -222,12 +224,12 @@ function updateNodeMonitor(account, callback) {
   }, function (err, response, data) {
     try {
       if (err) {
-        //console.log('CRON - updateNodeMonitor - Could not contact monitor for ' + account.account);
+        //console.log('MONITORS: Could not contact monitor for ' + account.account);
         callback();
         return;
 
       } else if (response.statusCode !== 200) {
-          //console.log('CRON - updateNodeMonitor - Could not contact monitor for ' + account.account + ' (' + response.statusCode + ')');
+          //console.log('MONITORS: Could not contact monitor for ' + account.account + ' (' + response.statusCode + ')');
           callback();
           return;
 
@@ -240,7 +242,7 @@ function updateNodeMonitor(account, callback) {
       }
       
       if (nanoNodeAccount != account.account) {
-        console.log('CRON - updateNodeMonitor - Account mismatch: ' + account.account);
+        console.log('MONITORS: Account mismatch: ' + account.account);
 
         // remove the fields
         delete account.monitor.version;
@@ -258,12 +260,12 @@ function updateNodeMonitor(account, callback) {
 
       account.save(function (err) {
         if (err) {
-          console.error('CRON - updateNodeMonitor', err);
+          console.error('MONITORS: ', err);
         }
         callback();
       });
     } catch (error) {
-      console.error('Problem with updateNodeMonitor', error)
+      console.error('MONITORS: Problem with updateNodeMonitor', error)
       callback();
     }
   });
@@ -279,9 +281,9 @@ cron.schedule('*/1 * * * *', updateUptimeDistributed);
 updateOnlineRepsRPC()
 updateUptimeDistributed()
 function updateOnlineRepsRPC() {
-  console.log('Updating Votes via RPC...');
+  console.log('VOTES: Started');
   nano.rpc('representatives_online').then(function (reps) {
-    console.log('== Votes: ' + reps.representatives.length + " reps are online");
+    console.log('VOTES: ' + reps.representatives.length + " reps are online");
 
     async.forEachOfSeries(reps.representatives, (rep, key, callback) => {
       
@@ -289,17 +291,17 @@ function updateOnlineRepsRPC() {
 
     }, err => {
       if (err) {
-        console.error(err.message);
+        console.error('VOTES:', err.message);
         return
       }
-      console.log('== Votes updated.');
+      console.log('VOTES: Done');
     });
 
   });
 }
 
 function updateUptimeDistributed() {
-  console.log('Updating Votes via distributed RPC...');
+  console.log('VOTES DRPC: Started');
 
   var provider = JSON.parse(process.env.DRPC_REPSONLINE);
 
@@ -313,7 +315,7 @@ function updateUptimeDistributed() {
     }, function (err, response, data) {
       if (err) {
         // error getting data
-        console.error('updateUptimeDistributed', err);
+        console.error('VOTES DRPC:', err);
         callback();
         return;
       }
@@ -325,7 +327,7 @@ function updateUptimeDistributed() {
           }
         };
       } catch (error) {
-        console.error(error);
+        console.error('VOTES DRPC:', error);
       }
       callback()
     });
@@ -333,10 +335,10 @@ function updateUptimeDistributed() {
 
   }, err => {
     if (err) {
-      console.error(err.message);
+      console.error('VOTES DRPC:', err.message);
       return
     }
-    console.log(onlinereps.length + ' reps via dRPC');
+    console.log('VOTES DRPC: ' + onlinereps.length + ' reps via dRPC');
 
     async.forEachOfSeries(onlinereps, (rep, key, callback) => {
       
@@ -344,10 +346,10 @@ function updateUptimeDistributed() {
 
     }, err => {
       if (err) {
-        console.error(err.message);
+        console.error('VOTES DRPC:', err.message);
         return
       }
-      console.log('== Votes updated via dRPC.');
+      console.log('VOTES DRPC: Done');
     });
   });
 }
@@ -369,7 +371,7 @@ function updateVoteSimple(rep, callback) {
       account.lastVoted = Date.now();
       account.save(function (err) {
         if (err) {
-          console.log("Cron - updateVoteSimple - Error saving account", err);
+          console.log("updateVoteSimple - Error saving account", err);
         }
         callback();
       });
@@ -378,15 +380,15 @@ function updateVoteSimple(rep, callback) {
 }
 
 function updateScore() {
-  console.log('Updating Scores...');
+  console.log('SCORES: Started');
   Account.find()
     .where('votingweight').gt(0)
     .exec(function (err, accounts) {
       if (err) {
-        console.error('CRON - updateScore', err);
+        console.error('SCORES:', err);
         return
       }
-      console.log('== Score: ' + accounts.length + " accounts");
+      console.log('SCORES: ' + accounts.length + " accounts");
 
       async.forEachOfSeries(accounts, (account, key, callback) => {
 
@@ -397,7 +399,7 @@ function updateScore() {
           console.error(err.message);
           return
         }
-        console.log('== Scores updated');
+        console.log('SCORES: Done');
       });
     });
 }
@@ -424,7 +426,7 @@ function updateScoreAccount(account, callback) {
 
   account.save(function (err) {
     if (err) {
-      console.log("Cron - updateScoreAccount - Error saving account", err);
+      console.log("SCORES: - Error saving account", err);
     }
     callback();
   });
@@ -437,15 +439,15 @@ cron.schedule('5 * * * *', updateScore);
 cron.schedule('0 * * * *', updateUptime);
 
 function updateUptime() {
-  console.log('== Updating Uptime...');
+  console.log('UPTIME: Started');
   Account.find()
     .where('votingweight').gt(0)
     .exec(function (err, accounts) {
       if (err) {
-        console.error('CRON - updateUptime', err);
+        console.error('UPTIME:', err);
         return
       }
-      console.log('== Uptime: ' + accounts.length + " accounts");
+      console.log('UPTIME: ' + accounts.length + " accounts");
 
       async.forEachOfSeries(accounts, (account, key, callback) => {
 
@@ -456,13 +458,13 @@ function updateUptime() {
           console.error(err.message);
           return
         }
-        console.log('== Uptime updated.');
+        console.log('UPTIME: Done');
       });
     });
 }
 
 function updateUptimeAccount(account, callback) {
-  var types = ['week', 'month', 'year'];
+  var types = ['week', 'month', '3_months', '6_months', 'year'];
 
   async.forEachOfSeries(types, (type, key, cb) => {
 
@@ -480,7 +482,7 @@ function updateUptimeAccount(account, callback) {
 cron.schedule('0 * * * *', updateRepresentatives);
 
 function updateRepresentatives(){
-  console.log('== Updating Representatives...');
+  console.log('REPRESENTATIVES: Started');
   
   nano.representatives().then((reps) => {
 
@@ -493,7 +495,7 @@ function updateRepresentatives(){
         console.error(err.message);
         return
       }
-      console.log('== Representatives updated.');
+      console.log('REPRESENTATIVES: Done');
     });
   });
 }
@@ -530,7 +532,7 @@ function checkRepresentative(rep, weight, cb){
 cron.schedule('*/15 * * * *', updateWeights);
 
 function updateWeights() {
-  console.log('== Updating Weights...');
+  console.log('WEIGHTS: Started');
 
   Account.find().exec(function (err, accounts) {
 
@@ -543,7 +545,7 @@ function updateWeights() {
           console.error(err.message);
           return
         }
-        console.log('== Weights updated.');
+        console.log('WEIGHTS: Done');
       });
   });
 }
@@ -572,12 +574,12 @@ function updateAccountWeight(account, callback){
 cron.schedule('0 3 * * *', updateDelegators);
 
 function updateDelegators() {
-  console.log('Updating Delegators...');
+  console.log('DELEGATORS: Started');
 
   // only accounts with more than 1 NANO delegated
   Account.find({ 'votingweight': { $gt: 133248289218203497353846153999000000 } })
     .exec(function (err, accounts) {
-      console.log('Reps found: ' + accounts.length);
+      console.log('DELEGATORS: Reps found: ' + accounts.length);
 
       async.forEachOfSeries(accounts, (account, key, callback) => {
 
@@ -585,10 +587,10 @@ function updateDelegators() {
 
       }, err => {
         if (err) {
-          console.error(err.message);
+          console.error('DELEGATORS:', err.message);
           return
         }
-        console.log('== Delegators updated.');
+        console.log('DELEGATORS: Done');
       });
     });
 }
@@ -616,7 +618,7 @@ function updateAccountDelegators(account, callback) {
 }
 
 function updateAccountDelegatorsExternal(account, callback) {
-  console.log('Updating', account.account)
+  console.log('DELEGATORS: Updating', account.account)
 
   rp({
     uri: 'https://api.nanocrawler.cc/v2/accounts/' + account.account + '/delegators',
