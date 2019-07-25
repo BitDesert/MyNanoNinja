@@ -10,7 +10,7 @@ cron.schedule('5 * * * *', updateScore);
 function updateScore() {
   console.log('SCORES: Started');
   Account.find()
-    .where('votingweight').gt(0)
+    .where('votingweight').gte(1000000000000000000000000000000)
     .exec(function (err, accounts) {
       if (err) {
         console.error('SCORES:', err);
