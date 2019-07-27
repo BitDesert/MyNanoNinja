@@ -130,7 +130,8 @@ function checkForMonitor(account, ipaddress){
   try {
     request.get({
       url: 'http://' + ipaddress + '/api.php',
-      json: true
+      json: true,
+      timeout: 10000
     }, function (err, response, data) {
       if (err || response.statusCode !== 200 || data === undefined) {
         // console.log('No monitor at', ipaddress);
