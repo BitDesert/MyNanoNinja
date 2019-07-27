@@ -23,7 +23,7 @@
         if (account.alias) {
           marker.bindPopup('<a href="/account/' + account.account + '">' + account.alias + '</a>')
         } else {
-          marker.bindPopup('<a href="/account/' + account.account + '">' + account.account + '</a>')
+          marker.bindPopup('<a href="/account/' + account.account + '">' + account.account.substr(0,10) + '</a>')
         }
       }
     });
