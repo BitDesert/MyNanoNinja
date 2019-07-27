@@ -1,6 +1,7 @@
 var cron = require('node-cron');
 var async = require("async");
 var _ = require('lodash');
+var request = require('request');
 var protomap = require('../nano/protomap');
 var maxmind = require('maxmind');
 var geo_asn = maxmind.openSync('./utils/GeoLite2-ASN.mmdb');
@@ -24,7 +25,6 @@ updatePeers();
 function updatePeers() {
   console.log('PEERS: Started');
 
-
   getAdvancedPeers().then((peers) => {
 
     async.forEachOfSeries(peers, (peer, key, callback) => {
@@ -33,6 +33,7 @@ function updatePeers() {
 
       if (match) {
         updatePeer(peer.account, match[1], peer.protocol_version, callback)
+        checkForMonitor(peer.account, match[1]);
       } else {
         callback()
       }
@@ -122,4 +123,60 @@ function updatePeer(peeraccount, ip, protoversion, callback) {
         callback()
       }
     });
+}
+
+
+function checkForMonitor(account, ipaddress){
+  try {
+    request.get({
+      url: 'http://' + ipaddress + '/api.php',
+      json: true
+    }, function (err, response, data) {
+      if (err || response.statusCode !== 200 || data === undefined) {
+        // console.log('No monitor at', ipaddress);
+        return;
+      }
+
+      if(!data.nanoNodeAccount) return
+        
+      // check for old prefix
+      var nanoNodeAccount = data.nanoNodeAccount;
+      if ((nanoNodeAccount.startsWith('xrb_1') || nanoNodeAccount.startsWith('xrb_3')) && nanoNodeAccount.length === 64) {
+        nanoNodeAccount = 'nano_' + nanoNodeAccount.substring(4,64);
+      }
+
+      if(nanoNodeAccount == account){
+        //console.log('PEERS: Monitor found!', ipaddress, nanoNodeAccount);
+        updateMonitor(account, ipaddress);
+
+      } else if(nanoNodeAccount){
+        //console.log('PEERS: Address mismatch', ipaddress, nanoNodeAccount, account);
+      }
+    });
+    
+  } catch (error) {
+    console.log('PEERS: checkForMonitor - ', error)
+  }
+}
+
+function updateMonitor(myaccount, ipaddress){
+  Account.findOne(
+    {
+      'account': myaccount
+    }, function (err, account) {
+      if (err || !account) return
+
+      if(!account.monitor.url){
+        account.monitor.url = 'http://'+ipaddress;
+        console.log('PEERS: Saved a new monitor!', myaccount, ipaddress);
+      }
+
+      account.save(function (err) {
+        if (err) {
+          console.log("Node - updateMonitor - Error saving account", err);
+        }
+      });
+
+    }
+  );
 }
