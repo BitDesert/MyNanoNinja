@@ -8,9 +8,13 @@ module.exports = function (nanorpc) {
   router.get('/:address', function (req, res, next) {
     var myaccount = req.params.address;
 
+    if(myaccount.startsWith('xrb_')){
+      return res.redirect('/account/' + myaccount.replace(/xrb_/g, "nano_"))
+    }
+
     Account.findOne({
       $or: [
-        { 'account': myaccount.replace(/xrb_/g, "nano_") },
+        { 'account': myaccount },
         { 'slug': myaccount }
       ]
     })
