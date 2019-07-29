@@ -11,9 +11,18 @@
 <link rel="stylesheet" href="/static/css/leaflet.css" />
 <script src="/static/js/leaflet.js"></script>
 <script src="/static/js/leaflet-color-markers.js"></script>
+<script src="/static/js/oms.min.js"></script>
 
 <script>
   var map = L.map('map').setView([0, 0], 2);
+
+  var oms = new OverlappingMarkerSpiderfier(map);
+  var popup = new L.Popup();
+  oms.addListener('click', function (marker) {
+    popup.setContent(marker.desc);
+    popup.setLatLng(marker.getLatLng());
+    map.openPopup(popup);
+  });
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -24,11 +33,12 @@
       for (const account of data) {
 
         var markerOptions = { icon: greyIcon }
-        if(account.votingweight > (115202418863627145255311728515410020648 / 1000)){
-          markerOptions.icon = greenIcon          
+        if (account.votingweight > (115202418863627145255311728515410020648 / 1000)) {
+          markerOptions.icon = greenIcon
         }
 
         var marker = L.marker([account.location.latitude, account.location.longitude], markerOptions).addTo(map)
+        oms.addMarker(marker);
 
         if (account.alias) {
           marker.bindPopup('<a href="/account/' + account.account + '">' + account.alias + '</a>')
