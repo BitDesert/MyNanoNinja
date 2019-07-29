@@ -87,7 +87,7 @@ router.get('/geo', function (req, res) {
     }
   })
     .sort('-votingweight')
-    .select('-_id account alias location')
+    .select('-_id account alias votingweight location')
     .exec(function (err, accounts) {
       if (err) {
         console.log("API - All Reps", err);

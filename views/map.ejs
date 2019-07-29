@@ -1,11 +1,16 @@
 <% include ../partials/header.ejs %>
 
 <h1>Map</h1>
+<h4>
+  <img src="/static/img/leaflet/marker-icon-green.png" style="height: 1em;"> = Principal
+  <img src="/static/img/leaflet/marker-icon-grey.png" style="height: 1em;"> = Non Principal
+</h4>
 
 <div id="map" style="height: 40rem"></div>
 
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"></script>
+<link rel="stylesheet" href="/static/css/leaflet.css" />
+<script src="/static/js/leaflet.js"></script>
+<script src="/static/js/leaflet-color-markers.js"></script>
 
 <script>
   var map = L.map('map').setView([0, 0], 2);
@@ -18,12 +23,17 @@
     $.getJSON('/api/accounts/geo', function (data) {
       for (const account of data) {
 
-        var marker = L.marker([account.location.latitude, account.location.longitude]).addTo(map)
+        var markerOptions = { icon: greyIcon }
+        if(account.votingweight > (115202418863627145255311728515410020648 / 1000)){
+          markerOptions.icon = greenIcon          
+        }
+
+        var marker = L.marker([account.location.latitude, account.location.longitude], markerOptions).addTo(map)
 
         if (account.alias) {
           marker.bindPopup('<a href="/account/' + account.account + '">' + account.alias + '</a>')
         } else {
-          marker.bindPopup('<a href="/account/' + account.account + '">' + account.account.substr(0,10) + '</a>')
+          marker.bindPopup('<a href="/account/' + account.account + '">' + account.account.substr(0, 10) + '</a>')
         }
       }
     });
