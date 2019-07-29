@@ -210,9 +210,9 @@
 
       data.forEach(function (element) {
         chartdata.labels.push(formatDate(element.date));
-        chartdata.datasets[0].data.push(element.quorum_delta);
-        chartdata.datasets[1].data.push(element.online_stake_total);
-        chartdata.datasets[2].data.push(element.peers_stake_total);
+        chartdata.datasets[0].data.push(element.quorum_delta / 1000000000000000000000000000000);
+        chartdata.datasets[1].data.push(element.online_stake_total / 1000000000000000000000000000000);
+        chartdata.datasets[2].data.push(element.peers_stake_total / 1000000000000000000000000000000);
       });
 
       setupGraphQuorum(chartdata);
