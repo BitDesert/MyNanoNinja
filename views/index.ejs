@@ -50,38 +50,32 @@
                 <% } %>
               </h4>
             </a>
-            <h6 class="card-subtitle text-muted">
+            <h5 class="card-subtitle text-muted">
               <% if (accounts[i].owner.facebook.token) { %>
-              <i class="fab fa-facebook-square"></i>
+                <span class="badge badge-secondary"><i class="fab fa-facebook-square"></i></span>
               <% } %>
               <% if (accounts[i].owner.twitter.token) { %>
-              <i class="fab fa-twitter"></i>
+                <span class="badge badge-secondary"><i class="fab fa-twitter"></i></span>
               <% } %>
               <% if (accounts[i].owner.google.token) { %>
-              <i class="fab fa-google-plus-g"></i>
+                <span class="badge badge-secondary"><i class="fab fa-google-plus-g"></i></span>
               <% } %>
               <% if (accounts[i].owner.github.token) { %>
-              <i class="fab fa-github"></i>
+                <span class="badge badge-secondary"><i class="fab fa-github"></i></span>
               <% } %>
               <% if (accounts[i].owner.reddit.token) { %>
-              <i class="fab fa-reddit"></i>
+                <span class="badge badge-secondary"><i class="fab fa-reddit"></i></span>
               <% } %>
               <% if (accounts[i].owner.discord.token) { %>
-              <i class="fab fa-discord"></i>
+                <span class="badge badge-secondary"><i class="fab fa-discord"></i></span>
               <% } %>
               <% if(accounts[i].website){ %>
-              <i class="fas fa-globe"></i>
+                <span class="badge badge-secondary"><i class="fas fa-globe"></i></span>
               <% } %>
               <% if(accounts[i].monitor.version){ %>
-              <i class="fas fa-binoculars"></i>
+                <span class="badge badge-secondary"><i class="fas fa-binoculars"></i></span>
               <% } %>
-              <br>
-              <% if(accounts[i].description) { %>
-              <%= accounts[i].description %>
-              <% } else { %>
-              No introduction
-              <% } %>
-            </h6>
+            </h5>
           </div>
           <div class="col-auto ml-auto">
             <span class="h1">
