@@ -10,10 +10,30 @@ const nano = new Nano({
 var router = express.Router();
 var Account = require('../../models/account');
 var cache = require('../../utils/cache');
+var nanorpc = require('../../nano/rpc_client');
 
 router.get('/principals', function (req, res) {
   Account.find()
-    .where('votingweight').gte(133248289218203497353846153999000000)
+    .where('votingweight').gte((nanorpc.getOnlineStakeTotal() / 1000))
+    .sort('-votingweight')
+    .select('-_id account alias uptime votingweight delegators')
+    .exec(function (err, accounts) {
+      if (err) {
+        console.log("API - All Reps", err);
+        return;
+      }
+      res.json(accounts);
+    });
+});
+
+router.get('/principals/online', function (req, res) {
+  Account
+    .find({
+      'lastVoted': {
+        $gt: moment().subtract(1, 'hours').toDate()
+      }
+    })
+    .where('votingweight').gte((nanorpc.getOnlineStakeTotal() / 1000))
     .sort('-votingweight')
     .select('-_id account alias uptime votingweight delegators')
     .exec(function (err, accounts) {
@@ -59,25 +79,6 @@ router.get('/monitors', cache(60), function (req, res) {
     });
 });
 
-router.get('/principals/online', function (req, res) {
-  Account
-    .find({
-      'lastVoted': {
-        $gt: moment().subtract(1, 'hours').toDate()
-      }
-    })
-    .where('votingweight').gte(133248289218203497353846153999000000)
-    .sort('-votingweight')
-    .select('-_id account alias uptime votingweight delegators')
-    .exec(function (err, accounts) {
-      if (err) {
-        console.log("API - All Reps", err);
-        return;
-      }
-      res.json(accounts);
-    });
-});
-
 router.get('/geo', function (req, res) {
   Account.find({
     'location.latitude': {
@@ -85,7 +86,6 @@ router.get('/geo', function (req, res) {
       $ne: null
     }
   })
-    .where('votingweight').gte(133248289218203497353846153999000000)
     .sort('-votingweight')
     .select('-_id account alias location')
     .exec(function (err, accounts) {
