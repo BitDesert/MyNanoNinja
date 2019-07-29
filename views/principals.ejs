@@ -3,32 +3,100 @@
 <h1>Principal Representatives</h1>
 <h4>Votes from representatives with over 0.1% total voting weight are being rebroadcasted.</h4>
 
-<div class="card-deck mb-3 text-center">
-  <div class="card mb-4 box-shadow">
-    <div class="card-header">
-      <h4 class="my-0 font-weight-normal">All representatives</h4>
-    </div>
-    <div class="card-body">
-      <h1 class="card-title"><%= accounts.length %></h1>
-    </div>
-  </div>
-  <div class="card mb-4 box-shadow">
-    <div class="card-header">
-      <h4 class="my-0 font-weight-normal">Online representatives</h4>
-    </div>
-    <div class="card-body">
-      <h1 class="card-title"><%= nanorpc.getNodesOnlineRebroad() %></h1>
-    </div>
-  </div>
-  <div class="card mb-4 box-shadow">
-    <div class="card-header">
-      <h4 class="my-0 font-weight-normal">% Online</h4>
-    </div>
-    <div class="card-body">
-      <h1 class="card-title"><%= nodesOnlinePercent %> %</h1>
-    </div>
-  </div>
-</div>
+<canvas id="chartrepsdecen" width="200" height="60" class="mb-3"></canvas>
+
+<script>
+  const officialreps = [
+    "nano_3arg3asgtigae3xckabaaewkx3bzsh7nwz7jkmjos79ihyaxwphhm6qgjps4",
+    "nano_1stofnrxuz3cai7ze75o174bpm7scwj9jn3nxsn8ntzg784jf1gzn1jjdkou",
+    "nano_1q3hqecaw15cjt7thbtxu3pbzr1eihtzzpzxguoc37bj1wc5ffoh7w74gi6p",
+    "nano_3dmtrrws3pocycmbqwawk6xs7446qxa36fcncush4s1pejk16ksbmakis78m",
+    "nano_3hd4ezdgsp15iemx7h81in7xz5tpxi43b6b41zn3qmwiuypankocw3awes5k",
+    "nano_1awsn43we17c1oshdru4azeqjz9wii41dy8npubm4rg11so7dx3jtqgoeahy",
+    "nano_1anrzcuwe64rwxzcco8dkhpyxpi8kd7zsjc1oeimpc3ppca4mrjtwnqposrs",
+    "nano_1hza3f7wiiqa7ig3jczyxj5yo86yegcmqk3criaz838j91sxcckpfhbhhra1"
+  ];
+
+  var chartColorsReps = ['#f44336', '#9C27B0', '#3F51B5', '#03A9F4', '#009688', '#8BC34A', '#FFEB3B', '#FF9800'];
+  init.push(setupActiveReps);
+
+  function setupActiveReps() {
+    getDataActiveReps('chartrepsdecen', '/api/accounts/principals');
+  }
+
+  function getDataActiveReps(chartid, url) {
+    console.log(chartid, url)
+    $.get(url, function (data) {
+
+      var chartdata = {
+        labels: [],
+        datasets: [
+          {
+            label: 'Weight',
+            data: [],
+            backgroundColor: []
+          }
+        ]
+      };
+
+      // filter the official reps
+      chartdata.labels.push('Official Reps');
+      chartdata.datasets[0].data.push(Math.round(data.filter(rep => officialreps.includes(rep.account)).sum('votingweight') / 1000000000000000000000000000000));
+      chartdata.datasets[0].backgroundColor.push('#AAAAAA');
+
+      var colorcount = 0;
+      data.forEach(function (element) {
+        // skip the official reps
+        if (officialreps.includes(element.account)) return;
+
+        if (element.alias) {
+          chartdata.labels.push(element.alias);
+        } else {
+          chartdata.labels.push(element.account);
+        }
+
+        chartdata.datasets[0].data.push(Math.round(element.votingweight / 1000000000000000000000000000000));
+        chartdata.datasets[0].backgroundColor.push(chartColorsReps[colorcount]);
+        colorcount++;
+        if (colorcount > chartColorsReps.length - 1) colorcount = 0;
+      });
+
+      setupGraphRepsDecen(chartid, chartdata);
+    });
+  }
+
+  Array.prototype.sum = function (prop) {
+    var total = 0
+    for (var i = 0, _len = this.length; i < _len; i++) {
+      total += this[i][prop]
+    }
+    return total
+  }
+
+  function setupGraphRepsDecen(chartid, data) {
+
+    var ctx = document.getElementById(chartid).getContext('2d');
+    var chartRepsDecen = new Chart(ctx, {
+      type: 'bar',
+      data: data,
+      options: {
+        responsive: true,
+        legend: {
+          display: false
+        },
+        scales: {
+          xAxes: [{
+            display: false
+          }]
+        },
+        tooltips: {
+          mode: 'index',
+          intersect: false,
+        },
+      }
+    });
+  }
+</script>
 
 <div class="row">
 
@@ -41,26 +109,29 @@
             <a href="/account/<%= accounts[i].account %>">
               <h4 class="card-title">
                 <% if(typeof accounts[i].alias !== 'undefined'){ %>
-                  <%= accounts[i].alias %>
+                <%= accounts[i].alias %>
                 <% } else { %>
-                  <%= accounts[i].account %>
+                <%= accounts[i].account %>
                 <% } %>
               </h4>
             </a>
             <h5 class="card-subtitle text-muted">
               <% if(accounts[i].lastVoted) { %>
-                <% if(moment(accounts[i].lastVoted).add(10, 'minutes').isAfter(/*now*/)) { %>
-                  <span class="badge badge-success" title="Last voted <%= moment(accounts[i].lastVoted).fromNow() %>">Online</span>
-                <% } else if(moment(accounts[i].lastVoted).add(1, 'day').isAfter(/*now*/)) { %>
-                  <span class="badge badge-warning" title="Last voted <%= moment(accounts[i].lastVoted).fromNow() %>">Unstable</span>
-                <% } else { %>
-                  <span class="badge badge-danger" title="Last voted <%= moment(accounts[i].lastVoted).fromNow() %>">Offline</span>
-                <% } %>
+              <% if(moment(accounts[i].lastVoted).add(10, 'minutes').isAfter(/*now*/)) { %>
+              <span class="badge badge-success"
+                title="Last voted <%= moment(accounts[i].lastVoted).fromNow() %>">Online</span>
+              <% } else if(moment(accounts[i].lastVoted).add(1, 'day').isAfter(/*now*/)) { %>
+              <span class="badge badge-warning"
+                title="Last voted <%= moment(accounts[i].lastVoted).fromNow() %>">Unstable</span>
               <% } else { %>
-                <span class="badge badge-danger" title="Never voted">Offline</span>
+              <span class="badge badge-danger"
+                title="Last voted <%= moment(accounts[i].lastVoted).fromNow() %>">Offline</span>
+              <% } %>
+              <% } else { %>
+              <span class="badge badge-danger" title="Never voted">Offline</span>
               <% } %>
               <% if(accounts[i].monitor.version) { %>
-                <span class="badge badge-secondary"><%= accounts[i].monitor.version %></span>
+              <span class="badge badge-secondary"><%= accounts[i].monitor.version %></span>
               <% } %>
             </h5>
           </div>
@@ -74,5 +145,6 @@
   <% } %>
 
 </div>
+<script src="/static/js/Chart.min.js"></script>
 
 <% include ../partials/footer.ejs %>
