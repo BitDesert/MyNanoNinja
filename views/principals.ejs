@@ -1,7 +1,7 @@
 <% include ../partials/header.ejs %>
 
 <h1>Principal Representatives</h1>
-<h4>Votes from representatives with over 0.1% total voting weight are being rebroadcasted.</h4>
+<h4>Votes from currently <%= accounts.length %> representatives with over 0.1% of the online voting weight are being counted.</h4>
 
 <canvas id="chartrepsdecen" width="200" height="60" class="mb-3"></canvas>
 
@@ -136,7 +136,7 @@
             </h5>
           </div>
           <div class="col-auto ml-auto">
-            <span class="h1"><%= variableRound((accounts[i].votingweight / nanorpc.getAvailable()) * 100, 3) %> %</span>
+            <span class="h1"><%= variableRound((accounts[i].votingweight / nanorpc.getOnlineStakeTotal()) * 100, 3) %> %</span>
           </div>
         </div>
       </div>

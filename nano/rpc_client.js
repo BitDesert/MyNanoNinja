@@ -1,8 +1,6 @@
 const {
   Nano
 } = require('nanode');
-var Account = require('../models/account');
-var moment = require('moment');
 var cron = require('node-cron');
 
 const nano = new Nano({
@@ -10,34 +8,31 @@ const nano = new Nano({
 });
 
 var available = 133248289218203497353846153999000000001;
-var nodesOnline_all = 0;
-var nodesOnline_rebroad = 0;
+var online_stake_total = 115202418863627145255311728515410020648;
 var blockcount = 0;
 
 function getAvailable(){
   return available;
 }
 
-function getNodesOnline(){
-  return nodesOnline_all;
-}
-
-function getNodesOnlineRebroad(){
-  return nodesOnline_rebroad;
+function getOnlineStakeTotal(){
+  return online_stake_total;
 }
 
 function getBlockcount(){
   return blockcount;
 }
 
-function getQueueLength(){
-  return q.length;
-}
+// update all local vars
+cron.schedule('* * * * *', updateLocalVars);
+
+// update the all local vars now
+updateLocalVars();
 
 function updateLocalVars(){
   updateBlockcount();
-  updateNodesOnline();
   updateAvailable();
+  updateOnlineStakeTotal();
 }
 
 function updateAvailable(){
@@ -63,46 +58,21 @@ function updateBlockcount(){
   });
 }
 
-function updateNodesOnline(){
-  // ALL REPRESENTATIVES
-  Account.find({
-    lastVoted: {$gt: moment().subtract(30, 'minutes').toDate()}
+function updateOnlineStakeTotal(){
+  console.log('RPC: Updating online_stake_total...');
+  nano.rpc("confirmation_quorum")
+  .then((result) => {
+    online_stake_total = result.online_stake_total;
+    console.log('RPC: Current online_stake_total: ' + online_stake_total);
   })
-  .where('votingweight').gt(0)
-  .exec(function (err, nodes) {
-    if(err) return
-    nodesOnline_all = nodes.length;
-    console.log('RPC: ' + nodesOnline_all + ' reps are online');
-  });
-
-  // WITH OVER 0.1%
-  Account.find({
-    votingweight: {$gte: 133248289218203497353846153999000000},
-    lastVoted: {$gt: moment().subtract(30, 'minutes').toDate()}
-  })
-  .where('votingweight').gt(0)
-  .exec(function (err, nodes) {
-    if(err) return
-    nodesOnline_rebroad = nodes.length;
-    console.log('RPC: ' + nodesOnline_rebroad + ' reps over 0.1% are online');
+  .catch( reason => {
+    console.error( 'onRejected function called: ', reason );
   });
 }
-
-// update all local vars
-cron.schedule('* * * * *', updateLocalVars);
-
-// update account delegators
-// just too slow, disabled for now
-//cron.schedule('0 */3 * * *', updateDelegators);
-
-// update the all local vars now
-updateLocalVars();
 
 module.exports = {
   rpc: nano, 
   getAvailable: getAvailable,
-  getNodesOnline: getNodesOnline,
-  getNodesOnlineRebroad: getNodesOnlineRebroad,
-  getQueueLength: getQueueLength,
+  getOnlineStakeTotal: getOnlineStakeTotal,
   getBlockcount: getBlockcount
 };

@@ -11,39 +11,42 @@ module.exports = function (nanorpc) {
     Account.find({
       'owner': { $exists: true, $ne: null }
     })
-    .where('votingweight').gt(0)
-    .where('score').gte(80)
-    .sort('-score')
-    .populate('owner')
-    .exec(function (err, accounts) {
-      res.render('index', {
-        loggedin: req.isAuthenticated(),
-        moment: moment,
-        accounts: accounts,
-        nanorpc: nanorpc,
-        variableRound: variableRound
+      .where('votingweight').gt(0)
+      .where('score').gte(80)
+      .sort('-score')
+      .populate('owner')
+      .exec(function (err, accounts) {
+        res.render('index', {
+          loggedin: req.isAuthenticated(),
+          moment: moment,
+          accounts: accounts,
+          nanorpc: nanorpc,
+          variableRound: variableRound
+        });
       });
-    });
   });
 
   /* GET home page. */
   router.get('/principals', function (req, res, next) {
     Account.find()
-    .where('votingweight').gte(133248289218203497353846153999000000)
-    .sort('-votingweight')
-    .populate('owner')
-    .exec(function (err, accounts) {
-      res.render('principals', {
-        loggedin: req.isAuthenticated(),
-        title: 'Principal Representatives',
-        moment: moment,
-        accounts: accounts,
-        nanorpc: nanorpc,
-        variableRound: variableRound,
-        round: round,
-        nodesOnlinePercent: round((nanorpc.getNodesOnlineRebroad() / accounts.length) * 100, 1)
+      .where('votingweight').gte((nanorpc.getOnlineStakeTotal() / 1000))
+      .sort('-votingweight')
+      .populate('owner')
+      .exec(function (err, accounts) {
+        if (err) {          
+          return res.status(500).json(err);;
+        }
+
+        res.render('principals', {
+          loggedin: req.isAuthenticated(),
+          title: 'Principal Representatives',
+          moment: moment,
+          accounts: accounts,
+          nanorpc: nanorpc,
+          variableRound: variableRound,
+          round: round
+        });
       });
-    });
   });
 
   router.get('/imprint', function (req, res, next) {
@@ -67,10 +70,10 @@ module.exports = function (nanorpc) {
     });
   });
 
-  function variableRound(value){
-    if(value > 1){
+  function variableRound(value) {
+    if (value > 1) {
       return round(value, 2);
-    } else if(value > 0.1) {
+    } else if (value > 0.1) {
       return round(value, 3);
     } else {
       return round(value, 4);
@@ -84,7 +87,7 @@ module.exports = function (nanorpc) {
     } else {
       return Math.round(value);
     }
-  } 
+  }
 
   return router;
 
