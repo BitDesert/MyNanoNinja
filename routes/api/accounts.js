@@ -122,12 +122,17 @@ router.get('/verified', function (req, res) {
 });
 
 router.get('/:account', function (req, res) {
+  var myaccount = req.params.account;
 
-  // replace nano_ with xrb_ (for now)
-  var accountparam = req.params.account.replace(/xrb_/g, "nano_");
+  if(myaccount.startsWith('xrb_')){
+    return res.redirect('/account/' + myaccount.replace(/xrb_/g, "nano_"))
+  }
 
   Account.findOne({
-    'account': accountparam
+    $or: [
+      { 'account': myaccount },
+      { 'slug': myaccount }
+    ]
   })
     .select('-_id account alias slug uptime uptime_over created lastVoted votingweight delegators description website server network.provider location monitor score verified')
     .exec(function (err, account) {
