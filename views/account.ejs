@@ -124,7 +124,21 @@
     </div>
     <div class="d-flex border-bottom py-2">
       <div class="flex-grow-1">Vote Latency</div>
-      <div v-if="account.votelatency">{{ account.votelatency }} ms</div>
+      <div v-if="account.votelatency < -100">
+        <span class="badge badge-success" :title="account.votelatency +' ms'">Very Fast</span>
+      </div>
+      <div v-else-if="account.votelatency >= -100 && account.votelatency < 50">
+        <span class="badge badge-success" :title="account.votelatency +' ms'">Fast</span>
+      </div>
+      <div v-else-if="account.votelatency >= 50 && account.votelatency < 200">
+        <span class="badge badge-info" :title="account.votelatency +' ms'">Medium</span>
+      </div>
+      <div v-else-if="account.votelatency >= 200 && account.votelatency < 500">
+        <span class="badge badge-warning" :title="account.votelatency +' ms'">Slow</span>
+      </div>
+      <div v-else-if="account.votelatency >= 500">
+        <span class="badge badge-danger" :title="account.votelatency +' ms'">Very Slow</span>
+      </div>
       <div v-else>No data</div>
     </div>
     <div class="d-flex py-2">
