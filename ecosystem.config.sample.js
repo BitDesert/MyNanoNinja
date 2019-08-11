@@ -53,6 +53,7 @@ module.exports = {
         NODE_ENV: 'production',
         DOMAIN: 'https://mynano.ninja',
         NODE_RPC: 'http://[::1]:7076',
+        NODE_WS: 'ws://[::1]:7078',
         MONGO_URL: 'mongodb://localhost:27017/mynanoninja',
         SENTRY_URL: '',
         EMAIL_HOST: 'smtp.myhost.com',

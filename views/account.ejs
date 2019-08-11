@@ -122,6 +122,11 @@
       <div v-if="account.lastVoted">{{ account.lastVoted | momentFromNow }}</div>
       <div v-else>Never voted</div>
     </div>
+    <div class="d-flex border-bottom py-2">
+      <div class="flex-grow-1">Vote Latency</div>
+      <div v-if="account.votelatency">{{ account.votelatency }} ms</div>
+      <div v-else>No data</div>
+    </div>
     <div class="d-flex py-2">
       <div class="flex-grow-1">Score <i class="fas fa-question-circle" data-toggle="modal" data-target="#repscore"></i></div>
       <div>{{ account.score }} / 100</div>
