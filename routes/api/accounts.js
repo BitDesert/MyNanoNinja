@@ -16,7 +16,7 @@ router.get('/principals', function (req, res) {
   Account.find()
     .where('votingweight').gte((nanorpc.getOnlineStakeTotal() / 1000))
     .sort('-votingweight')
-    .select('-_id account alias uptime votingweight delegators')
+    .select('-_id account alias uptime votingweight delegators votelatency')
     .exec(function (err, accounts) {
       if (err) {
         console.log("API - All Reps", err);
