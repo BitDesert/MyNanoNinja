@@ -18,6 +18,6 @@ require('./cron/uptimenotification');
 require('./cron/monitors');
 require('./cron/scores');
 require('./cron/representatives');
-require('./cron/weights');
+//require('./cron/weights');
 require('./cron/delegators');
 require('./cron/votelatency');

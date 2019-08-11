@@ -12,7 +12,7 @@ const nano = new Nano({
 });
 
 // get all representatives
-cron.schedule('0 * * * *', updateRepresentatives);
+cron.schedule('*/15 * * * *', updateRepresentatives);
 
 function updateRepresentatives() {
   console.log('REPRESENTATIVES: Started');
@@ -20,7 +20,6 @@ function updateRepresentatives() {
   nano.representatives().then((reps) => {
 
     console.log('REPRESENTATIVES:', Object.keys(reps).length);
-    
 
     async.forEachOfSeries(reps, (weight, rep, callback) => {
 
@@ -48,18 +47,15 @@ function checkRepresentative(rep, weight, cb) {
     if (!account) {
       var account = new Account();
       account.account = rep;
-      account.votingweight = weight;
-
-      account.save(function (err) {
-        if (err) {
-          console.log("RPC - checkRepresentative - Error saving account", err);
-        }
-        cb();
-      });
-
-      // console.log('New rep: '+rep);
-    } else {
-      cb();
     }
+
+    account.votingweight = weight;
+
+    account.save(function (err) {
+      if (err) {
+        console.log("RPC - checkRepresentative - Error saving account", err);
+      }
+      cb();
+    });
   });
 }
