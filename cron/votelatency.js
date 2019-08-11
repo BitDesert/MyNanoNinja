@@ -103,6 +103,7 @@ function updateLatency(account, latency, callback) {
       'account': account
     }, function (err, account) {
       if (err) {
+        callback();
         return;
       }
 
