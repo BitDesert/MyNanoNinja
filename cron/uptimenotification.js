@@ -68,6 +68,7 @@ function checkNodeUptime(account, callback) {
     var title = account.account;
   }
 
+  /*
   if (account.owner && process.env.NODE_ENV != 'development') {
     if (previous === true && account.uptime_data.last === false) {
       console.log('UPTIME NOTIFICATION: ' + account.account + ' went down!');
@@ -84,6 +85,7 @@ function checkNodeUptime(account, callback) {
       });
     }
   }
+  */
 
   account.save(function (err) {
     if (err) {
