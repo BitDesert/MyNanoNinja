@@ -1,6 +1,4 @@
-
-
-var request = require('request');
+const axios = require('axios');
 var async = require("async");
 var cron = require('node-cron');
 
@@ -20,7 +18,6 @@ updateOnlineReps()
 
 function updateOnlineReps() {
   console.log('VOTES: Started');
-  
 
   var provider = JSON.parse(process.env.DRPC_REPSONLINE);
   provider.push('local')
@@ -31,7 +28,7 @@ function updateOnlineReps() {
     getRepsOnline(currentprovider, function (err, data) {
       if (err) {
         // error getting data
-        console.error('VOTES:', err);
+        console.error('VOTES: Error at', currentprovider);
         callback();
         return;
       }
@@ -83,18 +80,13 @@ function getRepsOnline(provider, callback) {
       callback(true)
     })
   } else {
-    request.get({
-      url: provider,
-      json: true,
-      timeout: 10000
-    }, function (err, response, data) {
-      if (err) {
-        // error getting data
-        console.error('VOTES:', err);
-        callback(true);
-        return;
-      }
-      callback(null, data)
+    axios.get(provider, {
+      timeout: 5000
+    }).then(response => {
+      callback(null, response.data)
+    }).catch(error => {
+      console.error(error.code, error.message, error.config.url);
+      callback(true);
     })
   }
 }
