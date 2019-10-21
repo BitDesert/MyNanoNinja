@@ -49,13 +49,6 @@ module.exports = function (nanorpc) {
       });
   });
 
-  router.get('/imprint', function (req, res, next) {
-    res.render('imprint', {
-      loggedin: req.isAuthenticated(),
-      title: 'Imprint'
-    });
-  });
-
   router.get('/map', function (req, res, next) {
     res.render('map', {
       loggedin: req.isAuthenticated(),
