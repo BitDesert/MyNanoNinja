@@ -65,6 +65,21 @@
               <% } else { %>
               <span class="badge badge-danger" title="Never voted">Offline</span>
               <% } %>
+              <% if(accounts[i].votelatency) { %>
+                <% if(accounts[i].votelatency < -100) { %>
+                  <span class="badge badge-success">Very Fast</span>
+                <% } else if(accounts[i].votelatency >= -100 && accounts[i].votelatency < 50) { %>
+                  <span class="badge badge-success">Fast</span>
+                <% } else if(accounts[i].votelatency >= 50 && accounts[i].votelatency < 200) { %>
+                  <span class="badge badge-success">Medium</span>
+                <% } else if(accounts[i].votelatency >= 200 && accounts[i].votelatency < 500) { %>
+                  <span class="badge badge-success">Slow</span>
+                <% } else if(accounts[i].votelatency > 500) { %>
+                  <span class="badge badge-success">Very Slow</span>
+                <% } %>
+              <% } else { %>
+              <span class="badge badge-danger" title="Never voted">Offline</span>
+              <% } %>
               <% if(accounts[i].monitor.version) { %>
               <span class="badge badge-secondary"><%= accounts[i].monitor.version %></span>
               <% } %>
