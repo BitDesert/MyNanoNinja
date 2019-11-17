@@ -26,7 +26,10 @@ var accountSchema = mongoose.Schema({
     default: 0
   },
   lastVoted: Date,
-  votelatency: Number,
+  votelatency: {
+    type: Number,
+    default: 0
+  },
   votelatency_current: Number,
   votelatency_data: {
     count: {

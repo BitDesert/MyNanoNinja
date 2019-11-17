@@ -117,18 +117,31 @@
             </a>
             <h5 class="card-subtitle text-muted">
               <% if(accounts[i].lastVoted) { %>
-              <% if(moment(accounts[i].lastVoted).add(10, 'minutes').isAfter(/*now*/)) { %>
-              <span class="badge badge-success"
-                title="Last voted <%= moment(accounts[i].lastVoted).fromNow() %>">Online</span>
-              <% } else if(moment(accounts[i].lastVoted).add(1, 'day').isAfter(/*now*/)) { %>
-              <span class="badge badge-warning"
-                title="Last voted <%= moment(accounts[i].lastVoted).fromNow() %>">Unstable</span>
-              <% } else { %>
-              <span class="badge badge-danger"
-                title="Last voted <%= moment(accounts[i].lastVoted).fromNow() %>">Offline</span>
-              <% } %>
+                <% if(moment(accounts[i].lastVoted).add(10, 'minutes').isAfter(/*now*/)) { %>
+                <span class="badge badge-success"
+                  title="Last voted <%= moment(accounts[i].lastVoted).fromNow() %>">Online</span>
+                <% } else if(moment(accounts[i].lastVoted).add(1, 'day').isAfter(/*now*/)) { %>
+                <span class="badge badge-warning"
+                  title="Last voted <%= moment(accounts[i].lastVoted).fromNow() %>">Unstable</span>
+                <% } else { %>
+                <span class="badge badge-danger"
+                  title="Last voted <%= moment(accounts[i].lastVoted).fromNow() %>">Offline</span>
+                <% } %>
               <% } else { %>
               <span class="badge badge-danger" title="Never voted">Offline</span>
+              <% } %>
+              <% if(accounts[i].votelatency) { %>
+                <% if(accounts[i].votelatency < -100) { %>
+                  <span class="badge badge-success">Very Fast</span>
+                <% } else if(accounts[i].votelatency >= -100 && accounts[i].votelatency < 200) { %>
+                  <span class="badge badge-success">Fast</span>
+                <% } else if(accounts[i].votelatency >= 200 && accounts[i].votelatency < 500) { %>
+                  <span class="badge badge-info">Medium</span>
+                <% } else if(accounts[i].votelatency >= 500 && accounts[i].votelatency < 1000) { %>
+                  <span class="badge badge-warning">Slow</span>
+                <% } else if(accounts[i].votelatency > 1000) { %>
+                  <span class="badge badge-danger">Very Slow</span>
+                <% } %>
               <% } %>
               <% if(accounts[i].monitor.version) { %>
               <span class="badge badge-secondary"><%= accounts[i].monitor.version %></span>

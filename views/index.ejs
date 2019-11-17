@@ -77,8 +77,6 @@
                 <% } else if(accounts[i].votelatency > 1000) { %>
                   <span class="badge badge-danger">Very Slow</span>
                 <% } %>
-              <% } else { %>
-              <span class="badge badge-danger" title="Never voted">Offline</span>
               <% } %>
               <% if(accounts[i].monitor.version) { %>
               <span class="badge badge-secondary"><%= accounts[i].monitor.version %></span>

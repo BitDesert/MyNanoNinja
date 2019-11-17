@@ -45,8 +45,11 @@ function updateScoreAccount(account, callback) {
   var dayssincecreation = moment().diff(moment(account.created), 'days');
   var score_age = (100 + (-100 / (1 + Math.pow(dayssincecreation / 60, 4))));
 
+  // calculate latency score
+  var score_latency = 100 / (1 + Math.exp(0.012 * account.votelatency - 8));
+
   // divide so we get a smooth max 100 points
-  score = (score_weight * score_uptime * score_age) / 10000;
+  score = (score_weight * score_uptime * score_age * score_latency) / 10000;
 
   // round the final score
   account.score = Math.round(score);
