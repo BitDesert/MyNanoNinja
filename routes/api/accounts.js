@@ -106,7 +106,10 @@ router.get('/verified', function (req, res) {
     'owner': {
       $exists: true,
       $ne: null
-    }
+    },
+    'lastVoted': {
+      $gt: moment().subtract(1, 'day').toDate()
+    },
   })
     .where('votingweight').gt(0)
     .where('score').gte(80)
