@@ -27,6 +27,13 @@ var accountSchema = mongoose.Schema({
   },
   lastVoted: Date,
   votelatency: Number,
+  votelatency_current: Number,
+  votelatency_data: {
+    count: {
+      type: Number,
+      default: 0
+    },
+  },
   alias: String,
   slug: { type: String, slug: "alias", unique: true, sparse: true },
   verified: {

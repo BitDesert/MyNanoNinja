@@ -110,9 +110,14 @@ function updateLatency(account, latency, callback) {
       if (!account) {
         var account = new Account();
         account.account = account;
+        account.votelatency = latency;
+        account.votelatency_data.count = 1;
+      } else {
+        account.votelatency_data.count++;
+        account.votelatency = ((account.votelatency * account.votelatency_data.count) + latency) / (account.votelatency_data.count+1);
       }
 
-      account.votelatency = latency;
+      account.votelatency_current = latency;
       account.save(function (err) {
         if (err) {
           console.log("updateLatency - Error saving account", err);
