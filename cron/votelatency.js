@@ -114,7 +114,7 @@ function updateLatency(account, latency, callback) {
         account.votelatency_data.count = 1;
       } else {
         account.votelatency_data.count++;
-        account.votelatency = ((account.votelatency * account.votelatency_data.count) + latency) / (account.votelatency_data.count+1);
+        account.votelatency = Math.round(((account.votelatency * account.votelatency_data.count) + latency) / (account.votelatency_data.count+1));
       }
 
       account.votelatency_current = latency;
