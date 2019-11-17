@@ -9,7 +9,10 @@ module.exports = function (nanorpc) {
   /* GET home page. */
   router.get('/', function (req, res, next) {
     Account.find({
-      'owner': { $exists: true, $ne: null }
+      'owner': { $exists: true, $ne: null },
+      'lastVoted': {
+        $gt: moment().subtract(1, 'day').toDate()
+      },
     })
       .where('votingweight').gt(0)
       .where('score').gte(80)
