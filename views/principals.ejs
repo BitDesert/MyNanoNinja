@@ -6,7 +6,7 @@
 <canvas id="chartrepsdecen" width="200" height="60" class="mb-3"></canvas>
 
 <script>
-  const officialreps = [
+  const nf_reps = [
     "nano_3arg3asgtigae3xckabaaewkx3bzsh7nwz7jkmjos79ihyaxwphhm6qgjps4",
     "nano_1stofnrxuz3cai7ze75o174bpm7scwj9jn3nxsn8ntzg784jf1gzn1jjdkou",
     "nano_1q3hqecaw15cjt7thbtxu3pbzr1eihtzzpzxguoc37bj1wc5ffoh7w74gi6p",
@@ -39,15 +39,15 @@
         ]
       };
 
-      // filter the official reps
-      chartdata.labels.push('Official Reps');
-      chartdata.datasets[0].data.push(Math.round(data.filter(rep => officialreps.includes(rep.account)).sum('votingweight') / 1000000000000000000000000000000));
+      // filter the Nano Foundation reps
+      chartdata.labels.push('Nano Foundation');
+      chartdata.datasets[0].data.push(Math.round(data.filter(rep => nf_reps.includes(rep.account)).sum('votingweight') / 1000000000000000000000000000000));
       chartdata.datasets[0].backgroundColor.push('#AAAAAA');
 
       var colorcount = 0;
       data.forEach(function (element) {
-        // skip the official reps
-        if (officialreps.includes(element.account)) return;
+        // skip the Nano Foundation reps
+        if (nf_reps.includes(element.account)) return;
 
         if (element.alias) {
           chartdata.labels.push(element.alias);
