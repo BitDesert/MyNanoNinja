@@ -51,29 +51,22 @@
               </h4>
             </a>
             <h5 class="card-subtitle text-muted">
-              <% if (accounts[i].owner.facebook.token) { %>
-                <span class="badge badge-secondary"><i class="fab fa-facebook-square"></i></span>
+              <% if(accounts[i].lastVoted) { %>
+                <% if(moment(accounts[i].lastVoted).add(10, 'minutes').isAfter(/*now*/)) { %>
+                <span class="badge badge-success"
+                  title="Last voted <%= moment(accounts[i].lastVoted).fromNow() %>">Online</span>
+                <% } else if(moment(accounts[i].lastVoted).add(1, 'day').isAfter(/*now*/)) { %>
+                <span class="badge badge-warning"
+                  title="Last voted <%= moment(accounts[i].lastVoted).fromNow() %>">Unstable</span>
+                <% } else { %>
+                <span class="badge badge-danger"
+                  title="Last voted <%= moment(accounts[i].lastVoted).fromNow() %>">Offline</span>
+                <% } %>
+              <% } else { %>
+              <span class="badge badge-danger" title="Never voted">Offline</span>
               <% } %>
-              <% if (accounts[i].owner.twitter.token) { %>
-                <span class="badge badge-secondary"><i class="fab fa-twitter"></i></span>
-              <% } %>
-              <% if (accounts[i].owner.google.token) { %>
-                <span class="badge badge-secondary"><i class="fab fa-google-plus-g"></i></span>
-              <% } %>
-              <% if (accounts[i].owner.github.token) { %>
-                <span class="badge badge-secondary"><i class="fab fa-github"></i></span>
-              <% } %>
-              <% if (accounts[i].owner.reddit.token) { %>
-                <span class="badge badge-secondary"><i class="fab fa-reddit"></i></span>
-              <% } %>
-              <% if (accounts[i].owner.discord.token) { %>
-                <span class="badge badge-secondary"><i class="fab fa-discord"></i></span>
-              <% } %>
-              <% if(accounts[i].website){ %>
-                <span class="badge badge-secondary"><i class="fas fa-globe"></i></span>
-              <% } %>
-              <% if(accounts[i].monitor.version){ %>
-                <span class="badge badge-secondary"><i class="fas fa-binoculars"></i></span>
+              <% if(accounts[i].monitor.version) { %>
+              <span class="badge badge-secondary"><%= accounts[i].monitor.version %></span>
               <% } %>
             </h5>
           </div>
