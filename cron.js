@@ -9,15 +9,17 @@ mongoose.connect(process.env.MONGO_URL,
   { useNewUrlParser: true }
 );
 
+const { fork } = require('child_process');
+
 // cron subtasks
-require('./cron/peers');
-require('./cron/statistics');
-require('./cron/votes');
-require('./cron/uptime');
-require('./cron/uptimenotification');
-require('./cron/monitors');
-require('./cron/scores');
-require('./cron/representatives');
-//require('./cron/weights');
-require('./cron/delegators');
-require('./cron/votelatency');
+fork('./cron/peers');
+fork('./cron/statistics');
+fork('./cron/votes');
+fork('./cron/uptime');
+fork('./cron/uptimenotification');
+fork('./cron/monitors');
+fork('./cron/scores');
+fork('./cron/representatives');
+//fork('./cron/weights');
+fork('./cron/delegators');
+fork('./cron/votelatency');
