@@ -90,7 +90,7 @@ function updateNodeMonitor(account, callback) {
         callback();
       });
     } catch (error) {
-      console.error('MONITORS: Problem with updateNodeMonitor', account.monitor.url, error)
+      console.error('MONITORS: Problem with updateNodeMonitor', account.monitor.url, error.message)
       callback();
     }
   });

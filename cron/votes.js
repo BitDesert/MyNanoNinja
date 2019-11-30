@@ -42,7 +42,7 @@ function updateOnlineReps() {
           }
         };
       } catch (error) {
-        console.error('VOTES:', currentprovider, error);
+        console.error('VOTES: Catch Error:', currentprovider, error);
         callback()
         return
       }
@@ -52,18 +52,19 @@ function updateOnlineReps() {
 
   }, err => {
     if (err) {
-      console.error('VOTES:', err.message);
+      console.error('VOTES: Completed with error:', err.message);
       return
     }
     console.log('VOTES: ' + onlinereps.length + ' individual reps online');
 
+    console.log('VOTES: Updating accounts...');
     async.forEachOfSeries(onlinereps, (rep, key, callback) => {
 
       updateVoteSimple(rep, callback);
 
     }, err => {
       if (err) {
-        console.error('VOTES:', err.message);
+        console.error('VOTES: Not done', err.message);
         return
       }
       console.log('VOTES: Done');

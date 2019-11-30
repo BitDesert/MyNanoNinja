@@ -136,10 +136,12 @@ function analyzeBlocks() {
     return
   }
 
+  console.log('VOTELATENCY:', confirmedblocks.length, 'blocks confirmed');
+
   var reps = []
 
   confirmedblocks.forEach(block => {
-    console.log('VOTELATENCY:', block.hash, block.votes.length);
+    //console.log('VOTELATENCY:', block.hash, block.votes.length);
 
     block.votes.forEach(vote => {
 
