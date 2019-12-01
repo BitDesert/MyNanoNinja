@@ -15,7 +15,7 @@ cron.schedule('0 3 * * *', function(){
 });
 
 function updateUptime(types) {
-  console.log('UPTIME: Started');
+  console.log('UPTIME: Started', types);
   Account.find()
     .where('votingweight').gte(1000000000000000000000000000000)
     .exec(function (err, accounts) {
@@ -34,7 +34,7 @@ function updateUptime(types) {
           console.error(err.message);
           return
         }
-        console.log('UPTIME: Done');
+        console.log('UPTIME: Done', types);
       });
     });
 }
