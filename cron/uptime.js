@@ -4,9 +4,17 @@ var cron = require('node-cron');
 var Account = require('../models/account');
 
 // Uptime tracking
-cron.schedule('0 * * * *', updateUptime);
+cron.schedule('0 * * * *', function(){
+  var types = ['week'];
+  updateUptime(types)
+});
 
-function updateUptime() {
+cron.schedule('0 3 * * *', function(){
+  var types = ['month', '3_months', '6_months', 'year'];
+  updateUptime(types)
+});
+
+function updateUptime(types) {
   console.log('UPTIME: Started');
   Account.find()
     .where('votingweight').gte(1000000000000000000000000000000)
@@ -19,7 +27,7 @@ function updateUptime() {
 
       async.forEachOfSeries(accounts, (account, key, callback) => {
 
-        updateUptimeAccount(account, callback)
+        updateUptimeAccount(account, types, callback)
 
       }, err => {
         if (err) {
@@ -31,9 +39,7 @@ function updateUptime() {
     });
 }
 
-function updateUptimeAccount(account, callback) {
-  var types = ['week', 'month', '3_months', '6_months', 'year'];
-
+function updateUptimeAccount(account, types, callback) {
   async.forEachOfSeries(types, (type, key, cb) => {
 
     account.updateUptimeFor(type, cb)
