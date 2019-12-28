@@ -1,0 +1,29 @@
+<% include ../../partials/header.ejs %>
+
+<div class="d-flex">
+  <h1 class="truncate mb-3 flex-grow-1">
+    <% if (account === null) { %>
+      No alias
+    <% } else if (account.alias) { %>
+      <%= account.alias %><% if (account.verified) { %> <i class="fas fa-check-circle text-primary" title="Verified"></i><% } %>
+    <% } else { %>
+      No alias
+    <% } %>
+    <br>
+    <small><% if (account === null) { %><%= myaccount %><% } else { %><%= account.account %><% } %></small>
+  </h1>
+</div>
+
+<p class="text-center">
+  <img src="https://chart.googleapis.com/chart?chs=250x250&amp;cht=qr&amp;chl=<% if (account === null) { %><%= myaccount %><% } else { %><%= account.account %><% } %>&amp;choe=UTF-8">
+</p>
+
+<p class="text-center">
+  Scan the QR code with your wallet app or use the button below.
+</p>
+
+<p class="text-center">
+  <a href="nano:<% if (account === null) { %><%= myaccount %><% } else { %><%= account.account %><% } %>" class="btn btn-primary">Pay with your Wallet</a>
+</p>
+
+<% include ../../partials/footer.ejs %>

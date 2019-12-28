@@ -21,7 +21,7 @@ module.exports = function (nanorpc) {
       .populate('owner')
       .exec(function (err, account) {
         if (err) {
-          res.status(404);
+          res.status(500);
           res.render('error', {
             message: 'Whoops! There was an error...',
             error: {}
@@ -46,7 +46,56 @@ module.exports = function (nanorpc) {
           var account = null;
         }
 
-        res.render('account', {
+        res.render('account/account', {
+          title: title,
+          loggedin: req.isAuthenticated(),
+          user: req.user,
+          nanorpc: nanorpc,
+          moment: moment,
+          account: account,
+          round: round,
+          votingWeight: votingWeight,
+          myaccount: myaccount
+        });
+
+      });
+  });
+  router.get('/:address/pay', function (req, res, next) {
+    var myaccount = req.params.address;
+
+    if(myaccount.startsWith('xrb_')){
+      return res.redirect('/account/' + myaccount.replace(/xrb_/g, "nano_") + '/pay')
+    }
+
+    Account.findOne({
+      $or: [
+        { 'account': myaccount },
+        { 'slug': myaccount }
+      ]
+    })
+      .exec(function (err, account) {
+        if (err) {
+          res.status(500);
+          res.render('error', {
+            message: 'Whoops! There was an error...',
+            error: {}
+          });
+          return;
+        }
+
+        if (account) {
+          if (account.alias) {
+            var title = account.alias;
+          } else {
+            var title = account.account;
+          }
+        } else {
+          var title = myaccount;
+          var votingWeight = null;
+          var account = null;
+        }
+
+        res.render('account/pay', {
           title: title,
           loggedin: req.isAuthenticated(),
           user: req.user,

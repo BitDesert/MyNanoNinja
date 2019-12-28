@@ -1,4 +1,4 @@
-<% include ../partials/header.ejs %>
+<% include ../../partials/header.ejs %>
 
 <div id="app" v-cloak>
 
@@ -36,6 +36,7 @@
           <a href="nano:<% if (account === null) { %><%= myaccount %><% } else { %><%= account.account %><% } %>" class="btn btn-secondary">Pay</a>
           <a href="nanorep:<% if (account === null) { %><%= myaccount %><% } else { %><%= account.account %><% } %>" class="btn btn-secondary">Representative</a>
         </div>
+        <a href="/account/<% if (account === null) { %><%= myaccount %><% } else { %><%= account.account %><% } %>/pay" class="btn btn-secondary">Payment link</a>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
     </div>
@@ -597,4 +598,4 @@
 </script>
 <script src="/static/js/sites/account.js?v=6"></script>
 
-<% include ../partials/footer.ejs %>
+<% include ../../partials/footer.ejs %>
