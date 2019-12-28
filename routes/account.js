@@ -60,7 +60,7 @@ module.exports = function (nanorpc) {
 
       });
   });
-  router.get('/:address/pay', function (req, res, next) {
+  router.get('/:address/send', function (req, res, next) {
     var myaccount = req.params.address;
 
     if(myaccount.startsWith('xrb_')){
@@ -95,7 +95,7 @@ module.exports = function (nanorpc) {
           var account = null;
         }
 
-        res.render('account/pay', {
+        res.render('account/send', {
           title: title,
           loggedin: req.isAuthenticated(),
           user: req.user,

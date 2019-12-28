@@ -36,7 +36,7 @@
           <a href="nano:<% if (account === null) { %><%= myaccount %><% } else { %><%= account.account %><% } %>" class="btn btn-secondary">Pay</a>
           <a href="nanorep:<% if (account === null) { %><%= myaccount %><% } else { %><%= account.account %><% } %>" class="btn btn-secondary">Representative</a>
         </div>
-        <a href="/account/<% if (account === null) { %><%= myaccount %><% } else { %><%= account.account %><% } %>/pay" class="btn btn-secondary">Payment link</a>
+        <a href="/account/<% if (account === null) { %><%= myaccount %><% } else { %><%= account.account %><% } %>/send" class="btn btn-secondary">Payment link</a>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
     </div>
