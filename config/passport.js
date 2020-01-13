@@ -5,6 +5,7 @@ var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 var GitHubStrategy = require('passport-github').Strategy;
 var RedditStrategy = require('passport-reddit').Strategy;
 var DiscordStrategy = require('passport-discord').Strategy;
+var TelegramStrategy = require('passport-telegram-official').Strategy;
 
 // load up the user model
 var User = require('../models/user');
@@ -505,5 +506,93 @@ module.exports = function (passport) {
           });
     
         }));
+
+        // =========================================================================
+        // Telegram ================================================================
+        // =========================================================================
+        passport.use(new TelegramStrategy(configAuth.telegramAuth,
+          function (req, profile, done) {
+
+            console.log('TELEGRAM - ', profile);
+            return
+      
+            // asynchronous
+            process.nextTick(function () {
+  
+              console.log('TELEGRAM - ', profile);
+      
+              // check if the user is already logged in
+              if (!req.user) {
+      
+                console.log('TELEGRAM - not logged in');
+      
+                User.findOne({ 'discord.id': profile.id }, function (err, user) {
+                  if (err)
+                    return done(err);
+      
+                  if (user) {
+                    console.log('TELEGRAM - User found');
+      
+                    // if there is a user id already but no token (user was linked at one point and then removed)
+                    if (!user.discord.token) {
+                      console.log('TELEGRAM - User has no token');
+                      user.discord.token = token;
+                    }
+  
+                    user.discord.username = profile.username;
+                    user.discord.discriminator = profile.discriminator;
+                    user.discord.avatar = profile.avatar;
+                    user.discord.email = profile.email;
+    
+                    user.save(function (err) {
+                      if (err)
+                        return done(err);
+    
+                      return done(null, user);
+                    });
+                  } else {
+                    console.log('TELEGRAM - User not found');
+                    var newUser = new User();
+      
+                    newUser.discord.id = profile.id;
+                    newUser.discord.token = token;
+                    newUser.discord.username = profile.username;
+                    newUser.discord.discriminator = profile.discriminator;
+                    newUser.discord.avatar = profile.avatar;
+                    newUser.discord.email = profile.email;
+      
+                    newUser.save(function (err) {
+                      if (err)
+                        return done(err);
+      
+                      return done(null, newUser);
+                    });
+                  }
+                });
+      
+              } else {
+                console.log('TELEGRAM - User is logged in');
+                // user already exists and is logged in, we have to link accounts
+                var user = req.user; // pull the user out of the session
+      
+                user.discord.id = profile.id;
+                user.discord.token = token;
+                user.discord.username = profile.username;
+                user.discord.discriminator = profile.discriminator;
+                user.discord.avatar = profile.avatar;
+                user.discord.email = profile.email;
+      
+                user.save(function (err) {
+                  if (err)
+                    return done(err);
+      
+                  return done(null, user);
+                });
+      
+              }
+      
+            });
+      
+          }));
 
 };

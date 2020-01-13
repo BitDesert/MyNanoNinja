@@ -43,6 +43,7 @@
     "passport-google-oauth": "~1.0.0",
     "passport-local": "~1.0.0",
     "passport-reddit": "^0.2.4",
+    "passport-telegram-official": "^1.1.0",
     "passport-twitter": "~1.0.4",
     "popper.js": "^1.14.3",
     "portscanner": "^2.2.0",

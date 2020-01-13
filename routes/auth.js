@@ -238,6 +238,30 @@ module.exports = function (passport, nanorpc) {
     });
   });
 
+  // Telegram ---------------------------------
+
+  // send to google to do the authentication
+  router.get('/telegram', passport.authenticate('telegram'));
+
+  // the callback after google has authenticated the user
+  router.get('/telegram/callback',
+    passport.authenticate('telegram', {
+      successRedirect: '/profile',
+      failureRedirect: '/'
+    })
+  );
+
+  // unlink account
+  router.get('/unlink/telegram', isLoggedIn, function (req, res) {
+    var user = req.user;
+    user.telegram.id = undefined;
+    user.save(function (err) {
+      res.redirect('/profile');
+    });
+  });
+
+  // other stuff ---------------------------------
+
   // route middleware to ensure user is logged in
   function isLoggedIn(req, res, next) {
     if (req.isAuthenticated())

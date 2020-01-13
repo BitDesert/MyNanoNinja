@@ -46,6 +46,12 @@ module.exports = {
 		callbackURL: process.env.DOMAIN + '/auth/discord/callback',
 		scope: 'identify email',
 		passReqToCallback: true
+	},
+
+	telegramAuth: {
+		botToken: process.env.TELEGRAM_BOT_TOKEN,
+		callbackURL: process.env.DOMAIN + '/auth/telegram/callback',
+		passReqToCallback: true
 	}
 
 };
