@@ -22,4 +22,16 @@ router.get('/active_difficulty', function (req, res) {
   });
 });
 
+router.get('/representatives_online', function (req, res) {
+  nano.rpc('representatives_online')
+  .then(response => {
+    if(!response) return res.status(404).json({ error: 'Not found' });
+
+    res.json(response);
+  })
+  .catch(reason => {
+    res.status(500).json({ error: 'Not found', msg: reason });
+  });
+});
+
 module.exports = router;
