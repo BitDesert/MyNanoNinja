@@ -69,7 +69,7 @@ function checkNodeUptime(account, callback) {
     var title = account.account;
   }
 
-  if (account.owner && process.env.NODE_ENV != 'development') {
+  if (account.owner) {
     if(account.owner.discord){
       var discordprefix = '<@' + account.owner.discord.id + '> Your ';
     } else {
