@@ -2,6 +2,7 @@ var async = require("async");
 var cron = require('node-cron');
 const nodemailer = require('nodemailer');
 var moment = require('moment');
+const axios = require('axios');
 
 var Account = require('../models/account');
 var User = require('../models/user');
@@ -68,13 +69,19 @@ function checkNodeUptime(account, callback) {
     var title = account.account;
   }
 
-  /*
   if (account.owner && process.env.NODE_ENV != 'development') {
+    if(account.owner.discord){
+      var discordprefix = '<@' + account.owner.discord.id + '> Your ';
+    } else {
+      var discordprefix = 'The ';
+    }
+
     if (previous === true && account.uptime_data.last === false) {
       console.log('UPTIME NOTIFICATION: ' + account.account + ' went down!');
 
       account.owner.getEmails().forEach(function (email) {
         sendDownMail(account, email);
+        sendDiscord(discordprefix + 'Nano representative **' + title + '** is down! https://mynano.ninja/account/' + account.account);
       });
 
     } else if (previous === false && account.uptime_data.last === true) {
@@ -82,10 +89,10 @@ function checkNodeUptime(account, callback) {
 
       account.owner.getEmails().forEach(function (email) {
         sendUpMail(account, email);
+        sendDiscord(discordprefix + 'Nano representative **' + title + '** is up again. https://mynano.ninja/account/' + account.account);
       });
     }
   }
-  */
 
   account.save(function (err) {
     if (err) {
@@ -153,5 +160,17 @@ function sendMail(subject, body, email) {
     }
     console.log('UPTIME NOTIFICATION: Mail sent');
     
+  });
+}
+
+function sendDiscord(content) {
+  axios.post(process.env.DISCORD_HOOK, {
+    content: content
+  })
+  .then(function (response) {
+    //console.log(response);
+  })
+  .catch(function (error) {
+    console.log(error);
   });
 }

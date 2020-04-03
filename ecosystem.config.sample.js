@@ -59,6 +59,7 @@ module.exports = {
         EMAIL_HOST: 'smtp.myhost.com',
         EMAIL_USER: 'alert@mynano.ninja',
         EMAIL_PASS: 'mypassword',
+        DISCORD_HOOK: 'https://webhook.url',
         DRPC_REPSONLINE: '[]'
       }
     }
