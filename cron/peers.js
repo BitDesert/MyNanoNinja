@@ -4,8 +4,8 @@ var _ = require('lodash');
 var request = require('request');
 var protomap = require('../nano/protomap');
 var maxmind = require('maxmind');
-var geo_asn = maxmind.openSync('./utils/GeoLite2-ASN.mmdb');
-var geo_city = maxmind.openSync('./utils/GeoLite2-City.mmdb');
+var geo_asn = maxmind.openSync('./utils/maxmind/GeoLite2-ASN.mmdb');
+var geo_city = maxmind.openSync('./utils/maxmind/GeoLite2-City.mmdb');
 
 const regex_ip = /\[::ffff:([0-9.]+)\]:[0-9]+/
 
@@ -71,7 +71,7 @@ async function getAdvancedPeers() {
 
 }
 
-function updatePeer(peeraccount, ip, protoversion, callback) {
+function updatePeer(peeraccount, ip, protoversion, callback) {  
   Account.findOne(
     {
       'account': peeraccount
@@ -84,7 +84,7 @@ function updatePeer(peeraccount, ip, protoversion, callback) {
       try {
         account.network.ip = ip;
 
-        var geo_asn_response = geo_asn.get(ip);
+        var geo_asn_response = geo_asn.get(ip);        
 
         if (geo_asn_response && geo_asn_response.autonomous_system_organization) {
           account.network.provider = geo_asn_response.autonomous_system_organization;
