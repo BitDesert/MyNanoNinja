@@ -96,7 +96,8 @@ function isLoggedIn(req, res, next) {
 router.get('/', function (req, res, next) {
   res.render('api/node', {
     loggedin: req.isAuthenticated(),
-    title: 'Nano Node API'
+    title: 'Nano Node API',
+    user: req.user,
   });
 });
 

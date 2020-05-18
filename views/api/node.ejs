@@ -56,8 +56,111 @@
   You need a API key which you send via a <code>Authorization: yourapikey</code> HTTP header.<br>
   The <a href="https://github.com/BitDesert/nano-node-rpc">nano-node-rpc</a> NodeJS library does that for you.<br>
 </p>
+
+<h2 class="mt-3" id="apikey">API Key</h2>
+
+<% if (user) { %>
+<% if (user.api.key) { %>
 <p>
-  <a href="/profile#apikey" class="btn btn-secondary">Get you API key here!</a>
+  <pre><%= user.api.key %></pre>
 </p>
+<p>
+  Calls remaining: <%= user.api.calls_remaining %>
+</p>
+<div class="row">
+  <div class="col-4">
+    <label>Do you need more API calls?</label>
+    <div class="input-group mb-3">
+      <input type="text" class="form-control" placeholder="How many calls?" id="moreapicalls" pattern="[1-9][0-9]*" value="100">
+      <div class="input-group-append">
+        <button class="btn btn-primary" type="button" id="getmore">Get more</button>
+      </div>
+    </div>
+  </div>
+</div>
+<p id="statustext"></p>
+<% } else { %>
+<p>No API key.</p>
+<% } %>
+<% } else { %>
+<p>
+  <a href="/profile#apikey" class="btn btn-secondary">Login to get you API key!</a>
+</p>
+<% } %>
+
+
+
+<script src="/static/js/accept-nano/index.js"></script>
+
+<script>
+  window.acceptNano.setup({
+    apiURL: 'https://mynano.ninja/payment/api', // URL of your Accept NANO server (String, required)
+    debug: false, // used for enabling debug mode, (Bool, non-required, false by default)
+    pollInterval: 1500, // time period (ms) to check for verification of the payment sessions (Number, non-required, 1500 by default)
+  });
+
+  init.push(function () {
+    $("#getmore").click(
+      function () {
+        window.acceptNano.startPayment({
+          data: {
+            amount: ($('#moreapicalls').val() * 0.01),
+            currency: 'nano'
+          },
+          onStart: (paymentData) => {
+            console.log('onStart', paymentData)
+          },
+          onSuccess: (paymentData) => {
+            console.log('onSuccess', paymentData)
+            verifyPayment(paymentData.token)
+          },
+          onFailure: (failureReason) => {
+            console.log('onFailure', failureReason)
+            setPaymentStatus('Error: ' + failureReason);
+          },
+          onCancel: () => {
+            setPaymentStatus('Payment cancelled.');
+          }
+        })
+      }
+    )
+
+    $('#moreapicalls').blur(function (evt) {
+      evt.target.checkValidity();
+    }).bind('invalid', function (event) {
+      setPaymentStatus('Invalid amount');
+      $('#moreapicalls').val('')
+    });
+
+  });
+
+  function verifyPayment(token) {
+    setPaymentStatus('Verifying payment...');
+
+    $.getJSON('/api/node/payment/' + token + '/verify', function (verifydata) {
+      console.log(verifydata);
+
+      if (verifydata.status == 'OK') {
+        setPaymentStatus('Success! You get ' + verifydata.paidcalls + ' new calls.');
+        setTimeout(function () {
+          location.reload();
+        }, 1 * 1000);
+
+      } else if (verifydata.error == 'not_fulfilled') {
+        setPaymentStatus('Waiting for confimation...');
+        setTimeout(function () {
+          verifyPayment(token);
+        }, 3000);
+
+      } else {
+        setPaymentStatus('Error: ' + verifydata.error);
+      }
+    });
+  }
+
+  function setPaymentStatus(status) {
+    $("#statustext").text(status);
+  }
+</script>
 
 <% include ../../partials/footer.ejs %>
