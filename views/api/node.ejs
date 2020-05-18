@@ -1,0 +1,63 @@
+<% include ../../partials/header.ejs %>
+
+<h1>My Nano Ninja - Node API</h1>
+<h4>Build awesome apps with the Ninja!</h4>
+
+<h3>Direct RPC Access</h3>
+<p>With this endpoint you can communicate with the Nano Node directly.</p>
+<pre>https://mynano.ninja/api/node</pre>
+<p>
+  The following actions are available:<br>
+  <code>
+  'account_balance',
+  'account_info',
+  'account_history',
+  'account_key',
+  'account_representative',
+  'account_weight',
+  'accounts_balances',
+  'accounts_frontiers',
+  'accounts_pending',
+  'active_difficulty',
+  'available_supply',
+  'block_info',
+  'block_account',
+  'block_create',
+  'block_confirm',
+  'block_count',
+  'block_count_type',
+  'chain',
+  'confirmation_active',
+  'confirmation_history',
+  'confirmation_info',
+  'confirmation_quorum',
+  'frontier_count',
+  'process',
+  'representatives',
+  'representatives_online',
+  'successors',
+  'version',
+  'peers',
+  'pending',
+  'pending_exists',
+  'work_validate',
+  'work_generate',
+  'key_create',
+  'krai_from_raw',
+  'krai_to_raw',
+  'mrai_from_raw',
+  'mrai_to_raw',
+  'rai_from_raw',
+  'rai_to_raw'
+</code><br>
+  Anything missing? Suggest it on <a href="https://discord.gg/Dd8CUbv" target="_blank" rel="noreferer, noopener">Discord</a> or <a href="https://github.com/BitDesert/MyNanoNinja/issues/new">GitHub</a>!
+</p>
+<p>
+  You need a API key which you send via a <code>Authorization: yourapikey</code> HTTP header.<br>
+  The <a href="https://github.com/BitDesert/nano-node-rpc">nano-node-rpc</a> NodeJS library does that for you.<br>
+</p>
+<p>
+  <a href="/profile#apikey" class="btn btn-secondary">Get you API key here!</a>
+</p>
+
+<% include ../../partials/footer.ejs %>

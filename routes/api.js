@@ -19,9 +19,10 @@ module.exports = function (nanorpc) {
   router.use('/node', require('./api/node'));
   router.use('/general', require('./api/general'));
   router.use('/network', require('./api/network'));
+  router.use('/ledger', require('./api/ledger'));
 
   router.get('/', function (req, res, next) {
-    res.render('api', {
+    res.render('api/index', {
       loggedin: req.isAuthenticated(),
       title: 'API'
     });
@@ -30,19 +31,6 @@ module.exports = function (nanorpc) {
   router.get('/blockcount', function (req, res) {
     res.json({
       count: nanorpc.getBlockcount()
-    });
-  });
-
-  router.get('/ledger/download', function (req, res) {
-    request.get({
-      url: 'https://cloud-api.yandex.net/v1/disk/public/resources?public_key=https://yadi.sk/d/fcZgyES73Jzj5T&sort=-created&limit=1',
-      json: true
-    }, function (err, response, data) {
-      if (err || response.statusCode !== 200) {
-        res.status(404).end();
-      } else {
-        res.redirect(data._embedded.items[0].file);
-      }
     });
   });
 

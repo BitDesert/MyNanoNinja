@@ -93,6 +93,13 @@ function isLoggedIn(req, res, next) {
   res.redirect('/');
 }
 
+router.get('/', function (req, res, next) {
+  res.render('api/node', {
+    loggedin: req.isAuthenticated(),
+    title: 'Nano Node API'
+  });
+});
+
 router.post('/', isApiAuthorized, function (req, res) {
 
   const action = req.body.action;
