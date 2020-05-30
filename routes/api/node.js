@@ -61,7 +61,7 @@ isApiAuthorized = (req, res, next) => {
   if (!authHeader) {
     console.log('NODE API - No header')
     return res.status(403).json({
-      message: 'FORBIDDEN'
+      message: 'HTTP Authorization header is missing!'
     })
   } else {
     User.findOne({
@@ -73,7 +73,7 @@ isApiAuthorized = (req, res, next) => {
         if (err || !user) {
           console.log('NODE API - Insufficient funds / User not found')
           return res.status(403).json({
-            message: 'FORBIDDEN'
+            message: 'Insufficient funds / User not found'
           })
         }
         user.api.calls_remaining--;
