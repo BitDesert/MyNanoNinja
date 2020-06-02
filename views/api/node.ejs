@@ -3,7 +3,41 @@
 <h1>My Nano Ninja - Node API</h1>
 <h4>Build awesome apps with the Ninja!</h4>
 
-<h3>Direct RPC Access</h3>
+<p>Do you want to build your project with Nano but don't want to run your own node? The Ninja is here to help you!</p>
+
+<h2>Pricing</h2>
+<div class="card-deck mb-3 text-center">
+  <div class="card mb-4 box-shadow">
+    <div class="card-header">
+      <h4 class="my-0 font-weight-normal">Free</h4>
+    </div>
+    <div class="card-body">
+      <h1 class="card-title pricing-card-title">0 NANO</h1>
+      <ul class="list-unstyled mt-3 mb-4">
+        <li>60 tokens / 15 mins</li>
+        <li>For testing</li>
+        <li>Small projects</li>
+      </ul>
+      <a href="#free" class="btn btn-lg btn-block btn-outline-primary">Use for free</a>
+    </div>
+  </div>
+  <div class="card mb-4 box-shadow">
+    <div class="card-header">
+      <h4 class="my-0 font-weight-normal">Pro</h4>
+    </div>
+    <div class="card-body">
+      <h1 class="card-title pricing-card-title">0.01 NANO<small class="text-muted">/ token</small></h1>
+      <ul class="list-unstyled mt-3 mb-4">
+        <li>Pay-as-you-go</li>
+        <li>Fill up with NANO</li>
+        <li>Any project size</li>
+      </ul>
+      <a href="#pro" class="btn btn-lg btn-block btn-primary">Get started</a>
+    </div>
+  </div>
+</div>
+
+<h2>Direct RPC Access</h2>
 <p>With this endpoint you can communicate with the Nano Node directly.</p>
 <pre>https://mynano.ninja/api/node</pre>
 <p>
@@ -49,54 +83,28 @@
   'mrai_to_raw',
   'rai_from_raw',
   'rai_to_raw'
-</code><br>
-  Anything missing? Suggest it on <a href="https://discord.gg/Dd8CUbv" target="_blank" rel="noreferer, noopener">Discord</a> or <a href="https://github.com/BitDesert/MyNanoNinja/issues/new">GitHub</a>!
+</code>
+</p>
+<p>
+  Anything missing? 
+  Suggest it on <a href="https://discord.gg/Dd8CUbv" target="_blank" rel="noreferer, noopener">Discord</a> or 
+  <a href="https://github.com/BitDesert/MyNanoNinja/issues/new">GitHub</a>!
+  <br>
+  Important note: <code>work_generate</code> consumes 10 tokens instead of 1.
 </p>
 
-<h2>Pricing</h2>
-<div class="card-deck mb-3 text-center">
-  <div class="card mb-4 box-shadow">
-    <div class="card-header">
-      <h4 class="my-0 font-weight-normal">Free</h4>
-    </div>
-    <div class="card-body">
-      <h1 class="card-title pricing-card-title">0 NANO</h1>
-      <ul class="list-unstyled mt-3 mb-4">
-        <li>60 tokens / 15 mins</li>
-        <li>For testing</li>
-        <li>Small projects</li>
-      </ul>
-      <a href="#free" class="btn btn-lg btn-block btn-outline-primary">Use for free</a>
-    </div>
-  </div>
-  <div class="card mb-4 box-shadow">
-    <div class="card-header">
-      <h4 class="my-0 font-weight-normal">Pro</h4>
-    </div>
-    <div class="card-body">
-      <h1 class="card-title pricing-card-title">1 NANO<small class="text-muted">/ 100 tokens</small></h1>
-      <ul class="list-unstyled mt-3 mb-4">
-        <li>0.01 NANO per token</li>
-        <li>Pay-as-you-go</li>
-        <li>Any project size</li>
-      </ul>
-      <a href="#pro" class="btn btn-lg btn-block btn-primary">Get started</a>
-    </div>
-  </div>
-</div>
-
-<h1 id="free">Free</h1>
+<h2 id="free">Free</h2>
 
 <p>Just start using the API! You get 60 tokens for free every 15 minutes which is enough for small projects or quick hacking without a node.</p>
 
-<h1 id="pro">Pro</h1>
+<h2 id="pro">Pro</h2>
 
 <p>
   You need a API key which you send via a <code>Authorization: yourapikey</code> HTTP header.<br>
   The <a href="https://github.com/BitDesert/nano-node-rpc">nano-node-rpc</a> NodeJS library does that for you.<br>
 </p>
 
-<h2 class="mt-3" id="apikey">API Key</h2>
+<h3 class="mt-3" id="apikey">API Key</h3>
 
 <% if (user) { %>
 <% if (user.api.key) { %>
@@ -106,18 +114,27 @@
 <p>
   Tokens remaining: <%= user.api.calls_remaining %>
 </p>
+
+
 <div class="row">
   <div class="col-4">
-    <label>Do you need more API tokens?</label>
-    <div class="input-group mb-3">
-      <input type="text" class="form-control" placeholder="How many calls?" id="moreapitokens" pattern="[1-9][0-9]*" value="100">
-      <div class="input-group-append">
-        <button class="btn btn-primary" type="button" id="getmore">Get more</button>
+    <div class="card mb-4 box-shadow">
+      <div class="card-header">
+        <h4 class="my-0 font-weight-normal">Do you need more API tokens?</h4>
+      </div>
+      <div class="card-body">
+        <div class="input-group mb-3">
+          <input type="text" class="form-control" placeholder="How many calls?" id="moreapitokens" pattern="[1-9][0-9]*" value="100">
+          <div class="input-group-append">
+            <button class="btn btn-primary" type="button" id="getmore">Get more</button>
+          </div>
+        </div>
+
+        <p id="statustext"></p>
       </div>
     </div>
   </div>
 </div>
-<p id="statustext"></p>
 <% } else { %>
 <p>No API key.</p>
 <% } %>
