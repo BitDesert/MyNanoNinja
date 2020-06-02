@@ -14,7 +14,7 @@ const nano = new Nano({
 var router = express.Router();
 
 const opts = {
-  points: 60, // 6 points
+  points: 60,
   duration: 15 * 60, // in seconds
 };
 

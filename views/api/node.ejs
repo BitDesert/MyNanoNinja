@@ -52,6 +52,45 @@
 </code><br>
   Anything missing? Suggest it on <a href="https://discord.gg/Dd8CUbv" target="_blank" rel="noreferer, noopener">Discord</a> or <a href="https://github.com/BitDesert/MyNanoNinja/issues/new">GitHub</a>!
 </p>
+
+<h2>Pricing</h2>
+<div class="card-deck mb-3 text-center">
+  <div class="card mb-4 box-shadow">
+    <div class="card-header">
+      <h4 class="my-0 font-weight-normal">Free</h4>
+    </div>
+    <div class="card-body">
+      <h1 class="card-title pricing-card-title">0 NANO</h1>
+      <ul class="list-unstyled mt-3 mb-4">
+        <li>60 tokens / 15 mins</li>
+        <li>For testing</li>
+        <li>Small projects</li>
+      </ul>
+      <a href="#free" class="btn btn-lg btn-block btn-outline-primary">Use for free</a>
+    </div>
+  </div>
+  <div class="card mb-4 box-shadow">
+    <div class="card-header">
+      <h4 class="my-0 font-weight-normal">Pro</h4>
+    </div>
+    <div class="card-body">
+      <h1 class="card-title pricing-card-title">1 NANO<small class="text-muted">/ 100 tokens</small></h1>
+      <ul class="list-unstyled mt-3 mb-4">
+        <li>0.01 NANO per token</li>
+        <li>Pay-as-you-go</li>
+        <li>Any project size</li>
+      </ul>
+      <a href="#pro" class="btn btn-lg btn-block btn-primary">Get started</a>
+    </div>
+  </div>
+</div>
+
+<h1 id="free">Free</h1>
+
+<p>Just start using the API! You get 60 tokens for free every 15 minutes which is enough for small projects or quick hacking without a node.</p>
+
+<h1 id="pro">Pro</h1>
+
 <p>
   You need a API key which you send via a <code>Authorization: yourapikey</code> HTTP header.<br>
   The <a href="https://github.com/BitDesert/nano-node-rpc">nano-node-rpc</a> NodeJS library does that for you.<br>
@@ -65,13 +104,13 @@
   <pre><%= user.api.key %></pre>
 </p>
 <p>
-  Calls remaining: <%= user.api.calls_remaining %>
+  Tokens remaining: <%= user.api.calls_remaining %>
 </p>
 <div class="row">
   <div class="col-4">
-    <label>Do you need more API calls?</label>
+    <label>Do you need more API tokens?</label>
     <div class="input-group mb-3">
-      <input type="text" class="form-control" placeholder="How many calls?" id="moreapicalls" pattern="[1-9][0-9]*" value="100">
+      <input type="text" class="form-control" placeholder="How many calls?" id="moreapitokens" pattern="[1-9][0-9]*" value="100">
       <div class="input-group-append">
         <button class="btn btn-primary" type="button" id="getmore">Get more</button>
       </div>
@@ -102,7 +141,7 @@
       function () {
         window.acceptNano.startPayment({
           data: {
-            amount: ($('#moreapicalls').val() * 0.01),
+            amount: ($('#moreapitokens').val() * 0.01),
             currency: 'nano'
           },
           onStart: (paymentData) => {
@@ -123,11 +162,11 @@
       }
     )
 
-    $('#moreapicalls').blur(function (evt) {
+    $('#moreapitokens').blur(function (evt) {
       evt.target.checkValidity();
     }).bind('invalid', function (event) {
       setPaymentStatus('Invalid amount');
-      $('#moreapicalls').val('')
+      $('#moreapitokens').val('')
     });
 
   });
