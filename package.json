@@ -51,6 +51,7 @@
     "portscanner": "^2.2.0",
     "queue": "^4.4.2",
     "rand-token": "^0.4.0",
+    "rate-limiter-flexible": "^2.1.6",
     "raven": "^2.6.3",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",

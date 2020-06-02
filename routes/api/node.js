@@ -1,6 +1,7 @@
 var express = require('express');
 var request = require('request');
 const axios = require('axios');
+const RateLimiterMemory = require('rate-limiter-flexible').RateLimiterMemory;
 const {
   Nano
 } = require('nanode');
@@ -11,6 +12,13 @@ const nano = new Nano({
   url: process.env.NODE_RPC
 });
 var router = express.Router();
+
+const opts = {
+  points: 60, // 6 points
+  duration: 15 * 60, // in seconds
+};
+
+const rateLimiter = new RateLimiterMemory(opts);
 
 const allowed_actions = [
   'account_balance',
@@ -58,16 +66,28 @@ const allowed_actions = [
 isApiAuthorized = (req, res, next) => {
   const authHeader = req.headers.authorization
 
+  const consumePoints = req.body.action === 'work_generate' ? 10 : 1;  
+
   if (!authHeader) {
     console.log('NODE API - No header')
-    return res.status(403).json({
-      message: 'HTTP Authorization header is missing!'
-    })
+
+    rateLimiter.consume(req.ip, consumePoints)
+      .then((rateLimiterRes) => {
+        res.set('X-RateLimit-Remaining', rateLimiterRes.remainingPoints)
+        res.set("X-RateLimit-Reset", new Date(Date.now() + rateLimiterRes.msBeforeNext))
+        next();
+      })
+      .catch((rateLimiterRes) => {
+        res.set('X-RateLimit-Remaining', rateLimiterRes.remainingPoints)
+        res.set("X-RateLimit-Reset", new Date(Date.now() + rateLimiterRes.msBeforeNext))
+        return res.status(429).json({ message: 'Too Many Requests'});
+      });
+
   } else {
     User.findOne({
-      'api.key': authHeader
-    })
-      .where('api.calls_remaining').gt(0)
+        'api.key': authHeader
+      })
+      .where('api.calls_remaining').gte(consumePoints)
       .select('api')
       .exec(function (err, user) {
         if (err || !user) {
@@ -76,8 +96,8 @@ isApiAuthorized = (req, res, next) => {
             message: 'Insufficient funds / User not found'
           })
         }
-        user.api.calls_remaining--;
-        res.set('X-API-Calls', user.api.calls_remaining)
+        user.api.calls_remaining = user.api.calls_remaining - consumePoints;
+        res.set('X-API-Tokens', user.api.calls_remaining)
         user.save();
         next();
       });
@@ -120,35 +140,43 @@ router.post('/', isApiAuthorized, function (req, res) {
   var params = Object.assign({}, req.body);
   delete params.action;
 
-  if(action == 'work_generate'){
+  if (action == 'work_generate') {
     console.log('work_generate via DPOW');
-    
+
     axios.post('https://dpow.nanocenter.org/service/', {
         "hash": params.hash,
-        "user": process.env.DPOW_USER, 
+        "user": process.env.DPOW_USER,
         "api_key": process.env.DPOW_KEY
       })
       .then(function (response) {
         console.log('work_generate success', response.data.work);
-        
+
         res.json({
           work: response.data.work
         });
       })
       .catch(function (error) {
         console.log('work_generate error', error);
-        res.status(500).json({ error: 'Not found', msg: error });
+        res.status(500).json({
+          error: 'Not found',
+          msg: error
+        });
       });
 
   } else {
     nano.rpc(action, params)
       .then(response => {
-        if (!response) return res.status(404).json({ error: 'Not found' });
-  
+        if (!response) return res.status(404).json({
+          error: 'Not found'
+        });
+
         res.json(response);
       })
       .catch(reason => {
-        res.status(500).json({ error: 'Not found', msg: reason });
+        res.status(500).json({
+          error: 'Not found',
+          msg: reason
+        });
       });
   }
 });
@@ -156,12 +184,17 @@ router.post('/', isApiAuthorized, function (req, res) {
 router.get('/version', function (req, res) {
   nano.rpc('version')
     .then(response => {
-      if (!response) return res.status(404).json({ error: 'Not found' });
+      if (!response) return res.status(404).json({
+        error: 'Not found'
+      });
 
       res.json(response);
     })
     .catch(reason => {
-      res.status(500).json({ error: 'Not found', msg: reason });
+      res.status(500).json({
+        error: 'Not found',
+        msg: reason
+      });
     });
 });
 
