@@ -1,0 +1,220 @@
+<% include ../../partials/header.ejs %>
+
+<h1>My Nano Ninja - Node API</h1>
+<h4>Build awesome apps with the Ninja!</h4>
+
+<p>Do you want to build your project with Nano but don't want to run your own node? The Ninja is here to help you!</p>
+
+<h2>Pricing</h2>
+<div class="card-deck mb-3 text-center">
+  <div class="card mb-4 box-shadow">
+    <div class="card-header">
+      <h4 class="my-0 font-weight-normal">Free</h4>
+    </div>
+    <div class="card-body">
+      <h1 class="card-title pricing-card-title">0 NANO</h1>
+      <ul class="list-unstyled mt-3 mb-4">
+        <li>60 tokens / 15 mins</li>
+        <li>For testing</li>
+        <li>Small projects</li>
+      </ul>
+      <a href="#free" class="btn btn-lg btn-block btn-outline-primary">Use for free</a>
+    </div>
+  </div>
+  <div class="card mb-4 box-shadow">
+    <div class="card-header">
+      <h4 class="my-0 font-weight-normal">Pro</h4>
+    </div>
+    <div class="card-body">
+      <h1 class="card-title pricing-card-title">0.01 NANO<small class="text-muted">/ token</small></h1>
+      <ul class="list-unstyled mt-3 mb-4">
+        <li>Pay-as-you-go</li>
+        <li>Fill up with NANO</li>
+        <li>Any project size</li>
+      </ul>
+      <a href="#pro" class="btn btn-lg btn-block btn-primary">Get started</a>
+    </div>
+  </div>
+</div>
+
+<h2>Direct RPC Access</h2>
+<p>With this endpoint you can communicate with the Nano Node directly.</p>
+<pre>https://mynano.ninja/api/node</pre>
+<p>
+  The following actions are available:<br>
+  <code>
+  'account_balance',
+  'account_info',
+  'account_history',
+  'account_key',
+  'account_representative',
+  'account_weight',
+  'accounts_balances',
+  'accounts_frontiers',
+  'accounts_pending',
+  'active_difficulty',
+  'available_supply',
+  'block_info',
+  'block_account',
+  'block_create',
+  'block_confirm',
+  'block_count',
+  'block_count_type',
+  'chain',
+  'confirmation_active',
+  'confirmation_history',
+  'confirmation_info',
+  'confirmation_quorum',
+  'frontier_count',
+  'process',
+  'representatives',
+  'representatives_online',
+  'successors',
+  'version',
+  'peers',
+  'pending',
+  'pending_exists',
+  'work_validate',
+  'work_generate',
+  'key_create',
+  'krai_from_raw',
+  'krai_to_raw',
+  'mrai_from_raw',
+  'mrai_to_raw',
+  'rai_from_raw',
+  'rai_to_raw'
+</code>
+</p>
+<p>
+  Anything missing? 
+  Suggest it on <a href="https://discord.gg/Dd8CUbv" target="_blank" rel="noreferer, noopener">Discord</a> or 
+  <a href="https://github.com/BitDesert/MyNanoNinja/issues/new">GitHub</a>!
+  <br>
+  Important note: <code>work_generate</code> consumes 10 tokens instead of 1.
+</p>
+
+<h2 id="free">Free</h2>
+
+<p>Just start using the API! You get 60 tokens for free every 15 minutes which is enough for small projects or quick hacking without a node.</p>
+
+<h2 id="pro">Pro</h2>
+
+<p>
+  You need a API key which you send via a <code>Authorization: yourapikey</code> HTTP header.<br>
+  The <a href="https://github.com/BitDesert/nano-node-rpc">nano-node-rpc</a> NodeJS library does that for you.<br>
+</p>
+
+<h3 class="mt-3" id="apikey">API Key</h3>
+
+<% if (user) { %>
+<% if (user.api.key) { %>
+<p>
+  <pre><%= user.api.key %></pre>
+</p>
+<p>
+  Tokens remaining: <%= user.api.calls_remaining %>
+</p>
+
+
+<div class="row">
+  <div class="col-4">
+    <div class="card mb-4 box-shadow">
+      <div class="card-header">
+        <h4 class="my-0 font-weight-normal">Do you need more API tokens?</h4>
+      </div>
+      <div class="card-body">
+        <div class="input-group mb-3">
+          <input type="text" class="form-control" placeholder="How many calls?" id="moreapitokens" pattern="[1-9][0-9]*" value="100">
+          <div class="input-group-append">
+            <button class="btn btn-primary" type="button" id="getmore">Get more</button>
+          </div>
+        </div>
+
+        <p id="statustext"></p>
+      </div>
+    </div>
+  </div>
+</div>
+<% } else { %>
+<p>No API key.</p>
+<% } %>
+<% } else { %>
+<p>
+  <a href="/profile" class="btn btn-secondary">Login to get you API key!</a>
+</p>
+<% } %>
+
+<script src="/static/js/accept-nano/index.js"></script>
+
+<script>
+  window.acceptNano.setup({
+    apiURL: 'https://mynano.ninja/payment/api', // URL of your Accept NANO server (String, required)
+    debug: false, // used for enabling debug mode, (Bool, non-required, false by default)
+    pollInterval: 1500, // time period (ms) to check for verification of the payment sessions (Number, non-required, 1500 by default)
+  });
+
+  init.push(function () {
+    $("#getmore").click(
+      function () {
+        window.acceptNano.startPayment({
+          data: {
+            amount: ($('#moreapitokens').val() * 0.01),
+            currency: 'nano'
+          },
+          onStart: (paymentData) => {
+            console.log('onStart', paymentData)
+          },
+          onSuccess: (paymentData) => {
+            console.log('onSuccess', paymentData)
+            verifyPayment(paymentData.token)
+          },
+          onFailure: (failureReason) => {
+            console.log('onFailure', failureReason)
+            setPaymentStatus('Error: ' + failureReason);
+          },
+          onCancel: () => {
+            setPaymentStatus('Payment cancelled.');
+          }
+        })
+      }
+    )
+
+    $('#moreapitokens').blur(function (evt) {
+      evt.target.checkValidity();
+    }).bind('invalid', function (event) {
+      setPaymentStatus('Invalid amount');
+      $('#moreapitokens').val('')
+    });
+
+  });
+
+  function verifyPayment(token) {
+    setPaymentStatus('Verifying payment...');
+
+    $.getJSON('/api/node/payment/' + token + '/verify', function (verifydata) {
+      console.log(verifydata);
+
+      if (verifydata.status == 'OK') {
+        setPaymentStatus('Success! You get ' + verifydata.paidcalls + ' new calls.');
+        setTimeout(function () {
+          location.reload();
+        }, 1 * 1000);
+
+      } else if (verifydata.error == 'not_fulfilled') {
+        setPaymentStatus('Waiting for confimation...');
+        setTimeout(function () {
+          verifyPayment(token);
+        }, 3000);
+
+      } else {
+        setPaymentStatus('Error: ' + verifydata.error);
+      }
+    });
+  }
+
+  function setPaymentStatus(status) {
+    $("#statustext").text(status);
+  }
+</script>
+
+<% include ../../partials/footer.ejs %>

@@ -66,3 +66,6 @@ ecosystem.config.js
 
 # IDEs
 .idea
+
+# no environment file
+.env

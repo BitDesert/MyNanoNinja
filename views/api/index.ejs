@@ -1,0 +1,71 @@
+<% include ../../partials/header.ejs %>
+
+<h1>My Nano Ninja API</h1>
+<h4>Build awesome apps with the Ninja!</h4>
+
+<h2>Base URL</h2>
+<pre>https://mynano.ninja/api/</pre>
+
+<h2>General</h2>
+
+<h3>Direct RPC Access</h3>
+<p>With this endpoint you can communicate with the Nano Node directly.</p>
+<p>
+  <a href="/api/node" class="btn btn-secondary">Open Node API docs</a>
+</p>
+
+<h3>Blockcount</h3>
+<p>Returns the current block count</p>
+<pre>/blockcount</pre>
+
+<h3>Ledger</h3>
+<h4>Download</h4>
+<p>Redirects to the current ledger file at <a href="https://yadi.sk/d/fcZgyES73Jzj5T">Yandex Disk</a></p>
+<pre>/ledger/download</pre>
+<h4>Checksum SHA256</h4>
+<p>Outputs the SHA256 checksum of the ledger download</p>
+<pre>/ledger/checksum/sha256</pre>
+<h4>Checksum MD5</h4>
+<p>Outputs the MD5 checksum of the ledger download</p>
+<pre>/ledger/checksum/md5</pre>
+
+<h2>Accounts</h2>
+
+<h3>Principals</h3>
+<p>Accounts with over 0.1% voting weight</p>
+<pre>/accounts/principals</pre>
+
+<h3>Verified</h3>
+<p>Accounts that are verified</p>
+<pre>/accounts/verified</pre>
+
+<h3>All Aliases</h3>
+<p>Get all aliases for local caching</p>
+<pre>/accounts/aliases</pre>
+
+<h3>Accounts with Monitor</h3>
+<p>Get all representatives that have a node monitor</p>
+<pre>/accounts/monitors</pre>
+
+<h3>Specific account</h3>
+<p>Get information about a specific account</p>
+<pre>/accounts/:account</pre>
+<h4>Parameter</h4>
+<table class="table table-active">
+  <thead>
+    <tr>
+      <th scope="col">Field</th>
+      <th scope="col">Type</th>
+      <th scope="col">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>account</td>
+      <td>String</td>
+      <td>Nano address nano_1234...</td>
+    </tr>
+  </tbody>
+</table>
+
+<% include ../../partials/footer.ejs %>

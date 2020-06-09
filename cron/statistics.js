@@ -22,7 +22,7 @@ function updateStatisticsUptime() {
   var obj = {
     total: {
       votingweight: {
-        $gte: 0
+        $gt: 0
       }
     },
     eligible: {
