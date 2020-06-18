@@ -17,5 +17,6 @@ RUN npm install pm2 -g
 # Bundle app source
 COPY . .
 
-EXPOSE 8080
-CMD [ "pm2-runtime", "ecosystem.config.js" ]
+EXPOSE 3000
+#CMD [ "pm2-runtime", "ecosystem.config.docker.js" ]
+CMD [ "node", "bin/www" ]

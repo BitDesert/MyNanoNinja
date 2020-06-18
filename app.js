@@ -23,7 +23,7 @@ var ua = require("universal-analytics");
 var configDB = require('./config/database.js');
 mongoose.connect(configDB.url,
   { useNewUrlParser: true }
-);
+).catch(error => console.error(error));
 
 var nanorpc = require('./nano/rpc_client');
 
