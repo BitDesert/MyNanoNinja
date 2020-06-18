@@ -3,7 +3,10 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "start-cron": "node ./cron.js",
+    "dev": "nodemon ./bin/www",
+    "dev-cron": "nodemon ./cron.js"
   },
   "dependencies": {
     "@accept-nano/client": "^1.7.0",
@@ -28,7 +31,7 @@
     "memory-cache": "^0.2.0",
     "method-override": "~2.3.6",
     "moment": "^2.21.0",
-    "mongoose": "~5.4.18",
+    "mongoose": "~5.7.5",
     "mongoose-slug-updater": "^3.1.4",
     "morgan": "^1.9.1",
     "nano-node": "0.0.7",
@@ -48,6 +51,7 @@
     "portscanner": "^2.2.0",
     "queue": "^4.4.2",
     "rand-token": "^0.4.0",
+    "rate-limiter-flexible": "^2.1.6",
     "raven": "^2.6.3",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",

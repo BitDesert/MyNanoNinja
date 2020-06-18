@@ -46,15 +46,16 @@ $.get("/api/statistics/nodeversions", function (data) {
 
   console.log('MIN', version_min, 'MAX', version_max);
   
-
+  var colorcounter = 0;
   for (var i = version_min; i <= version_max; i++) {
     chartdata.datasets.push({
       label: protomap[i] ? protomap[i] : 'Protocol ' + i,
       data: [],
-      borderColor: chartColors[i - 1],
-      backgroundColor: chartColors[i - 1],
+      borderColor: chartColors[colorcounter],
+      backgroundColor: chartColors[colorcounter],
       pointRadius: 0
     });
+    colorcounter++;
   }
 
   data.forEach(function (element) {

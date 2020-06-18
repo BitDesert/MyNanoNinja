@@ -1,5 +1,7 @@
 console.log('=== STARING NANO NINJA CRON ===');
 
+require('dotenv').config()
+
 // global requirements
 var Raven = require('raven');
 Raven.config(process.env.SENTRY_URL).install();
