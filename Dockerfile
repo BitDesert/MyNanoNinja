@@ -18,5 +18,5 @@ RUN npm install pm2 -g
 COPY . .
 
 EXPOSE 3000
-#CMD [ "pm2-runtime", "ecosystem.config.docker.js" ]
-CMD [ "node", "bin/www" ]
+CMD [ "pm2-runtime", "ecosystem.json" ]
+#CMD [ "node", "bin/www" ]
