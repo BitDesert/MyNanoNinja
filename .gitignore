@@ -70,3 +70,4 @@ ecosystem.config.js
 # no environment file
 .env
 docker-compose.yml
+docker-compose.prod.yml
