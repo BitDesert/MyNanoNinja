@@ -60,7 +60,8 @@ const allowed_actions = [
   'mrai_from_raw',
   'mrai_to_raw',
   'rai_from_raw',
-  'rai_to_raw'
+  'rai_to_raw',
+  'validate_account_number'
 ]
 
 isApiAuthorized = (req, res, next) => {
