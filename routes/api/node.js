@@ -38,6 +38,7 @@ const allowed_actions = [
   'block_confirm',
   'block_count',
   'block_count_type',
+  'blocks_info',
   'chain',
   'confirmation_active',
   'confirmation_history',
