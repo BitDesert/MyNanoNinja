@@ -14,8 +14,8 @@ const nano = new Nano({
 var router = express.Router();
 
 const opts = {
-  points: 60,
-  duration: 15 * 60, // in seconds
+  points: 240,
+  duration: 60 * 60, // in seconds
 };
 
 const rateLimiter = new RateLimiterMemory(opts);
