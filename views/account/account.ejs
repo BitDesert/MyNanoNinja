@@ -265,9 +265,7 @@
       <li class="list-group-item">
         Node Version
         <span class="float-right">
-          <a href="<%= account.monitor.url %>" target="_blank" rel="noreferer, noopener">
-            <%= account.monitor.version %>
-          </a>
+          <%= account.monitor.version %>
         </span>
       </li>
       <% } %>
@@ -275,9 +273,7 @@
       <li class="list-group-item">
         Sync Status
         <span class="float-right">
-          <a href="<%= account.monitor.url %>" target="_blank" rel="noreferer, noopener">
-            <%= account.monitor.sync %> %
-          </a>
+          <%= account.monitor.sync %> %
         </span>
       </li>
       <% } %>
@@ -359,13 +355,6 @@
                     pattern="(http(s)?:\/\/.)(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,8}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)"
                     value="<% if (account.website) { %><%= account.website %><% } %>">
                   <small class="form-text text-muted">Your project / personal website</small>
-                </div>
-                <div class="form-group">
-                  <label>Nano Node Monitor URL</label>
-                  <input type="text" class="form-control" name="account_monitorUrl" id="account_monitorUrl" v-model="editAccount.account_monitorUrl" placeholder="https://monitor.mynanonode.com"
-                    value="<% if (account.monitor.url) { %><%= account.monitor.url %><% } %>">
-                  <small class="form-text text-muted">Add the full URL to your <a href="https://github.com/NanoTools/nanoNodeMonitor"
-                      target="_blank" rel="noreferer, noopener">Nano Node Monitor</a></small>
                 </div>
               </div>
               <div class="modal-footer">

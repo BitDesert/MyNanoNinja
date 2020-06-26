@@ -65,58 +65,16 @@ module.exports = function (nanorpc) {
         account.server.type = req.body.server_type;
         account.server.renewable = req.body.server_renewable;
 
-        if (req.body.account_monitorUrl) {
-          request.get({
-            url: req.body.account_monitorUrl + '/api.php',
-            json: true
-          }, function (err, response, data) {
-            if (err || response.statusCode !== 200) {
-              output.status = 'error';
-              output.msg = 'Couldn\'t contact Node Monitor!';
-              console.log(output);
-              res.status(400).json(output);
-
-            } else if (data.nanoNodeAccount != account.account) {
-              output.status = 'error';
-              output.msg = 'Node Monitor account mismatch!';
-              console.log(output);
-              res.status(400).json(output);
-
-            } else {
-              account.monitor.url = req.body.account_monitorUrl;
-              account.monitor.version = data.version;
-              account.monitor.blocks = data.currentBlock;
-              account.monitor.sync = round((data.currentBlock / nanorpc.getBlockcount())*100, 3);
-              if(account.monitor.sync > 100){
-                account.monitor.sync = 100;
-              }
-
-              account.save(function (err) {
-                if (err) {
-                  output.status = 'error';
-                  output.msg = 'Error!';
-                } else {
-                  output.status = 'success';
-                  output.msg = 'Success!';
-                }
-                console.log(output);
-                res.json(output);
-              });
-            }
-          });
-        } else {
-
-          account.save(function (err) {
-            if (err) {
-              output.status = 'error';
-              output.msg = 'Error!';
-            } else {
-              output.status = 'success';
-              output.msg = 'Success!';
-            }
-            res.json(output);
-          });
-        }
+        account.save(function (err) {
+          if (err) {
+            output.status = 'error';
+            output.msg = 'Error!';
+          } else {
+            output.status = 'success';
+            output.msg = 'Success!';
+          }
+          res.json(output);
+        });
       });
   });
 

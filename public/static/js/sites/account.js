@@ -17,7 +17,6 @@ var app = new Vue({
         server_type: '',
         server_renewable: '',
         account_website: '',
-        account_monitorUrl: ''
       }
     }
   },
@@ -35,9 +34,6 @@ var app = new Vue({
 
         if (response.data.website)
           this.editAccount.account_website = response.data.website;
-
-        if (response.data.monitor.url)
-          this.editAccount.account_monitorUrl = response.data.monitor.url;
       })
       .catch(reason => { });
 
@@ -67,7 +63,6 @@ var app = new Vue({
           account_alias: '' + this.editAccount.account_alias,
           account_description: '' + this.editAccount.account_description,
           account_website: '' + this.editAccount.account_website,
-          account_monitorUrl: '' + this.editAccount.account_monitorUrl,
         }).then(response => {
           console.log('OK', response);
           this.editAccount.button_submit = 'Done!';
