@@ -54,6 +54,8 @@ var accountSchema = mongoose.Schema({
   website: String,
   server: {
     type: { type: String },
+    cpu: String,
+    ram: String,
     renewable: Boolean
   },
   uptime: {

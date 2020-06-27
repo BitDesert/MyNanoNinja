@@ -16,6 +16,8 @@ var app = new Vue({
         account_description: '',
         server_type: '',
         server_renewable: '',
+        server_cpu: '',
+        server_ram: '',
         account_website: '',
       }
     }
@@ -63,6 +65,9 @@ var app = new Vue({
           account_alias: '' + this.editAccount.account_alias,
           account_description: '' + this.editAccount.account_description,
           account_website: '' + this.editAccount.account_website,
+          server_type: '' + this.editAccount.server_type,
+          server_cpu: '' + this.editAccount.server_cpu,
+          server_ram: '' + this.editAccount.server_ram,
         }).then(response => {
           console.log('OK', response);
           this.editAccount.button_submit = 'Done!';
