@@ -374,20 +374,17 @@
                 </div>
                 <div class="form-group">
                   <label>Server Type</label>
-                  <input type="text" class="form-control" name="server_type" id="server_type" v-model="editAccount.server_type" placeholder="VPS"
-                    value="<% if (account.server.type) { %><%= account.server.type %><% } %>" maxlength="50">
+                  <input type="text" class="form-control" name="server_type" id="server_type" v-model="editAccount.server_type" placeholder="VPS" maxlength="50">
                   <small class="form-text text-muted">Dedicated, VPS, etc.</small>
                 </div>
                 <div class="form-group">
                   <label>Server CPU</label>
-                  <input type="text" class="form-control" name="server_cpu" id="server_cpu" v-model="editAccount.server_cpu" placeholder="AMD EPYC 7702 - 4 cores"
-                    value="<% if (account.server.cpu) { %><%= account.server.cpu %><% } %>" maxlength="50">
+                  <input type="text" class="form-control" name="server_cpu" id="server_cpu" v-model="editAccount.server_cpu" placeholder="AMD EPYC 7702 - 4 cores" maxlength="50">
                   <small class="form-text text-muted">Your server CPU, type, core count</small>
                 </div>
                 <div class="form-group">
                   <label>Server RAM</label>
-                  <input type="text" class="form-control" name="server_ram" id="server_ram" v-model="editAccount.server_ram" placeholder="16 GB"
-                    value="<% if (account.server.ram) { %><%= account.server.ram %><% } %>" maxlength="50">
+                  <input type="text" class="form-control" name="server_ram" id="server_ram" v-model="editAccount.server_ram" placeholder="16 GB" maxlength="50">
                   <small class="form-text text-muted">How much RAM do you have?</small>
                 </div>
               </div>
@@ -619,6 +616,6 @@
 <script>
   const address = "<% if (account === null) { %><%= myaccount %><% } else { %><%= account.account %><% } %>";
 </script>
-<script src="/static/js/sites/account.js?v=7"></script>
+<script src="/static/js/sites/account.js?v=8"></script>
 
 <% include ../../partials/footer.ejs %>

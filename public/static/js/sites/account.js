@@ -36,6 +36,15 @@ var app = new Vue({
 
         if (response.data.website)
           this.editAccount.account_website = response.data.website;
+
+        if (response.data.server.type)
+          this.editAccount.server_type = response.data.server.type;
+
+        if (response.data.server.cpu)
+          this.editAccount.server_cpu = response.data.server.cpu;
+
+        if (response.data.server.ram)
+          this.editAccount.server_ram = response.data.server.ram;
       })
       .catch(reason => { });
 
