@@ -32,7 +32,7 @@ module.exports = function (nanorpc) {
         if (account) {
 
           if (account.slug && account.slug != myaccount) {
-            res.redirect('/account/' + account.slug)
+            return res.redirect('/account/' + account.slug)
           }
           if (account.alias) {
             var title = account.alias;
