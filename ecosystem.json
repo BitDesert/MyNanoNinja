@@ -1,9 +1,9 @@
 {
   "apps" : [{
-    "name"        : "My Nano Ninja",
+    "name"        : "WWW",
     "script"      : "bin/www"
   },{
-    "name"       : "My Nano Ninja - CRON",
+    "name"       : "CRON",
     "script"     : "./cron.js"
   }]
 }
