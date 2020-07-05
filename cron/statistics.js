@@ -3,13 +3,8 @@ var moment = require('moment');
 var async = require("async");
 var tools = require('../tools');
 
-const {
-  Nano
-} = require('nanode');
-
-const node = new Nano({
-  url: process.env.NODE_RPC
-});
+const NanoClient = require('nano-node-rpc');
+const client = new NanoClient({url: process.env.NODE_RPC})
 
 var Account = require('../models/account');
 var Statistics = require('../models/statistics/representatives');
@@ -70,7 +65,7 @@ function updateStatisticsUptime() {
 }
 
 function updateStatisticsVersions() {
-  node.rpc('peers').then(function (peers) {
+  client._send('peers').then(function (peers) {
 
     var stats = new StatisticsVersions();
 
@@ -137,7 +132,7 @@ function updateStatisticsBlockcounts() {
 }
 
 function updateStatisticsQuorum() {
-  node.rpc('confirmation_quorum').then(function (response) {
+  client._send('confirmation_quorum').then(function (response) {
     if(!response) return
 
     var stats = new StatisticsQuorum();

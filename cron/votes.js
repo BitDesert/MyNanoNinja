@@ -4,13 +4,8 @@ var cron = require('node-cron');
 
 var Account = require('../models/account');
 
-const {
-  Nano
-} = require('nanode');
-
-const nano = new Nano({
-  url: process.env.NODE_RPC
-});
+const NanoClient = require('nano-node-rpc');
+const client = new NanoClient({url: process.env.NODE_RPC})
 
 cron.schedule('* * * * *', updateOnlineReps);
 
@@ -74,7 +69,7 @@ function updateOnlineReps() {
 
 function getRepsOnline(provider, callback) {
   if (provider == 'local') {
-    nano.rpc('representatives_online').then(function (reps) {
+    client._send('representatives_online').then(function (reps) {
       callback(null, reps)
     }).catch((error) => {
       console.error('getRepsOnline', error)

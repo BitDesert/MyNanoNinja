@@ -1,11 +1,7 @@
-const {
-  Nano
-} = require('nanode');
 var cron = require('node-cron');
 
-const nano = new Nano({
-  url: process.env.NODE_RPC
-});
+const NanoClient = require('nano-node-rpc');
+const client = new NanoClient({url: process.env.NODE_RPC})
 
 var available = 133248289218203497353846153999000000001;
 var online_stake_total = 115202418863627145255311728515410020648;
@@ -36,9 +32,9 @@ function updateLocalVars(){
 }
 
 function updateAvailable(){
-  nano.available()
-  .then((data) => {
-    available = data;
+  client.available_supply()
+  .then((data) => {    
+    available = data.available;
     console.log('RPC: Available Supply: ' + available);
   })
   .catch( reason => {
@@ -48,7 +44,7 @@ function updateAvailable(){
 
 function updateBlockcount(){
   console.log('RPC: Updating Blockcount...');
-  nano.blocks.count()
+  client.block_count()
   .then((blocks) => {
     blockcount = blocks.count;
     console.log('RPC: Current Blockcount: ' + blockcount);
@@ -60,7 +56,7 @@ function updateBlockcount(){
 
 function updateOnlineStakeTotal(){
   console.log('RPC: Updating online_stake_total...');
-  nano.rpc("confirmation_quorum")
+  client._send("confirmation_quorum")
   .then((result) => {
     online_stake_total = result.online_stake_total;
     console.log('RPC: Current online_stake_total: ' + online_stake_total);
@@ -71,7 +67,6 @@ function updateOnlineStakeTotal(){
 }
 
 module.exports = {
-  rpc: nano, 
   getAvailable: getAvailable,
   getOnlineStakeTotal: getOnlineStakeTotal,
   getBlockcount: getBlockcount

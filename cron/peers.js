@@ -9,13 +9,8 @@ var geo_city = maxmind.openSync('./utils/maxmind/GeoLite2-City.mmdb');
 
 const regex_ip = /\[::ffff:([0-9.]+)\]:[0-9]+/
 
-const {
-  Nano
-} = require('nanode');
-
-const node = new Nano({
-  url: process.env.NODE_RPC
-});
+const NanoClient = require('nano-node-rpc');
+const client = new NanoClient({url: process.env.NODE_RPC})
 
 var Account = require('../models/account');
 
@@ -50,11 +45,11 @@ function updatePeers() {
 }
 
 async function getAdvancedPeers() {
-  const quorumPeers = (await node.rpc("confirmation_quorum", {
+  const quorumPeers = (await client._send("confirmation_quorum", {
     peer_details: true
   })).peers;
 
-  const allPeers = (await node.rpc("peers", { peer_details: true }))
+  const allPeers = (await client._send("peers", { peer_details: true }))
     .peers;
 
   return _.map(allPeers, (peer, address) => {

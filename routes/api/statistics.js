@@ -8,8 +8,6 @@ var Statistics = require('../../models/statistics/representatives');
 var StatisticsQuorum = require('../../models/statistics/quorum');
 var Account = require('../../models/account');
 
-var nodeclient = require('../../nano/client');
-
 /* GET home page. */
 router.get('/representatives', function (req, res) {
   Statistics.find({
@@ -39,7 +37,7 @@ router.get('/nodeversions', function (req, res) {
   });
 });
 
-router.get('/blockcounts', function (req, res) {
+router.get('/blockcounts', async function (req, res) {
   Account.find({
     'monitor.url': {
       $exists: true,
@@ -48,7 +46,7 @@ router.get('/blockcounts', function (req, res) {
     'monitor.blocks': {
       $exists: true,
       $ne: null,
-      $gte: (nodeclient.getBlockcount() - 100000)
+      $gte: ((await client.block_count()).count - 100000)
     }
   })
   .select('-_id account alias monitor')

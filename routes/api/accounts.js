@@ -1,12 +1,9 @@
 var express = require('express');
 var moment = require('moment');
-const {
-  Nano
-} = require('nanode');
 
-const nano = new Nano({
-  url: process.env.NODE_RPC
-});
+const NanoClient = require('nano-node-rpc');
+const client = new NanoClient({url: process.env.NODE_RPC})
+
 var router = express.Router();
 var Account = require('../../models/account');
 var cache = require('../../utils/cache');
@@ -149,7 +146,7 @@ router.get('/:account', function (req, res) {
 });
 
 router.get('/:account/history', function (req, res) {
-  nano.accounts.history(req.params.account, 20)
+  client.account_history(req.params.account, 20)
     .then(history => {
       if (!history) return res.status(404).json({ error: 'Not found' });
 
@@ -162,7 +159,7 @@ router.get('/:account/history', function (req, res) {
 });
 
 router.get('/:account/pending', function (req, res) {
-  nano.rpc('pending', {
+  client._send('pending', {
     account: req.params.account,
     threshold: '1000000000000000000000000',
     source: true,
@@ -180,7 +177,7 @@ router.get('/:account/pending', function (req, res) {
 });
 
 router.get('/:account/info', function (req, res) {
-  nano.rpc('account_info', {
+  client._send('account_info', {
     account: req.params.account,
     representative: true,
     weight: true,

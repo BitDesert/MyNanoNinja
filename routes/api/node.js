@@ -2,15 +2,11 @@ var express = require('express');
 var request = require('request');
 const axios = require('axios');
 const RateLimiterMemory = require('rate-limiter-flexible').RateLimiterMemory;
-const {
-  Nano
-} = require('nanode');
-
 var User = require('../../models/user');
 
-const nano = new Nano({
-  url: process.env.NODE_RPC
-});
+const NanoClient = require('nano-node-rpc');
+const client = new NanoClient({url: process.env.NODE_RPC})
+
 var router = express.Router();
 
 const opts = {
@@ -166,7 +162,7 @@ router.post('/', isApiAuthorized, function (req, res) {
       });
 
   } else {
-    nano.rpc(action, params)
+    client._send(action, params)
       .then(response => {
         if (!response) return res.status(404).json({
           error: 'Not found'
@@ -184,7 +180,7 @@ router.post('/', isApiAuthorized, function (req, res) {
 });
 
 router.get('/version', function (req, res) {
-  nano.rpc('version')
+  client._send('version')
     .then(response => {
       if (!response) return res.status(404).json({
         error: 'Not found'

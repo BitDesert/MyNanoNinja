@@ -1,16 +1,13 @@
 var express = require('express');
 var moment = require('moment');
-const {
-  Nano
-} = require('nanode');
 
-const nano = new Nano({
-  url: process.env.NODE_RPC
-});
+const NanoClient = require('nano-node-rpc');
+const client = new NanoClient({url: process.env.NODE_RPC})
+
 var router = express.Router();
 
 router.get('/:block', function (req, res) {
-  nano.rpc('blocks_info', { 
+  client._send('blocks_info', { 
     hashes: [req.params.block],
     source: true,
     pending: true,

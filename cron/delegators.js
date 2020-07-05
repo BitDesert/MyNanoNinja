@@ -4,22 +4,19 @@ var rp = require('request-promise');
 
 var Account = require('../models/account');
 
-const {
-  Nano
-} = require('nanode');
-
-const nano = new Nano({
-  url: process.env.NODE_RPC
-});
+const NanoClient = require('nano-node-rpc');
+const client = new NanoClient({url: process.env.NODE_RPC})
 
 // account delegators count
 cron.schedule('0 3 * * *', updateDelegators);
 
-function updateDelegators() {
+async function updateDelegators() {
   console.log('DELEGATORS: Started');
 
+  var online_stake_total = (await client._send("confirmation_quorum")).online_stake_total;
+
   // only principals
-  Account.find({ 'votingweight': { $gt: 133248289218203497353846153999000000 } })
+  Account.find({ 'votingweight': { $gt: (online_stake_total / 1000) } })
     .exec(function (err, accounts) {
       console.log('DELEGATORS: Reps found: ' + accounts.length);
 
@@ -40,7 +37,7 @@ function updateDelegators() {
 /*
 function updateAccountDelegators(account, callback) {
   console.log('Updating delegators of', account.account)
-  nano.rpc('delegators_count', { account: account.account })
+  client._send('delegators_count', { account: account.account })
     .then((delegators) => {
 
       console.log(account.account, delegators.count, 'delegators')

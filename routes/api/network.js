@@ -1,15 +1,12 @@
 var express = require('express');
-const {
-  Nano
-} = require('nanode');
 
-const nano = new Nano({
-  url: process.env.NODE_RPC
-});
+const NanoClient = require('nano-node-rpc');
+const client = new NanoClient({url: process.env.NODE_RPC})
+
 var router = express.Router();
 
 router.get('/active_difficulty', function (req, res) {
-  nano.rpc('active_difficulty', { 
+  client._send('active_difficulty', { 
     "include_trend": "true"
    })
   .then(response => {
@@ -23,7 +20,7 @@ router.get('/active_difficulty', function (req, res) {
 });
 
 router.get('/representatives_online', function (req, res) {
-  nano.rpc('representatives_online')
+  client._send('representatives_online')
   .then(response => {
     if(!response) return res.status(404).json({ error: 'Not found' });
 

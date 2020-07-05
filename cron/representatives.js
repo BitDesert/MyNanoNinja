@@ -3,13 +3,8 @@ var cron = require('node-cron');
 
 var Account = require('../models/account');
 
-const {
-  Nano
-} = require('nanode');
-
-const nano = new Nano({
-  url: process.env.NODE_RPC
-});
+const NanoClient = require('nano-node-rpc');
+const client = new NanoClient({url: process.env.NODE_RPC})
 
 // get all representatives
 cron.schedule('*/15 * * * *', updateRepresentatives);
@@ -17,7 +12,9 @@ cron.schedule('*/15 * * * *', updateRepresentatives);
 function updateRepresentatives() {
   console.log('REPRESENTATIVES: Started');
 
-  nano.representatives().then((reps) => {
+  client.representatives().then((data) => {
+
+    var reps = data.representatives;    
 
     console.log('REPRESENTATIVES:', Object.keys(reps).length);
 

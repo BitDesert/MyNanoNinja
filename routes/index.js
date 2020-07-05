@@ -30,9 +30,12 @@ module.exports = function (nanorpc) {
   });
 
   /* GET home page. */
-  router.get('/principals', function (req, res, next) {
+  router.get('/principals', async function (req, res, next) {
+
+    var online_stake_total = (await client._send("confirmation_quorum")).online_stake_total;
+
     Account.find()
-      .where('votingweight').gte((nanorpc.getOnlineStakeTotal() / 1000))
+      .where('votingweight').gte((online_stake_total / 1000))
       .sort('-votingweight')
       .populate('owner')
       .exec(function (err, accounts) {

@@ -1,16 +1,13 @@
 var express = require('express');
 var moment = require('moment');
-const {
-  Nano
-} = require('nanode');
 
-const nano = new Nano({
-  url: process.env.NODE_RPC
-});
+const NanoClient = require('nano-node-rpc');
+const client = new NanoClient({url: process.env.NODE_RPC})
+
 var router = express.Router();
 
 router.get('/active', function (req, res) {
-  nano.rpc('confirmation_active')
+  client._send('confirmation_active')
   .then(response => {
     if(!response) return res.status(404).json({ error: 'Not found' });
 
@@ -22,7 +19,7 @@ router.get('/active', function (req, res) {
 });
 
 router.get('/history', function (req, res) {
-  nano.rpc('confirmation_history')
+  client._send('confirmation_history')
   .then(response => {
     if(!response) return res.status(404).json({ error: 'Not found' });
 
@@ -34,7 +31,7 @@ router.get('/history', function (req, res) {
 });
 
 router.get('/quorum', function (req, res) {
-  nano.rpc('confirmation_quorum', {
+  client._send('confirmation_quorum', {
     peer_details: true
   })
   .then(response => {
@@ -48,7 +45,7 @@ router.get('/quorum', function (req, res) {
 });
 
 router.get('/:block', function (req, res) {
-  nano.rpc('confirmation_info', { 
+  client._send('confirmation_info', { 
     root: req.params.block,
     representatives: 'true'
    })

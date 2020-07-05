@@ -2,8 +2,12 @@ module.exports = function (nanorpc) {
   var express = require('express');
   var request = require('request');
 
+  const NanoClient = require('nano-node-rpc');
+  const client = new NanoClient({url: process.env.NODE_RPC})
+
   var router = express.Router();
   var Account = require('../models/account');
+  var cache = require('../utils/cache');
 
   router.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -28,9 +32,9 @@ module.exports = function (nanorpc) {
     });
   });
 
-  router.get('/blockcount', function (req, res) {
+  router.get('/blockcount', cache(60), async function (req, res) {
     res.json({
-      count: nanorpc.getBlockcount()
+      count: (await client.block_count())
     });
   });
 
