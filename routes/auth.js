@@ -26,6 +26,7 @@ module.exports = function (passport, nanorpc) {
     res.render('auth/nano', { 
       loggedin: req.isAuthenticated(),
       user : req.user,
+      payment_url: process.env.PAYMENT_URL,
       amount: process.env.VERIFICATION_AMOUNT,
       amount_raw: Big(process.env.VERIFICATION_AMOUNT).times(multNANO).toFixed().toString()
     });
@@ -39,7 +40,7 @@ module.exports = function (passport, nanorpc) {
     var output = {};
 
     request.get({
-      url: process.env.DOMAIN + '/payment/api/verify?token='+token,
+      url: process.env.PAYMENT_URL + '/api/verify?token='+token,
       json: true
     }, function(err, response, data){
       if (err || response.statusCode !== 200) {
