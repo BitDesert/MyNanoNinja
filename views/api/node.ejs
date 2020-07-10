@@ -14,7 +14,7 @@
     <div class="card-body">
       <h1 class="card-title pricing-card-title">0 NANO</h1>
       <ul class="list-unstyled mt-3 mb-4">
-        <li>240 tokens / 60 mins</li>
+        <li>500 tokens / 60 mins</li>
         <li>For testing</li>
         <li>Small projects</li>
       </ul>
@@ -26,7 +26,7 @@
       <h4 class="my-0 font-weight-normal">Pro</h4>
     </div>
     <div class="card-body">
-      <h1 class="card-title pricing-card-title">0.01 NANO<small class="text-muted">/ token</small></h1>
+      <h1 class="card-title pricing-card-title">0.001 NANO<small class="text-muted">/ token</small></h1>
       <ul class="list-unstyled mt-3 mb-4">
         <li>Pay-as-you-go</li>
         <li>Fill up with NANO</li>
@@ -160,7 +160,7 @@
       function () {
         window.acceptNano.startPayment({
           data: {
-            amount: ($('#moreapitokens').val() * 0.01),
+            amount: ($('#moreapitokens').val() * 0.001),
             currency: 'nano'
           },
           onStart: (paymentData) => {
