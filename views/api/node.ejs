@@ -92,7 +92,7 @@
   Suggest it on <a href="https://discord.gg/Dd8CUbv" target="_blank" rel="noreferer, noopener">Discord</a> or 
   <a href="https://github.com/BitDesert/MyNanoNinja/issues/new">GitHub</a>!
   <br>
-  Important note: <code>work_generate</code> consumes 10 tokens instead of 1.
+  Important note: <code>work_generate</code> consumes 50 tokens instead of 1.
 </p>
 
 <h2 id="free">Free</h2>
@@ -150,7 +150,7 @@
 
 <script>
   window.acceptNano.setup({
-    apiURL: 'https://mynano.ninja/payment/api', // URL of your Accept NANO server (String, required)
+    apiURL: '<%= payment_api %>', // URL of your Accept NANO server (String, required)
     debug: false, // used for enabling debug mode, (Bool, non-required, false by default)
     pollInterval: 1500, // time period (ms) to check for verification of the payment sessions (Number, non-required, 1500 by default)
   });
