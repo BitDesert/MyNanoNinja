@@ -14,7 +14,7 @@ const nano = new Nano({
 var router = express.Router();
 
 const opts = {
-  points: 240,
+  points: 500,
   duration: 60 * 60, // in seconds
 };
 
@@ -68,7 +68,7 @@ const allowed_actions = [
 isApiAuthorized = (req, res, next) => {
   const authHeader = req.headers.authorization
 
-  const consumePoints = req.body.action === 'work_generate' ? 10 : 1;  
+  const consumePoints = req.body.action === 'work_generate' ? 50 : 1;  
 
   if (!authHeader) {
     console.log('NODE API - No header')
@@ -120,6 +120,7 @@ router.get('/', function (req, res, next) {
     loggedin: req.isAuthenticated(),
     title: 'Nano Node API',
     user: req.user,
+    payment_api: process.env.PAYMENT_API,
   });
 });
 
@@ -207,7 +208,7 @@ router.get('/payment/:token/verify', isLoggedIn, function (req, res) {
   var output = {};
 
   request.get({
-    url: 'https://mynano.ninja/payment/api/verify?token=' + token,
+    url: process.env.PAYMENT_API + '/verify?token='+token,
     json: true
   }, function (err, response, data) {
     if (err || response.statusCode !== 200) {
