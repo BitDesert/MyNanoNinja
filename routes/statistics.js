@@ -24,6 +24,13 @@ router.get('/versions', function (req, res) {
   });
 });
 
+router.get('/protocols', function (req, res) {    
+  res.render('statistics/protocols', {
+    loggedin: req.isAuthenticated(),
+    title: 'Protocol Statistics'
+  });
+});
+
 router.get('/difficulty', function (req, res) {    
   res.render('statistics/difficulty', {
     loggedin: req.isAuthenticated(),

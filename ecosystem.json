@@ -1,9 +1,11 @@
 {
   "apps" : [{
     "name"        : "WWW",
-    "script"      : "bin/www"
+    "script"      : "bin/www",
+    "ignore_watch": ["*.ejs", "public"]
   },{
     "name"       : "CRON",
-    "script"     : "./cron.js"
+    "script"     : "./cron.js",
+    "ignore_watch": ["*.ejs", "public"]
   }]
 }

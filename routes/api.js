@@ -20,6 +20,7 @@ module.exports = function (nanorpc) {
   router.use('/general', require('./api/general'));
   router.use('/network', require('./api/network'));
   router.use('/ledger', require('./api/ledger'));
+  router.use('/telemetry', require('./api/telemetry'));
 
   router.get('/', function (req, res, next) {
     res.render('api/index', {
