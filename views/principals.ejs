@@ -143,8 +143,8 @@
                   <span class="badge badge-danger">Very Slow</span>
                 <% } %>
               <% } %>
-              <% if(accounts[i].monitor.version) { %>
-              <span class="badge badge-secondary"><%= accounts[i].monitor.version %></span>
+              <% if(accounts[i].telemetry.major_version && accounts[i].telemetry.minor_version && accounts[i].telemetry.patch_version) { %>
+              <span class="badge badge-secondary"><%= accounts[i].telemetry.major_version %>.<%= accounts[i].telemetry.minor_version %>.<%= accounts[i].telemetry.patch_version %></span>
               <% } %>
             </h5>
           </div>
