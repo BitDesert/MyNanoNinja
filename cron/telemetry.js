@@ -25,13 +25,24 @@ async function updateTelemetry(){
     
     var account = await Account.findOne({account: peer.account})
 
-    account.monitor.version = telemetry.major_version + '.' + telemetry.minor_version + '.' + telemetry.patch_version
-    account.monitor.blocks = telemetry.block_count
-
-    account.monitor.sync = tools.round((telemetry.block_count / nanorpc.getBlockcount()) * 100, 3)
-    if (account.monitor.sync > 100) {
-      account.monitor.sync = 100
-    }    
+    try {
+      account.monitor.version = telemetry.major_version + '.' + telemetry.minor_version + '.' + telemetry.patch_version
+      account.monitor.blocks = telemetry.block_count
+  
+      account.monitor.sync = tools.round((telemetry.block_count / nanorpc.getBlockcount()) * 100, 3)
+      if (account.monitor.sync > 100) {
+        account.monitor.sync = 100
+      }
+      
+      account.telemetry.block_count = telemetry.block_count
+      account.telemetry.cemented_count = telemetry.cemented_count
+      account.telemetry.major_version = telemetry.major_version
+      account.telemetry.minor_version = telemetry.minor_version
+      account.telemetry.patch_version = telemetry.patch_version
+      account.telemetry.pre_release_version = telemetry.pre_release_version
+    } catch (error) {
+      console.log('TELEMETRY: Error at ', peer.account, error);
+    }
 
     account.save()
   });  

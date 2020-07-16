@@ -50,6 +50,14 @@ var accountSchema = mongoose.Schema({
     blocks: Number,
     sync: Number
   },
+  telemetry: {
+    block_count: Number,
+    cemented_count: Number,
+    major_version: Number,
+    minor_version: Number,
+    patch_version: Number,
+    pre_release_version: Number
+  },
   description: String,
   website: String,
   server: {
