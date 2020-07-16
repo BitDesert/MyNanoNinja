@@ -16,12 +16,18 @@ async function updateTelemetry(){
 
     var match = peer.ip.match(regex_ip)
 
+    const address = match[1]
+    const port = match[2]
+
     var telemetry = await client._send('telemetry', {
-      address: match[1],
-      port: match[2]
+      address,
+      port
     })
 
-    if(telemetry.error) return
+    if(telemetry.error){
+      console.log('TELEMETRY: No telemetry from', peer.account, address, telemetry.error);
+      return
+    }
     
     var account = await Account.findOne({account: peer.account})
 
@@ -40,6 +46,8 @@ async function updateTelemetry(){
       account.telemetry.minor_version = telemetry.minor_version
       account.telemetry.patch_version = telemetry.patch_version
       account.telemetry.pre_release_version = telemetry.pre_release_version
+      
+      console.log('TELEMETRY: OK from ', peer.account, telemetry.block_count);
     } catch (error) {
       console.log('TELEMETRY: Error at ', peer.account, error);
     }
