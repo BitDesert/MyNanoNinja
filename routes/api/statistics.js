@@ -93,4 +93,18 @@ router.get('/quorum', function (req, res) {
   });
 });
 
+router.get('/quorum/:days', function (req, res) {
+  StatisticsQuorum.find({
+    'date': {$gt: moment().subtract(req.params.days, 'days').toDate()}
+  })
+  .select('-_id date quorum_delta online_stake_total peers_stake_total')
+  .exec(function (err, stats) {
+    if (err) {
+      console.log("API - Quorum", err);
+      return;
+    }
+    res.json(stats);
+  });
+});
+
 module.exports = router;
