@@ -49,7 +49,9 @@ function updateScoreAccount(account, callback) {
   var score_latency = 100 / (1 + Math.exp(0.012 * account.votelatency - 8));
 
   // divide so we get a smooth max 100 points
-  score = (((score_weight * score_uptime * score_age) / 10000) + score_latency) / 2;
+  var scorecount = 4;
+  var divider = Math.pow(100, scorecount) / 100
+  score = (score_weight * score_uptime * score_age * score_latency) / divider;
 
   // round the final score
   account.score = Math.round(score);
