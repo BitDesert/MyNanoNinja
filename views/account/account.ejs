@@ -119,11 +119,17 @@
       <div>{{ Number((account.uptime).toFixed(3)) }} %</div>
     </div>
     <div class="d-flex border-bottom py-2">
+      <div class="flex-grow-1">Status</div>
+      <div v-if="account.status === 'online'"><span class="badge badge-success">Online</span></div>
+      <div v-else-if="account.status === 'unstable'"><span class="badge badge-warning">Unstable</span></div>
+      <div v-else><span class="badge badge-danger">Offline</span></div>
+    </div>
+    <div class="d-flex border-bottom py-2">
       <div class="flex-grow-1">Last voted</div>
       <div v-if="account.lastVoted">{{ account.lastVoted | momentFromNow }}</div>
       <div v-else>Never voted</div>
     </div>
-    <div class="d-flex border-bottom py-2">
+    <div class="d-flex border-bottom py-2" v-if="account.isOnline">
       <div class="flex-grow-1">Vote Latency</div>
       <div v-if="account.votelatency < -100">
         <span class="badge badge-success" :title="account.votelatency +' ms'">Very Fast</span>
@@ -142,7 +148,7 @@
       </div>
       <div v-else>No data</div>
     </div>
-    <div class="d-flex border-bottom py-2">
+    <div class="d-flex border-bottom py-2" v-if="account.isOnline">
       <div class="flex-grow-1">Vote Latency (current)</div>
       <div v-if="account.votelatency_current < -100">
         <span class="badge badge-success" :title="account.votelatency_current +' ms'">Very Fast</span>
@@ -608,6 +614,6 @@
 <script>
   const address = "<% if (account === null) { %><%= myaccount %><% } else { %><%= account.account %><% } %>";
 </script>
-<script src="/static/js/sites/account.js?v=8"></script>
+<script src="/static/js/sites/account.js?v=9"></script>
 
 <% include ../../partials/footer.ejs %>

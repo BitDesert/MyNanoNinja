@@ -27,6 +27,14 @@ var app = new Vue({
       .get("/api/accounts/" + this.address)
       .then(response => {
         this.account = response.data;
+        this.account.isOnline = moment(this.account.lastVoted).add(1, 'day').isAfter(/*now*/)
+        if(moment(accounts[i].lastVoted).add(10, 'minutes').isAfter(/*now*/)){
+          this.account.status = 'online';
+        } else if(moment(accounts[i].lastVoted).add(1, 'day').isAfter(/*now*/)) {
+          this.account.status = 'unstable';
+        } else {
+          this.account.status = 'offline';
+        }
 
         if (response.data.alias)
           this.editAccount.account_alias = response.data.alias;
