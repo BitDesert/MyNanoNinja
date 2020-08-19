@@ -4,12 +4,14 @@ var cron = require('node-cron');
 var Account = require('../models/account');
 
 // Uptime tracking
-cron.schedule('0 * * * *', function(){
+// every hour 00:42
+cron.schedule('42 * * * *', function(){
   var types = ['week'];
   updateUptime(types)
 });
 
-cron.schedule('0 3 * * *', function(){
+// every day at 03:33
+cron.schedule('33 3 * * *', function(){
   var types = ['month', '3_months', '6_months', 'year'];
   updateUptime(types)
 });
