@@ -47,7 +47,7 @@ async function updateTelemetry(){
       account.telemetry.patch_version = telemetry.patch_version
       account.telemetry.pre_release_version = telemetry.pre_release_version
       
-      console.log('TELEMETRY: OK from ', peer.account, telemetry.block_count);
+      //console.log('TELEMETRY: OK from ', peer.account, telemetry.block_count);
     } catch (error) {
       console.log('TELEMETRY: Error at ', peer.account, error);
     }
