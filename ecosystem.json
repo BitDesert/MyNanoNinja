@@ -2,10 +2,12 @@
   "apps" : [{
     "name"        : "WWW",
     "script"      : "bin/www",
+    "log_date_format" : "YYYY-MM-DD HH:mm:ss",
     "ignore_watch": ["*.ejs", "public"]
   },{
     "name"       : "CRON",
     "script"     : "./cron.js",
+    "log_date_format" : "YYYY-MM-DD HH:mm:ss",
     "ignore_watch": ["*.ejs", "public"]
   }]
 }
