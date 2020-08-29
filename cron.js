@@ -16,6 +16,7 @@ require('./cron/peers');
 require('./cron/statistics');
 require('./cron/votes');
 require('./cron/uptime');
+require('./cron/uptimecheck');
 //require('./cron/uptimenotification');
 //require('./cron/monitors');
 require('./cron/scores');
