@@ -8,16 +8,16 @@ var Check = require('../models/check');
 cron.schedule('*/30 * * * *', updateNodeUptime);
 
 function updateNodeUptime() {
-  console.log('UPTIME NOTIFICATION: Started');
+  console.log('UPTIME CHECK: Started');
   Account.find()
     .where('votingweight').gte(1000000000000000000000000000000)
     .populate('owner')
     .exec(function (err, accounts) {
       if (err) {
-        console.error('UPTIME NOTIFICATION:', err);
+        console.error('UPTIME CHECK:', err);
         return
       }
-      console.log('UPTIME NOTIFICATION: ' + accounts.length + " accounts");
+      console.log('UPTIME CHECK: ' + accounts.length + " accounts");
 
       async.forEachOfSeries(accounts, (account, key, callback) => {
 
@@ -28,7 +28,7 @@ function updateNodeUptime() {
           console.error(err.message);
           return
         }
-        console.log('UPTIME NOTIFICATION: Done');
+        console.log('UPTIME CHECK: Done');
       });
     });
 }
@@ -51,7 +51,7 @@ function checkNodeUptime(account, callback) {
 
   account.save(function (err) {
     if (err) {
-      console.log("UPTIME NOTIFICATION: Error saving account", err);
+      console.log("UPTIME CHECK: Error saving account", err);
     }
     account.updateUptimeFor('day')
     callback();
