@@ -11,7 +11,6 @@ function updateNodeUptime() {
   console.log('UPTIME CHECK: Started');
   Account.find()
     .where('votingweight').gte(1000000000000000000000000000000)
-    .populate('owner')
     .exec(function (err, accounts) {
       if (err) {
         console.error('UPTIME CHECK:', err);
