@@ -3,6 +3,7 @@ var cron = require('node-cron');
 var moment = require('moment');
 
 var Account = require('../models/account');
+var User = require('../models/user');
 var Check = require('../models/check');
 
 cron.schedule('*/30 * * * *', updateNodeUptime);
