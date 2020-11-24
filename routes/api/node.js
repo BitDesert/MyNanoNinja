@@ -49,6 +49,7 @@ const allowed_actions = [
   'representatives',
   'representatives_online',
   'successors',
+  'telemetry',
   'version',
   'peers',
   'pending',
