@@ -81,7 +81,7 @@ Vue.filter('toCurrency', function (value) {
 
 Vue.filter('toLocaleString', function (value) {
   if(isNaN(value)) return '0';
-  return Number.parseFloat(value).toLocaleString()
+  return Number.parseFloat(value).toLocaleString('en-US')
 })
 
 Vue.filter('momentFromNow', function (value) {
