@@ -11,7 +11,7 @@ cron.schedule('*/30 * * * *', updateNodeUptime);
 function updateNodeUptime() {
   console.log('UPTIME CHECK: Started');
   Account.find()
-    .where('votingweight').gte(1000000000000000000000000000000)
+    .where('votingweight').gte(1000000000000000000000000000000000) // 1000 NANO minimum
     .exec(function (err, accounts) {
       if (err) {
         console.error('UPTIME CHECK:', err);

@@ -19,7 +19,7 @@ cron.schedule('33 3 * * *', function(){
 function updateUptime(types) {
   console.log('UPTIME: Started', types);
   Account.find()
-    .where('votingweight').gte(1000000000000000000000000000000)
+    .where('votingweight').gte(1000000000000000000000000000000000) // 1000 NANO minimum
     .exec(function (err, accounts) {
       if (err) {
         console.error('UPTIME:', err);

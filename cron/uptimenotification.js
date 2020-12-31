@@ -24,7 +24,7 @@ cron.schedule('*/30 * * * *', updateNodeUptime);
 function updateNodeUptime() {
   console.log('UPTIME NOTIFICATION: Started');
   Account.find()
-    .where('votingweight').gte(1000000000000000000000000000000)
+    .where('votingweight').gte(1000000000000000000000000000000000) // 1000 NANO minimum
     .populate('owner')
     .exec(function (err, accounts) {
       if (err) {
