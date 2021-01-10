@@ -13,6 +13,7 @@ module.exports = function (nanorpc) {
       'lastVoted': {
         $gt: moment().subtract(1, 'day').toDate()
       },
+      'closing': false,
     })
       .where('votingweight').gt(0)
       .where('score').gte(80)

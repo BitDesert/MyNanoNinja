@@ -19,6 +19,7 @@ var app = new Vue({
         server_cpu: '',
         server_ram: '',
         account_website: '',
+        closing: false
       }
     }
   },
@@ -46,6 +47,9 @@ var app = new Vue({
 
         if (response.data.website)
           this.editAccount.account_website = response.data.website;
+
+        if (response.data.closing)
+          this.editAccount.closing = response.data.closing;
 
         if (response.data.server){
           if (response.data.server.type)
@@ -91,6 +95,7 @@ var app = new Vue({
           server_type: '' + this.editAccount.server_type,
           server_cpu: '' + this.editAccount.server_cpu,
           server_ram: '' + this.editAccount.server_ram,
+          closing: this.editAccount.closing,
         }).then(response => {
           console.log('OK', response);
           this.editAccount.button_submit = 'Done!';
