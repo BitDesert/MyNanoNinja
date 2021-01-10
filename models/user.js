@@ -19,24 +19,11 @@ var userSchema = mongoose.Schema({
       default: 100
     }
   },
-  facebook: {
-    id: String,
-    token: String,
-    name: String,
-    email: String
-  },
   twitter: {
     id: String,
     token: String,
     displayName: String,
     username: String,
-    avatar: String
-  },
-  google: {
-    id: String,
-    token: String,
-    email: String,
-    name: String,
     avatar: String
   },
   github: {

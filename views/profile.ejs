@@ -41,29 +41,6 @@
   <div class="col-sm-4">
     <div class="card mb-3">
       <div class="card-body">
-        <h4 class="card-title">Facebook</h4>
-        <% if (user.facebook.token) { %>
-        <div class="row">
-          <div class="col-3">
-            <img class="img-fluid" src="/static/img/ninja-icon.png" alt="Avatar">
-          </div>
-          <div class="col">
-            <p>
-              <%= user.facebook.name %>
-            </p>
-            <a href="/auth/unlink/facebook" class="card-link">Unlink</a>
-          </div>
-        </div>
-        <% } else { %>
-        <a href="/auth/facebook" class="btn btn-primary">Connect</a>
-        <% } %>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-sm-4">
-    <div class="card mb-3">
-      <div class="card-body">
         <h4 class="card-title">Twitter</h4>
         <% if (user.twitter.token) { %>
         <div class="row">
@@ -81,29 +58,6 @@
         </div>
         <% } else { %>
         <a href="/auth/twitter" class="btn btn-primary">Connect</a>
-        <% } %>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-sm-4">
-    <div class="card mb-3">
-      <div class="card-body">
-        <h4 class="card-title">Google</h4>
-        <% if (user.google.token) { %>
-        <div class="row">
-          <div class="col-3">
-            <img class="img-fluid" src="/static/img/ninja-icon.png" alt="Avatar">
-          </div>
-          <div class="col">
-            <p>
-              <%= user.google.name %>
-            </p>
-            <a href="/auth/unlink/google" class="card-link">Unlink</a>
-          </div>
-        </div>
-        <% } else { %>
-        <!--<a href="/auth/google" class="btn btn-primary">Connect</a>-->
         <% } %>
       </div>
     </div>
