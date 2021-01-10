@@ -66,6 +66,7 @@ module.exports = function (nanorpc) {
         account.server.type = req.body.server_type;
         account.server.cpu = req.body.server_cpu;
         account.server.ram = req.body.server_ram;
+        account.closing = req.body.closing;
 
         account.save(function (err) {
           if (err) {

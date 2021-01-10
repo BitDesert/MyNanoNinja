@@ -385,6 +385,11 @@
                   <input type="text" class="form-control" name="server_ram" id="server_ram" v-model="editAccount.server_ram" placeholder="16 GB" maxlength="50">
                   <small class="form-text text-muted">How much RAM do you have?</small>
                 </div>
+                <div class="form-group form-check">
+                  <input type="checkbox" class="form-check-input" name="closing" id="closing" v-model="editAccount.closing">
+                  <label class="form-check-label" for="exampleCheck1">Closing</label>
+                  <small class="form-text text-muted">Set your representative to shutdown mode</small>
+                </div>
               </div>
               <div class="modal-footer">
                 <button type="submit" class="btn btn-primary">{{ editAccount.button_submit }}</button>
