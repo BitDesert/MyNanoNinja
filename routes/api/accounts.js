@@ -138,7 +138,7 @@ router.get('/:account', function (req, res) {
       { 'slug': myaccount }
     ]
   })
-    .select('-_id account alias slug uptime uptime_over created lastVoted votelatency votelatency_current votingweight delegators description website server network.provider location monitor score verified closing')
+    .select('-_id account alias slug uptime uptime_over created lastVoted votelatency votelatency_current votingweight delegators description website server network.provider location monitor score verified closing avoid')
     .exec(function (err, account) {
       if (err || !account) {
         console.log("API - Account", err, req.params.account);
