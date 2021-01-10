@@ -14,6 +14,19 @@ const nano = new Nano({
 // get all representatives
 cron.schedule('*/15 * * * *', updateRepresentatives);
 
+function initialUpdate(){
+  Account.count({}, function (err, count) {
+    if(err) return console.error('COUNT ERROR', err);
+
+    if(count == 0){
+      console.log('REPRESENTATIVES: INITIAL');
+      updateRepresentatives();
+    }
+  })
+}
+initialUpdate();
+updateRepresentatives();
+
 function updateRepresentatives() {
   console.log('REPRESENTATIVES: Started');
 

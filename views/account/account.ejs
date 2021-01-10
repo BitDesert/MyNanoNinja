@@ -43,6 +43,10 @@
   </div>
 </div>
 
+<div class="alert alert-danger" v-if="account.closing">
+  <strong>Heads up!</strong> This representative will shut down soon. Please <a href="/" class="alert-link">choose a new one here</a>!
+</div>
+
 <div class="card elegant-color mb-3">
   <div class="card-body d-flex flex-wrap truncate">
     <div class="flex-grow-1 px-3 truncate">
@@ -388,7 +392,7 @@
                 <div class="form-group form-check">
                   <input type="checkbox" class="form-check-input" name="closing" id="closing" v-model="editAccount.closing">
                   <label class="form-check-label" for="exampleCheck1">Closing</label>
-                  <small class="form-text text-muted">Set your representative to shutdown mode</small>
+                  <small class="form-text text-muted"><span class="text-danger">Warning:</span> This set your representative to shutdown mode</small>
                 </div>
               </div>
               <div class="modal-footer">
