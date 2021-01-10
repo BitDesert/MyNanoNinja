@@ -90,30 +90,6 @@ module.exports = function (passport, nanorpc) {
     });
   });
 
-  // facebook -------------------------------
-
-  // send to facebook to do the authentication
-  router.get('/facebook', passport.authenticate('facebook', {
-    scope: ['public_profile', 'email']
-  }));
-
-  // handle the callback after facebook has authenticated the user
-  router.get('/facebook/callback',
-    passport.authenticate('facebook', {
-      successRedirect: '/profile',
-      failureRedirect: '/'
-    })
-  );
-  
-  // unlink account
-  router.get('/unlink/facebook', isLoggedIn, function (req, res) {
-    var user = req.user;
-    user.facebook.token = undefined;
-    user.save(function (err) {
-      res.redirect('/profile');
-    });
-  });
-
   // twitter --------------------------------
 
   // send to twitter to do the authentication
@@ -133,30 +109,6 @@ module.exports = function (passport, nanorpc) {
   router.get('/unlink/twitter', isLoggedIn, function (req, res) {
     var user = req.user;
     user.twitter.token = undefined;
-    user.save(function (err) {
-      res.redirect('/profile');
-    });
-  });
-
-  // google ---------------------------------
-
-  // send to google to do the authentication
-  router.get('/google', passport.authenticate('google', {
-    scope: ['profile', 'email']
-  }));
-
-  // the callback after google has authenticated the user
-  router.get('/google/callback',
-    passport.authenticate('google', {
-      successRedirect: '/profile',
-      failureRedirect: '/'
-    })
-  );
-
-  // unlink account
-  router.get('/unlink/google', isLoggedIn, function (req, res) {
-    var user = req.user;
-    user.google.token = undefined;
     user.save(function (err) {
       res.redirect('/profile');
     });

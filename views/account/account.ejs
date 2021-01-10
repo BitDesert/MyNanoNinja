@@ -400,28 +400,6 @@
 <% } %>
 
 <div class="row">
-  <% if (account.owner.facebook.token) { %>
-  <div class="col-sm-4">
-    <div class="card mb-3">
-      <div class="card-body">
-        <h4 class="card-title">Facebook</h4>
-        <div class="row">
-          <div class="col-3">
-            <img class="img-fluid" src="<% if(account.owner.facebook.avatar){ %><%= account.owner.facebook.avatar %><% } else { %>/static/img/ninja-icon.png<% } %>"
-              alt="Avatar">
-          </div>
-          <div class="col">
-            <p>
-              <%= account.owner.facebook.name %>
-            </p>
-            <a href="https://facebook.com/<%= account.owner.facebook.id %>" class="card-link" target="_blank" rel="noreferer, noopener">Visit
-              profile</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <% } %>
 
   <% if (account.owner.twitter.token) { %>
   <div class="col-sm-4">
@@ -439,29 +417,6 @@
             </p>
             <a href="https://twitter.com/<%= account.owner.twitter.username %>" class="card-link" target="_blank" rel="noreferer, noopener"
               target="_blank" rel="noreferer, noopener">Visit profile</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <% } %>
-
-  <% if (account.owner.google.token) { %>
-  <div class="col-sm-4">
-    <div class="card mb-3">
-      <div class="card-body">
-        <h4 class="card-title">Google</h4>
-        <div class="row">
-          <div class="col-3">
-            <img class="img-fluid" src="<% if(account.owner.google.avatar){ %><%= account.owner.google.avatar %><% } else { %>/static/img/ninja-icon.png<% } %>"
-              alt="Avatar">
-          </div>
-          <div class="col">
-            <p>
-              <%= account.owner.google.name %>
-            </p>
-            <a href="https://plus.google.com/<%= account.owner.google.id %>" class="card-link" target="_blank" rel="noreferer, noopener" target="_blank" rel="noreferer, noopener">Visit
-              profile</a>
           </div>
         </div>
       </div>
