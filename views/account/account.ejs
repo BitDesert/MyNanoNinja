@@ -505,6 +505,177 @@
     </tr>
   </tbody>
 </table>
+<div v-if="modal.editAccount">
+  <transition name="modal">
+    <div class="modal-mask">
+        <div class="modal-wrapper">
+        <form @submit="submitEditAccount">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Edit account</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true" @click="modal.editAccount = false">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div class="form-group">
+                  <label>Account alias</label>
+                  <input type="text" class="form-control" name="account_alias" id="account_alias" v-model="editAccount.account_alias" placeholder="My Nano node"
+                    value="<% if (account.alias) { %><%= account.alias %><% } %>">
+                  <small class="form-text text-muted">This will be shown instead of the full address.</small>
+                </div>
+                <div class="form-group">
+                  <label>Introduction</label>
+                  <input type="text" class="form-control" name="account_description" id="account_description" v-model="editAccount.account_description" placeholder="I run this representative because..."
+                    value="<% if (account.description) { %><%= account.description %><% } %>" maxlength="500">
+                  <small class="form-text text-muted">Write a short text why you run this representative.</small>
+                </div>
+                <div class="form-group">
+                  <label>Website</label>
+                  <input type="text" class="form-control" name="account_website" id="account_website" v-model="editAccount.account_website" placeholder="https://ilovenano.com"
+                    pattern="(http(s)?:\/\/.)(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,8}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)"
+                    value="<% if (account.website) { %><%= account.website %><% } %>">
+                  <small class="form-text text-muted">Your project / personal website</small>
+                </div>
+                <div class="form-group">
+                  <label>Server Type</label>
+                  <input type="text" class="form-control" name="server_type" id="server_type" v-model="editAccount.server_type" placeholder="VPS" maxlength="50">
+                  <small class="form-text text-muted">Dedicated, VPS, etc.</small>
+                </div>
+                <div class="form-group">
+                  <label>Server CPU</label>
+                  <input type="text" class="form-control" name="server_cpu" id="server_cpu" v-model="editAccount.server_cpu" placeholder="AMD EPYC 7702 - 4 cores" maxlength="50">
+                  <small class="form-text text-muted">Your server CPU, type, core count</small>
+                </div>
+                <div class="form-group">
+                  <label>Server RAM</label>
+                  <input type="text" class="form-control" name="server_ram" id="server_ram" v-model="editAccount.server_ram" placeholder="16 GB" maxlength="50">
+                  <small class="form-text text-muted">How much RAM do you have?</small>
+                </div>
+                <div class="form-group">
+                  <label>Donation Account</label>
+                  <input type="text" class="form-control" v-model="editAccount.donation.account" placeholder="nano_1abc..." maxlength="50">
+                  <small class="form-text text-muted">Enter a address if you want to receive donations</small>
+                </div>
+                <div class="form-group">
+                  <label>Donation Website</label>
+                  <input type="text" class="form-control" v-model="editAccount.donation.website" placeholder="https://patreon.com/mynanonode"
+                    pattern="(http(s)?:\/\/.)(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,8}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)">
+                  <small class="form-text text-muted">Your donation website like Patreon, GitHub Sponsors etc.</small>
+                </div>
+                <div class="form-group form-check">
+                  <input type="checkbox" class="form-check-input" name="closing" id="closing" v-model="editAccount.closing">
+                  <label class="form-check-label" for="exampleCheck1">Closing</label>
+                  <small class="form-text text-muted"><span class="text-danger">Warning:</span> This set your representative to shutdown mode</small>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">{{ editAccount.button_submit }}</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </transition>
+</div>
+
+<% } %>
+
+<div class="row">
+
+  <% if (account.owner.twitter.token) { %>
+  <div class="col-sm-4">
+    <div class="card mb-3">
+      <div class="card-body">
+        <h4 class="card-title">Twitter</h4>
+        <div class="row">
+          <div class="col-3">
+            <img class="img-fluid" src="<% if(account.owner.twitter.avatar){ %><%= account.owner.twitter.avatar %><% } else { %>/static/img/ninja-icon.png<% } %>"
+              alt="Avatar">
+          </div>
+          <div class="col">
+            <p>
+              @<%= account.owner.twitter.username %>
+            </p>
+            <a href="https://twitter.com/<%= account.owner.twitter.username %>" class="card-link" target="_blank" rel="noreferer, noopener"
+              target="_blank" rel="noreferer, noopener">Visit profile</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% } %>
+
+  <% if (account.owner.github.token) { %>
+  <div class="col-sm-4">
+    <div class="card mb-3">
+      <div class="card-body">
+        <h4 class="card-title">GitHub</h4>
+        <div class="row">
+          <div class="col-3">
+            <img class="img-fluid" src="<% if(account.owner.github.avatar){ %><%= account.owner.github.avatar %><% } else { %>/static/img/ninja-icon.png<% } %>"
+              alt="Avatar">
+          </div>
+          <div class="col">
+            <p>
+              <%= account.owner.github.displayName %> (
+              <%= account.owner.github.username %>)
+            </p>
+            <a href="https://github.com/<%= account.owner.github.username %>" class="card-link" target="_blank" rel="noreferer, noopener">Visit
+              profile</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% } %>
+
+  <% if (account.owner.reddit.token) { %>
+  <div class="col-sm-4">
+    <div class="card mb-3">
+      <div class="card-body">
+        <h4 class="card-title">Reddit</h4>
+        <div class="row">
+          <div class="col-3">
+            <img class="img-fluid" src="<% if(account.owner.reddit.avatar){ %><%= account.owner.reddit.avatar %><% } else { %>/static/img/ninja-icon.png<% } %>"
+              alt="Avatar">
+          </div>
+          <div class="col">
+            <p>
+              <%= account.owner.reddit.name %>
+            </p>
+            <a href="https://www.reddit.com/user/<%= account.owner.reddit.name %>" class="card-link" target="_blank" rel="noreferer, noopener">Visit
+              profile</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% } %>
+
+  <% if (account.owner.discord.token) { %>
+  <div class="col-sm-4">
+    <div class="card mb-3">
+      <div class="card-body">
+        <h4 class="card-title">Discord</h4>
+        <div class="row">
+          <div class="col-3">
+            <img class="img-fluid" src="<% if(account.owner.discord.avatar){ %>https://cdn.discordapp.com/avatars/<%= account.owner.discord.id %>/<%= account.owner.discord.avatar %>.png<% } else { %>/static/img/ninja-icon.png<% } %>"
+              alt="Avatar">
+          </div>
+          <div class="col">
+            <p>
+              <%= account.owner.discord.username %>#<%= account.owner.discord.discriminator %>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% } %>
+
 </div>
 
 </div><!-- end of app class -->

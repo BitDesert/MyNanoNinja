@@ -115,6 +115,10 @@ var accountSchema = mongoose.Schema({
     type: Boolean,
     default: false
   },
+  donation: {
+    account: String,
+    website: String
+  },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'

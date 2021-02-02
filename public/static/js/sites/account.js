@@ -19,6 +19,10 @@ var app = new Vue({
         server_cpu: '',
         server_ram: '',
         account_website: '',
+        donation: {
+          account: null,
+          website: null
+        },
         closing: false
       }
     }
@@ -95,6 +99,7 @@ var app = new Vue({
           server_type: '' + this.editAccount.server_type,
           server_cpu: '' + this.editAccount.server_cpu,
           server_ram: '' + this.editAccount.server_ram,
+          donation: this.editAccount.donation,
           closing: this.editAccount.closing,
         }).then(response => {
           console.log('OK', response);
