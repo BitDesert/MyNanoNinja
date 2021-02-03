@@ -45,7 +45,7 @@
   </div>
 </div>
 
-<div class="alert alert-danger" v-if="account.closing">
+<div class="alert alert-danger" v-if="account && account.closing">
   <strong>Heads up!</strong> This representative will shut down soon. Please <a href="/" class="alert-link">choose a new one here</a>!
 </div>
 
@@ -204,145 +204,7 @@
   </div>
 </div>
 
-<% if(account !== null && account.description){ %>
-<div class="row">
-  <div class="col">
-      <ul class="list-group mb-4">
-        <li class="list-group-item">
-          <%= account.description %>
-        </li>
-      </ul>
-  </div>
-</div>
-<% } %>
-
-<div class="row">
-
-  <div class="col-lg-4 mb-4">
-    <h3>Information</h3>
-    <ul class="list-group mb-3">
-      <% if(account !== null){ %>
-      <li class="list-group-item">
-        Created
-        <span class="float-right">
-          <%= moment(account.created).fromNow() %>
-        </span>
-      </li>
-      <% } %>
-      <% if(account !== null && account.website){ %>
-      <li class="list-group-item">
-        Website
-        <span class="float-right">
-          <a href="<%= account.website %>" target="_blank" rel="noreferer, noopener">
-            <%= account.website %>
-          </a>
-        </span>
-      </li>
-      <% } %>
-    </ul>
-    
-  </div>
-
-  <div class="col-lg-4 mb-4" v-if="account && account.votingweight > 0">
-    <h3>Node</h3>
-    <ul class="list-group mb-3">
-      <% if(account !== null && account.server && account.server.type){ %>
-      <li class="list-group-item">
-        Server Type
-        <span class="float-right">
-          <%= account.server.type %>
-          <% if(account.server.renewable){ %>
-          <i class="fas fa-leaf" style="color: #8BC34A" title="Renewable Energy"></i>
-          <% } %>
-        </span>
-      </li>
-      <% } %>
-      <% if(account !== null && account.server && account.server.cpu){ %>
-      <li class="list-group-item">
-        Server CPU
-        <span class="float-right">
-          <%= account.server.cpu %>
-        </span>
-      </li>
-      <% } %>
-      <% if(account !== null && account.server && account.server.ram){ %>
-      <li class="list-group-item">
-        Server RAM
-        <span class="float-right">
-          <%= account.server.ram %>
-        </span>
-      </li>
-      <% } %>
-      <% if(account !== null && account.location.country){ %>
-      <li class="list-group-item">
-        Location
-        <span class="float-right">
-          <% if(account.location.city){ %><%= account.location.city %>, <% } %><%= account.location.country %>
-        </span>
-      </li>
-      <% } %>
-      <% if(account !== null && account.network.provider){ %>
-      <li class="list-group-item">
-        Server Provider
-        <span class="float-right">
-          <%= account.network.provider %>
-        </span>
-      </li>
-      <% } %>
-      <% if(account !== null && account.telemetry.major_version){ %>
-      <li class="list-group-item">
-        Node Version
-        <span class="float-right">
-          <%= account.telemetry.major_version %>.<%= account.telemetry.minor_version %>.<%= account.telemetry.patch_version %>
-        </span>
-      </li>
-      <% } %>
-    </ul>
-    
-  </div>
-
-  <div class="col-lg-4 mb-4" v-if="account && account.votingweight > 0">
-    <h3>Uptime</h3>
-    <ul class="list-group mb-3">
-      <li class="list-group-item">
-        Last 24 hours
-        <span class="float-right">
-          {{ account.uptime_over.day | round(3) }} %
-        </span>
-      </li>
-      <li class="list-group-item">
-        Last 7 days
-        <span class="float-right">
-            {{ account.uptime_over.week | round(3) }} %
-        </span>
-      </li>
-      <li class="list-group-item">
-        Last 30 days
-        <span class="float-right">
-            {{ account.uptime_over.month | round(3) }} %
-        </span>
-      </li>
-      <li class="list-group-item">
-        Last year
-        <span class="float-right">
-            {{ account.uptime_over.year | round(3) }} %
-        </span>
-      </li>
-    </ul>
-  </div>
-
-</div>
-
-<h3>Account Owner</h3>
 <% if (account) { %>
-<% if (account.owner) { %>
-
-<% if (loggedin && account.owner._id.toString() == user._id.toString()) { %>
-<div class="alert alert-dismissible alert-primary">
-  <button type="button" class="close" data-dismiss="alert">&times;</button>
-  <strong>Welcome!</strong> You are the owner of this account. <a href="#" class="alert-link" @click="modal.editAccount = true">Edit it here</a>!
-</div>
-
 <div v-if="modal.editAccount">
   <transition name="modal">
     <div class="modal-mask">
@@ -407,170 +269,245 @@
     </div>
   </transition>
 </div>
-
 <% } %>
 
 <div class="row">
-
-  <% if (account.owner.twitter.token) { %>
-  <div class="col-sm-4">
-    <div class="card mb-3">
-      <div class="card-body">
-        <h4 class="card-title">Twitter</h4>
-        <div class="row">
-          <div class="col-3">
-            <img class="img-fluid" src="<% if(account.owner.twitter.avatar){ %><%= account.owner.twitter.avatar %><% } else { %>/static/img/ninja-icon.png<% } %>"
-              alt="Avatar">
-          </div>
-          <div class="col">
-            <p>
-              @<%= account.owner.twitter.username %>
-            </p>
-            <a href="https://twitter.com/<%= account.owner.twitter.username %>" class="card-link" target="_blank" rel="noreferer, noopener"
-              target="_blank" rel="noreferer, noopener">Visit profile</a>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div class="col-lg-4 mb-4">
+    <h3>Owner</h3>
+    <% if (account && account.owner) { %>
+    <ul class="list-group mb-3">
+      <% if (account.owner.twitter.token) { %>
+      <li class="list-group-item">
+        <i class="fab fa-twitter"></i> Twitter
+        <span class="float-right">
+          <a href="https://twitter.com/<%= account.owner.twitter.username %>" target="_blank" rel="noreferer, noopener"
+            target="_blank" rel="noreferer, noopener">
+            @<%= account.owner.twitter.username %>
+          </a>
+        </span>
+      </li>
+      <% } %>
+      <% if (account.owner.github.token) { %>
+      <li class="list-group-item">
+        <i class="fab fa-github"></i> GitHub
+        <span class="float-right">
+          <a href="https://github.com/<%= account.owner.github.username %>" target="_blank" rel="noreferer, noopener"
+            target="_blank" rel="noreferer, noopener">
+            <%= account.owner.github.username %>
+          </a>
+        </span>
+      </li>
+      <% } %>
+      <% if (account.owner.reddit.token) { %>
+      <li class="list-group-item">
+        <i class="fab fa-reddit"></i> Reddit
+        <span class="float-right">
+          <a href="https://www.reddit.com/user/<%= account.owner.reddit.name %>" target="_blank" rel="noreferer, noopener"
+            target="_blank" rel="noreferer, noopener">
+            <%= account.owner.reddit.name %>
+          </a>
+        </span>
+      </li>
+      <% } %>
+      <% if (account.owner.discord.token) { %>
+      <li class="list-group-item">
+        <i class="fab fa-discord"></i> Discord
+        <span class="float-right">
+          <%= account.owner.discord.username %>#<%= account.owner.discord.discriminator %>
+        </span>
+      </li>
+      <% } %>
+    </ul>
+    <% if (loggedin && account.owner._id.toString() == user._id.toString()) { %>
+      <a href="#" class="btn btn-secondary btn-sm" @click="modal.editAccount = true">Edit account</a>
+    <% } %>
+    <% } else { %>
+      <a href="/auth/login" class="btn btn-secondary">
+        Log in to claim this account
+      </a>
+    <% } %>
   </div>
-  <% } %>
 
-  <% if (account.owner.github.token) { %>
-  <div class="col-sm-4">
-    <div class="card mb-3">
-      <div class="card-body">
-        <h4 class="card-title">GitHub</h4>
-        <div class="row">
-          <div class="col-3">
-            <img class="img-fluid" src="<% if(account.owner.github.avatar){ %><%= account.owner.github.avatar %><% } else { %>/static/img/ninja-icon.png<% } %>"
-              alt="Avatar">
-          </div>
-          <div class="col">
-            <p>
-              <%= account.owner.github.displayName %> (
-              <%= account.owner.github.username %>)
-            </p>
-            <a href="https://github.com/<%= account.owner.github.username %>" class="card-link" target="_blank" rel="noreferer, noopener">Visit
-              profile</a>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div class="col">
+    <h3>Description</h3>
+      <ul class="list-group mb-4">
+        <li class="list-group-item">
+          <% if(account !== null && account.description){ %>
+            <%= account.description %>
+          <% } else { %>
+            No description
+          <% } %>
+        </li>
+      </ul>
   </div>
-  <% } %>
+</div>
 
-  <% if (account.owner.reddit.token) { %>
-  <div class="col-sm-4">
-    <div class="card mb-3">
-      <div class="card-body">
-        <h4 class="card-title">Reddit</h4>
-        <div class="row">
-          <div class="col-3">
-            <img class="img-fluid" src="<% if(account.owner.reddit.avatar){ %><%= account.owner.reddit.avatar %><% } else { %>/static/img/ninja-icon.png<% } %>"
-              alt="Avatar">
-          </div>
-          <div class="col">
-            <p>
-              <%= account.owner.reddit.name %>
-            </p>
-            <a href="https://www.reddit.com/user/<%= account.owner.reddit.name %>" class="card-link" target="_blank" rel="noreferer, noopener">Visit
-              profile</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <% } %>
+<div class="row">
 
-  <% if (account.owner.discord.token) { %>
-  <div class="col-sm-4">
-    <div class="card mb-3">
-      <div class="card-body">
-        <h4 class="card-title">Discord</h4>
-        <div class="row">
-          <div class="col-3">
-            <img class="img-fluid" src="<% if(account.owner.discord.avatar){ %>https://cdn.discordapp.com/avatars/<%= account.owner.discord.id %>/<%= account.owner.discord.avatar %>.png<% } else { %>/static/img/ninja-icon.png<% } %>"
-              alt="Avatar">
-          </div>
-          <div class="col">
-            <p>
-              <%= account.owner.discord.username %>#<%= account.owner.discord.discriminator %>
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div class="col-lg-4 mb-4">
+    <h3>Information</h3>
+    <ul class="list-group mb-3">
+      <% if(account !== null){ %>
+      <li class="list-group-item">
+        Created
+        <span class="float-right">
+          <%= moment(account.created).fromNow() %>
+        </span>
+      </li>
+      <% } %>
+      <% if(account !== null && account.website){ %>
+      <li class="list-group-item">
+        Website
+        <span class="float-right">
+          <a href="<%= account.website %>" target="_blank" rel="noreferer, noopener">
+            <%= account.website %>
+          </a>
+        </span>
+      </li>
+      <% } %>
+    </ul>
   </div>
-  <% } %>
+
+  <div class="col-lg-4 mb-4" v-if="account && account.votingweight > 0">
+    <h3>Node</h3>
+    <ul class="list-group mb-3">
+      <% if(account !== null && account.server && account.server.type){ %>
+      <li class="list-group-item">
+        Server Type
+        <span class="float-right">
+          <%= account.server.type %>
+          <% if(account.server.renewable){ %>
+          <i class="fas fa-leaf" style="color: #8BC34A" title="Renewable Energy"></i>
+          <% } %>
+        </span>
+      </li>
+      <% } %>
+      <% if(account !== null && account.server && account.server.cpu){ %>
+      <li class="list-group-item">
+        Server CPU
+        <span class="float-right">
+          <%= account.server.cpu %>
+        </span>
+      </li>
+      <% } %>
+      <% if(account !== null && account.server && account.server.ram){ %>
+      <li class="list-group-item">
+        Server RAM
+        <span class="float-right">
+          <%= account.server.ram %>
+        </span>
+      </li>
+      <% } %>
+      <% if(account !== null && account.location.country){ %>
+      <li class="list-group-item">
+        Location
+        <span class="float-right">
+          <% if(account.location.city){ %><%= account.location.city %>, <% } %><%= account.location.country %>
+        </span>
+      </li>
+      <% } %>
+      <% if(account !== null && account.network.provider){ %>
+      <li class="list-group-item">
+        Server Provider
+        <span class="float-right">
+          <%= account.network.provider %>
+        </span>
+      </li>
+      <% } %>
+      <% if(account !== null && account.telemetry.major_version){ %>
+      <li class="list-group-item">
+        Node Version
+        <span class="float-right">
+          <%= account.telemetry.major_version %>.<%= account.telemetry.minor_version %>.<%= account.telemetry.patch_version %>
+        </span>
+      </li>
+      <% } %>
+    </ul>
+  </div>
+
+  <div class="col-lg-4 mb-4" v-if="account && account.votingweight > 0">
+    <h3>Uptime</h3>
+    <ul class="list-group mb-3">
+      <li class="list-group-item">
+        Last 24 hours
+        <span class="float-right">
+          {{ account.uptime_over.day | round(3) }} %
+        </span>
+      </li>
+      <li class="list-group-item">
+        Last 7 days
+        <span class="float-right">
+            {{ account.uptime_over.week | round(3) }} %
+        </span>
+      </li>
+      <li class="list-group-item">
+        Last 30 days
+        <span class="float-right">
+            {{ account.uptime_over.month | round(3) }} %
+        </span>
+      </li>
+      <li class="list-group-item">
+        Last year
+        <span class="float-right">
+            {{ account.uptime_over.year | round(3) }} %
+        </span>
+      </li>
+    </ul>
+  </div>
 
 </div>
 
-<% } else { %>
-<div class="alert alert-dismissible alert-primary">
-  <button type="button" class="close" data-dismiss="alert">&times;</button>
-  <strong>Whoops!</strong> No owner set up. Is this yours? <a href="/auth/login" class="alert-link">Log in to claim
-    this account</a>!
+<h3 v-if="pending.blocks">Incoming Transactions</h3>
+<div class="table-responsive">
+  <table class="table" v-if="pending.blocks">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+        <th scope="col">Account</th>
+        <th scope="col">Amount</th>
+        <th scope="col">Hash</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="(item, key) in pending.blocks">
+        <th scope="row">receive</th>
+        <td>
+          <account-alias :account="item.source"></account-alias>
+        </td>
+        <td>{{item.amount | toMnano}} NANO</td>
+        <td><a v-bind:href="'/block/'+ key"><span v-html="$options.filters.formatHash(key)"></span></a></td>
+      </tr>
+    </tbody>
+  </table>
 </div>
-<% } %>
 
-<% } else { %>
-<div class="alert alert-dismissible alert-primary">
-  <button type="button" class="close" data-dismiss="alert">&times;</button>
-  <strong>Whoops!</strong> No owner set up. Is this yours? <a href="/auth/login" class="alert-link">Log in to claim
-    this account</a>!
+<h3>Transaction History</h3>
+<div class="table-responsive">
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Date</th>
+      <th scope="col">Type</th>
+      <th scope="col">Account</th>
+      <th scope="col">Amount</th>
+      <th scope="col">Hash</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr v-for="item of history">
+      <th scope="row" v-bind:title="item.local_timestamp | momentUnixFormat">{{ item.local_timestamp | momentUnixFromNow }}</th>
+      <td>{{ item.type }}</td>
+      <td>
+        <account-alias :account="item.account"></account-alias>
+      </td>
+      <td>{{item.amount | toMnano}} NANO</td>
+      <td><a v-bind:href="'/block/'+ item.hash"><span v-html="$options.filters.formatHash(item.hash)"></span></a></td>
+    </tr>
+  </tbody>
+</table>
 </div>
-<% } %>
 
-    <h3 v-if="pending.blocks">Pending Transactions</h3>
-    <div class="table-responsive">
-      <table class="table" v-if="pending.blocks">
-        <thead>
-          <tr>
-            <th scope="col">Type</th>
-            <th scope="col">Account</th>
-            <th scope="col">Amount</th>
-            <th scope="col">Hash</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(item, key) in pending.blocks">
-            <th scope="row">receive</th>
-            <td>
-              <account-alias :account="item.source"></account-alias>
-            </td>
-            <td>{{item.amount | toMnano}} NANO</td>
-            <td><a v-bind:href="'/block/'+ key"><span v-html="$options.filters.formatHash(key)"></span></a></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  <h3>Transaction History</h3>
-  <div class="table-responsive">
-    <table class="table">
-      <thead>
-        <tr>
-          <th scope="col">Date</th>
-          <th scope="col">Type</th>
-          <th scope="col">Account</th>
-          <th scope="col">Amount</th>
-          <th scope="col">Hash</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="item of history">
-          <th scope="row" v-bind:title="item.local_timestamp | momentUnixFormat">{{ item.local_timestamp | momentUnixFromNow }}</th>
-          <td>{{ item.type }}</td>
-          <td>
-            <account-alias :account="item.account"></account-alias>
-          </td>
-          <td>{{item.amount | toMnano}} NANO</td>
-          <td><a v-bind:href="'/block/'+ item.hash"><span v-html="$options.filters.formatHash(item.hash)"></span></a></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-</div>
+</div><!-- end of app class -->
 
 <script src="/static/js/vue.js"></script>
 <script src="/static/js/main-vue.js?v=7"></script>
