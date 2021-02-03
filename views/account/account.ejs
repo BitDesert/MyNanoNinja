@@ -329,16 +329,36 @@
   </div>
 
   <div class="col">
-    <h3>Description</h3>
+    <div v-if="account && account.donation">
+      <h3>Donation</h3>
       <ul class="list-group mb-4">
-        <li class="list-group-item">
-          <% if(account !== null && account.description){ %>
-            <%= account.description %>
-          <% } else { %>
-            No description
-          <% } %>
+        <li class="list-group-item" v-if="account.donation.account">
+          Nano
+          <span class="float-right">
+            <account-alias :account="account.donation.account"></account-alias>
+          </span>
+        </li>
+        <li class="list-group-item" v-if="account.donation.website">
+          Other
+          <span class="float-right">
+            <a :href="account.donation.website" target="_blank" rel="noreferer, noopener">
+              {{ account.donation.website }}
+            </a>
+          </span>
         </li>
       </ul>
+    </div>
+
+    <h3>Description</h3>
+    <ul class="list-group mb-4">
+      <li class="list-group-item">
+        <% if(account !== null && account.description){ %>
+          <%= account.description %>
+        <% } else { %>
+          No description
+        <% } %>
+      </li>
+    </ul>
   </div>
 </div>
 
