@@ -12,12 +12,15 @@ const nano = new Nano({
 });
 
 // update account weights
-cron.schedule('*/15 * * * *', updateWeights);
+cron.schedule('7 * * * *', updateWeights);
 
 function updateWeights() {
   console.log('WEIGHTS: Started');
 
-  Account.find().exec(function (err, accounts) {
+  // update all accounts in db who have any weight
+  Account.find({
+    votingweight: { $gt: 0 }
+  }).exec(function (err, accounts) {
 
     console.log('WEIGHTS:', accounts.length);
 
@@ -44,6 +47,7 @@ function updateAccountWeight(account, callback) {
         if (err) {
           console.log("RPC - updateAccountWeight - Error saving account", err);
         }
+        //console.log('WEIGHTS: Updated', account.account);
         callback();
       });
     })
