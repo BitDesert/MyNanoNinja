@@ -11,8 +11,8 @@
     <% } else { %>
       No alias
     <% } %>
-    <i class="fas fa-exclamation-circle text-warning" title="Avoid" v-if="account.avoid"></i>
-    <i class="fas fa-exclamation-circle text-danger" title="Closing" v-if="account.closing"></i>
+    <i class="fas fa-exclamation-circle text-warning" title="Avoid" v-if="account && account.avoid"></i>
+    <i class="fas fa-exclamation-circle text-danger" title="Closing" v-if="account && account.closing"></i>
   </h1>
   <i class="fas fa-qrcode h1" title="Verified" data-toggle="modal" data-target="#setRepresentative"></i>
 </div>
