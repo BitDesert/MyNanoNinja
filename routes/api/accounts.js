@@ -45,7 +45,7 @@ router.get('/principals/online', function (req, res) {
     });
 });
 
-router.get('/aliases', cache(60), function (req, res) {
+router.get('/aliases', function (req, res) {
   Account.find({
     'alias': {
       $exists: true,
@@ -62,7 +62,7 @@ router.get('/aliases', cache(60), function (req, res) {
     });
 });
 
-router.get('/monitors', cache(60), function (req, res) {
+router.get('/monitors', function (req, res) {
   Account.find({
     'monitor.url': {
       $exists: true,
