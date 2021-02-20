@@ -255,7 +255,7 @@
                 </div>
                 <div class="form-group">
                   <label>Donation Account</label>
-                  <input type="text" class="form-control" v-model="editAccount.donation.account" placeholder="nano_1abc..." maxlength="50">
+                  <input type="text" class="form-control" v-model="editAccount.donation.account" placeholder="nano_1abc..." pattern="(nano_[a-z0-9]{60}|[A-Z0-9]{64})">
                   <small class="form-text text-muted">Enter a address if you want to receive donations</small>
                 </div>
                 <div class="form-group">
@@ -350,7 +350,7 @@
           </span>
         </li>
         <li class="list-group-item" v-if="account.donation.website">
-          Other
+          Custom
           <span class="float-right">
             <a :href="account.donation.website" target="_blank" rel="noreferer, noopener">
               {{ account.donation.website }}
@@ -536,100 +536,6 @@
     </tr>
   </tbody>
 </table>
-
-<div class="row">
-
-  <% if (account.owner.twitter.token) { %>
-  <div class="col-sm-4">
-    <div class="card mb-3">
-      <div class="card-body">
-        <h4 class="card-title">Twitter</h4>
-        <div class="row">
-          <div class="col-3">
-            <img class="img-fluid" src="<% if(account.owner.twitter.avatar){ %><%= account.owner.twitter.avatar %><% } else { %>/static/img/ninja-icon.png<% } %>"
-              alt="Avatar">
-          </div>
-          <div class="col">
-            <p>
-              @<%= account.owner.twitter.username %>
-            </p>
-            <a href="https://twitter.com/<%= account.owner.twitter.username %>" class="card-link" target="_blank" rel="noreferer, noopener"
-              target="_blank" rel="noreferer, noopener">Visit profile</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <% } %>
-
-  <% if (account.owner.github.token) { %>
-  <div class="col-sm-4">
-    <div class="card mb-3">
-      <div class="card-body">
-        <h4 class="card-title">GitHub</h4>
-        <div class="row">
-          <div class="col-3">
-            <img class="img-fluid" src="<% if(account.owner.github.avatar){ %><%= account.owner.github.avatar %><% } else { %>/static/img/ninja-icon.png<% } %>"
-              alt="Avatar">
-          </div>
-          <div class="col">
-            <p>
-              <%= account.owner.github.displayName %> (
-              <%= account.owner.github.username %>)
-            </p>
-            <a href="https://github.com/<%= account.owner.github.username %>" class="card-link" target="_blank" rel="noreferer, noopener">Visit
-              profile</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <% } %>
-
-  <% if (account.owner.reddit.token) { %>
-  <div class="col-sm-4">
-    <div class="card mb-3">
-      <div class="card-body">
-        <h4 class="card-title">Reddit</h4>
-        <div class="row">
-          <div class="col-3">
-            <img class="img-fluid" src="<% if(account.owner.reddit.avatar){ %><%= account.owner.reddit.avatar %><% } else { %>/static/img/ninja-icon.png<% } %>"
-              alt="Avatar">
-          </div>
-          <div class="col">
-            <p>
-              <%= account.owner.reddit.name %>
-            </p>
-            <a href="https://www.reddit.com/user/<%= account.owner.reddit.name %>" class="card-link" target="_blank" rel="noreferer, noopener">Visit
-              profile</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <% } %>
-
-  <% if (account.owner.discord.token) { %>
-  <div class="col-sm-4">
-    <div class="card mb-3">
-      <div class="card-body">
-        <h4 class="card-title">Discord</h4>
-        <div class="row">
-          <div class="col-3">
-            <img class="img-fluid" src="<% if(account.owner.discord.avatar){ %>https://cdn.discordapp.com/avatars/<%= account.owner.discord.id %>/<%= account.owner.discord.avatar %>.png<% } else { %>/static/img/ninja-icon.png<% } %>"
-              alt="Avatar">
-          </div>
-          <div class="col">
-            <p>
-              <%= account.owner.discord.username %>#<%= account.owner.discord.discriminator %>
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <% } %>
-
 </div>
 
 </div><!-- end of app class -->
