@@ -346,7 +346,7 @@
         <li class="list-group-item" v-if="account.donation.account">
           Nano
           <span class="float-right">
-            <account-alias :account="account.donation.account"></account-alias>
+            <account-alias :account="account.donation.account" :send="true"></account-alias>
           </span>
         </li>
         <li class="list-group-item" v-if="account.donation.website">
@@ -548,6 +548,6 @@
 <script>
   const address = "<% if (account === null) { %><%= myaccount %><% } else { %><%= account.account %><% } %>";
 </script>
-<script src="/static/js/sites/account.js?v=10"></script>
+<script src="/static/js/sites/account.js?v=11"></script>
 
 <% include ../../partials/footer.ejs %>

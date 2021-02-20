@@ -1,8 +1,15 @@
 Vue.component('account-alias', {
-  props: ['account'],
+  props: {
+    account: String,
+    send: {
+      type: Boolean,
+      default: false
+    },
+  },
   data: function () {
     return {
-      alias: null
+      alias: null,
+      url: '/account/' + this.account
     }
   },
   methods: {
@@ -15,8 +22,11 @@ Vue.component('account-alias', {
   },
   created() {
     this.getAlias();
+    if (this.send) {
+      this.url = '/account/' + this.account + '/send';
+    }
   },
-  template: '<a v-bind:href="\'/account/\'+ account"><span><b v-if="alias">{{alias}} - </b>{{ account }}</span></a>'
+  template: '<a v-bind:href="url"><span><b v-if="alias">{{alias}} - </b>{{ account }}</span></a>'
 })
 
 Vue.component('account-alias-sm', {

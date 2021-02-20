@@ -75,7 +75,7 @@ var app = new Vue({
         }
       })
       .catch(reason => {
-        console.error(reason);
+        console.error('Could not load info for', this.address, reason);
       });
 
     axios
@@ -111,15 +111,10 @@ var app = new Vue({
           closing: this.editAccount.closing,
         }).then(response => {
           console.log('OK', response);
-          this.editAccount.button_submit = 'Done!';
-          setTimeout(function(){
-            location.reload();
-          }, 1000)
-          
+          location.reload();
         }).catch(error => {
           console.log('CATCH', error.response);
           this.editAccount.button_submit = error.response.data.msg;
-          
         })
     }
   }
