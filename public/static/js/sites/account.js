@@ -65,6 +65,14 @@ var app = new Vue({
           if (response.data.server.ram)
             this.editAccount.server_ram = response.data.server.ram;
         }
+
+        if (response.data.donation){
+          if (response.data.donation.account)
+            this.editAccount.donation.account = response.data.donation.account;
+  
+          if (response.data.donation.website)
+            this.editAccount.donation.website = response.data.donation.website;
+        }
       })
       .catch(reason => {
         console.error(reason);
