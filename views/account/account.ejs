@@ -478,6 +478,18 @@
         </span>
       </li>
       <li class="list-group-item">
+        Last 3 months
+        <span class="float-right">
+            {{ account.uptime_over['3_months'] | round(3) }} %
+        </span>
+      </li>
+      <li class="list-group-item">
+        Last 6 months
+        <span class="float-right">
+            {{ account.uptime_over['6_months'] | round(3) }} %
+        </span>
+      </li>
+      <li class="list-group-item">
         Last year
         <span class="float-right">
             {{ account.uptime_over.year | round(3) }} %
