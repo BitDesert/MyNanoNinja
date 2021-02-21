@@ -39,7 +39,7 @@ function updateScoreAccount(account, callback) {
   var score_weight = 100 / (1 + Math.exp(8 * weightpercent - 10));
 
   // calculate uptime score
-  var score_uptime = Math.pow(10, -6) * Math.pow(account.uptime, 4);
+  var score_uptime = Math.pow(10, -6) * Math.pow(account.uptime_over['6_months'], 4);
 
   // calculate days since creation score
   var dayssincecreation = moment().diff(moment(account.created), 'days');
