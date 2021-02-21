@@ -78,6 +78,7 @@
                   <span class="badge badge-danger">Very Slow</span>
                 <% } %>
               <% } %>
+              <span class="badge badge-success"><%= variableRound((accounts[i].votingweight / nanorpc.getOnlineStakeTotal()) * 100, 3) %> % Voting Weight</span>
               <% if(accounts[i].telemetry.major_version) { %>
               <span class="badge badge-secondary"><%= accounts[i].telemetry.major_version %>.<%= accounts[i].telemetry.minor_version %>.<%= accounts[i].telemetry.patch_version %></span>
               <% } %>
