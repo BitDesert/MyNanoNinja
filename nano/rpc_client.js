@@ -8,7 +8,7 @@ const nano = new Nano({
 });
 
 var available = 133248289218203497353846153999000000001;
-var online_stake_total = 115202418863627145255311728515410020648;
+var online_stake_total = 111073634713394802707654827519888461987;
 var blockcount = 0;
 
 function getAvailable(){
