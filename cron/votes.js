@@ -81,12 +81,14 @@ function getRepsOnline(provider, callback) {
       callback(true)
     })
   } else {
-    axios.get(provider, {
+    axios.post(provider, {
+      action: 'representatives_online'
+    },{
       timeout: 5000
     }).then(response => {
       callback(null, response.data)
     }).catch(error => {
-      console.error(error.code, error.message, error.config.url);
+      console.error('VOTES:', error.code, error.message, error.config.url);
       callback(true);
     })
   }
