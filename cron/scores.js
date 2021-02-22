@@ -34,7 +34,7 @@ function updateScore() {
 
 function updateScoreAccount(account, callback) {
   // calculate weight score
-  var weightpercent = (account.votingweight / nanorpc.getAvailable()) * 100;
+  var weightpercent = (account.votingweight / nanorpc.getOnlineStakeTotal()) * 100;
 
   var score_weight = 100 / (1 + Math.exp(8 * weightpercent - 10));
 
