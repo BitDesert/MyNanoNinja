@@ -1,13 +1,27 @@
 <% include ../partials/header.ejs %>
 
-<h1>Login to your Profile</h1>
-
-<p>Choose your favorite social platform! You can connect more later.</p>
-<p>Afterwards you can connect your crypto address.</p>
-
-<a href="/auth/twitter" class="btn btn-secondary"><i class="fab fa-twitter"></i> Twitter</a>
-<a href="/auth/github" class="btn btn-secondary"><i class="fab fa-github"></i> GitHub</a>
-<a href="/auth/reddit" class="btn btn-secondary"><i class="fab fa-reddit"></i> Reddit</a>
-<a href="/auth/discord" class="btn btn-secondary"><i class="fab fa-discord"></i> Discord</a>
+<div class="row">
+  <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+      <div class="card card-signin my-5">
+          <div class="card-body">
+              <h1 class="card-title text-center">Sign In</h1>
+              <form class="form-signin">
+                  <a href="/auth/twitter" class="btn btn-lg btn-block text-uppercase">
+                    <i class="fab fa-twitter"></i> Twitter
+                  </a>
+                  <a href="/auth/github" class="btn btn-lg btn-block text-uppercase">
+                    <i class="fab fa-github"></i> GitHub
+                  </a>
+                  <a href="/auth/reddit" class="btn btn-lg btn-block text-uppercase">
+                    <i class="fab fa-reddit"></i> Reddit
+                  </a>
+                  <a href="/auth/discord" class="btn btn-lg btn-block text-uppercase">
+                    <i class="fab fa-discord"></i> Discord
+                  </a>
+              </form>
+          </div>
+      </div>
+  </div>
+</div>
 
 <% include ../partials/footer.ejs %>
