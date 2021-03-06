@@ -69,7 +69,9 @@ const allowed_actions = [
 isApiAuthorized = (req, res, next) => {
   const authHeader = req.headers.authorization
 
-  const consumePoints = req.body.action === 'work_generate' ? 50 : 1;  
+  const consumePoints = req.body.action === 'work_generate' ? 50 : 1;
+  
+  console.log('NODE API - Action:', req.body.action);
 
   if (!authHeader) {
     rateLimiter.consume(req.ip, consumePoints)
@@ -138,8 +140,6 @@ router.post('/', isApiAuthorized, function (req, res) {
       message: 'Action is not supported'
     })
   }
-
-  console.log('NODE API - Action:', action);
 
   var params = Object.assign({}, req.body);
   delete params.action;
