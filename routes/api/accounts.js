@@ -128,7 +128,7 @@ router.get('/verified', cache('5 minutes'), function (req, res) {
     });
 });
 
-router.get('/:account', cache('5 minutes'), function (req, res) {
+router.get('/:account', function (req, res) {
   var myaccount = req.params.account;
 
   if(myaccount.startsWith('xrb_')){
