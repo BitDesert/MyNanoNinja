@@ -84,56 +84,6 @@ module.exports = function (nanorpc) {
       });
   });
 
-  router.post('/setuppod', function (req, res) {
-    var output = {};
-
-    if(req.body.key !== process.env.BRAINBLOCKS_POD_KEY){
-      output.status = 'error';
-      output.msg = 'Wrong key';
-      res.json(output);
-      return;
-    }
-
-    if(!req.body.account){
-      output.status = 'error';
-      output.msg = 'Account missing';
-      res.json(output);
-      return;
-    }
-
-    var myaccount = req.body.account;
-
-    Account.findOne({
-      'account': myaccount
-    }, function (err, account) {
-      if (err){
-        return
-      }
-
-      if (!account){
-        var account = new Account();
-        account.account = myaccount;
-        account.votingweight = 0;
-      }
-
-      // set the type
-      account.server.type = 'BrainBlocks Pod';
-
-      account.save(function (err) {
-        if (err) {
-          console.log("API - setuppod - Error saving account", err);
-          output.status = 'error';
-          output.msg = 'Cannot update';
-        } else {
-          output.status = 'success';
-          output.msg = 'Successfully updated';
-        }
-        res.json(output);
-      });
-    });
-
-  });
-
   function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
       next();
