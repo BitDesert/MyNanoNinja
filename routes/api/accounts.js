@@ -99,6 +99,41 @@ router.get('/geo', cache('5 minutes'), function (req, res) {
     });
 });
 
+router.get('/providers', cache('5 minutes'), function (req, res) {
+  Account.find({
+    'network.provider': {
+      $exists: true,
+      $ne: null
+    }
+  })
+    .sort('-votingweight')
+    .select('-_id account alias votingweight network.provider')
+    .exec(function (err, accounts) {
+      if (err) {
+        console.log("API - All Reps", err);
+        return;
+      }
+      res.json(accounts);
+    });
+});
+
+router.get('/votelatency', cache('5 minutes'), function (req, res) {
+  Account.find({
+    'votelatency_current': {
+      $exists: true,
+      $ne: null
+    }
+  })
+    .select('-_id account alias votingweight votelatency votelatency_current')
+    .exec(function (err, accounts) {
+      if (err) {
+        console.log("API - All Reps", err);
+        return;
+      }
+      res.json(accounts);
+    });
+});
+
 router.get('/recommended', function(req, res) {
   res.redirect('/api/accounts/verified');
 });
