@@ -1,6 +1,8 @@
 module.exports = function (nanorpc) {
   var express = require('express');
-  var request = require('request');
+
+  var apicache = require('apicache');
+  let cache = apicache.middleware
 
   var router = express.Router();
   var Account = require('../models/account');
@@ -29,7 +31,7 @@ module.exports = function (nanorpc) {
     });
   });
 
-  router.get('/blockcount', function (req, res) {
+  router.get('/blockcount', cache('1 minute'), function (req, res) {
     res.json({
       count: nanorpc.getBlockcount()
     });
@@ -141,15 +143,6 @@ module.exports = function (nanorpc) {
     req.session.returnTo = req.path;
     res.redirect('/auth/login');
   };
-
-  function round(value, precision) {
-    if (Number.isInteger(precision)) {
-      var shift = Math.pow(10, precision);
-      return Math.round(value * shift) / shift;
-    } else {
-      return Math.round(value);
-    }
-  }
 
   return router;
 
