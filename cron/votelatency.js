@@ -4,6 +4,8 @@ var Account = require('../models/account');
 
 var ws;
 
+var isSubscribed = false;
+
 function connectWS() {
   ws = new WebSocket(process.env.NODE_WS);
   ws.on('open', function () {
@@ -24,7 +26,8 @@ function wsSend(json) {
   ws.send(JSON.stringify(json));
 }
 
-function wsStartup() {
+function wsSubscribe(){
+  console.log('VOTELATENCY: Subscribing...');
   wsSend({
     "action": "subscribe",
     "topic": "confirmation",
@@ -36,6 +39,26 @@ function wsStartup() {
     "action": "subscribe",
     "topic": "vote"
   });
+
+  isSubscribed = true;
+}
+
+function wsUnsubscribe(){
+  console.log('VOTELATENCY: Unsubscribing...');
+  wsSend({
+    "action": "unsubscribe",
+    "topic": "confirmation"
+  });
+  wsSend({
+    "action": "unsubscribe",
+    "topic": "vote"
+  });
+
+  isSubscribed = false;
+}
+
+function wsStartup() {
+  wsSubscribe()
 
   ws.on('message', function incoming(data) {
     var data = JSON.parse(data);
@@ -96,6 +119,20 @@ function blockConfirmed(hash, time) {
     console.log('VOTELATENCY: No votes for', hash);
   }
 }
+
+function checkThrottle(){
+  if(blocks.length > 10){
+    if(isSubscribed){
+      console.log('VOTELATENCY: TIMEOUT after %d blocks', blocks.length);
+      wsUnsubscribe()
+    }
+  } else if(blocks.length == 0){
+    if(!isSubscribed){
+      wsSubscribe()
+    }
+  }
+}
+setInterval(checkThrottle, 1*1000)
 
 function updateLatency(account, latency, callback) {
   Account.findOne(
