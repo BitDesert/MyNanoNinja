@@ -9,10 +9,12 @@ const nano = new Nano({
 });
 var router = express.Router();
 var Account = require('../../models/account');
-var cache = require('../../utils/cache');
 var nanorpc = require('../../nano/rpc_client');
 
-router.get('/principals', function (req, res) {
+var apicache = require('apicache');
+let cache = apicache.middleware
+
+router.get('/principals', cache('5 minutes'), function (req, res) {
   Account.find()
     .where('votingweight').gte((nanorpc.getOnlineStakeTotal() / 1000))
     .sort('-votingweight')
@@ -26,7 +28,7 @@ router.get('/principals', function (req, res) {
     });
 });
 
-router.get('/principals/online', function (req, res) {
+router.get('/principals/online', cache('5 minutes'), function (req, res) {
   Account
     .find({
       'lastVoted': {
@@ -45,7 +47,7 @@ router.get('/principals/online', function (req, res) {
     });
 });
 
-router.get('/aliases', function (req, res) {
+router.get('/aliases', cache('5 minutes'), function (req, res) {
   Account.find({
     'alias': {
       $exists: true,
@@ -62,7 +64,7 @@ router.get('/aliases', function (req, res) {
     });
 });
 
-router.get('/monitors', function (req, res) {
+router.get('/monitors', cache('5 minutes'), function (req, res) {
   Account.find({
     'monitor.url': {
       $exists: true,
@@ -79,7 +81,7 @@ router.get('/monitors', function (req, res) {
     });
 });
 
-router.get('/geo', function (req, res) {
+router.get('/geo', cache('5 minutes'), function (req, res) {
   Account.find({
     'location.latitude': {
       $exists: true,
@@ -101,7 +103,7 @@ router.get('/recommended', function(req, res) {
   res.redirect('/api/accounts/verified');
 });
 
-router.get('/verified', function (req, res) {
+router.get('/verified', cache('5 minutes'), function (req, res) {
   Account.find({
     'owner': {
       $exists: true,
@@ -126,7 +128,7 @@ router.get('/verified', function (req, res) {
     });
 });
 
-router.get('/:account', function (req, res) {
+router.get('/:account', cache('5 minutes'), function (req, res) {
   var myaccount = req.params.account;
 
   if(myaccount.startsWith('xrb_')){
