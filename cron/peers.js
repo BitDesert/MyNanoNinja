@@ -3,9 +3,7 @@ var async = require("async");
 var _ = require('lodash');
 var request = require('request');
 var protomap = require('../nano/protomap');
-var maxmind = require('maxmind');
-var geo_asn = maxmind.openSync('./utils/maxmind/GeoLite2-ASN.mmdb');
-var geo_city = maxmind.openSync('./utils/maxmind/GeoLite2-City.mmdb');
+const axios = require('axios');
 
 const regex_ip = /\[::ffff:([0-9.]+)\]:[0-9]+/
 
@@ -71,58 +69,37 @@ async function getAdvancedPeers() {
 
 }
 
-function updatePeer(peeraccount, ip, protoversion, callback) {  
-  Account.findOne(
-    {
-      'account': peeraccount
-    }, function (err, account) {
-      if (err || !account) {
-        callback()
-        return;
-      }
+async function updatePeer(peeraccount, ip, protoversion, callback) {
+  var account = await Account.findOne({ 'account': peeraccount })
 
-      try {
-        account.network.ip = ip;
+  try {
+    if(!account.network || account.network.ip !== ip){
+      console.log('PEERS: IP changed for', peeraccount, account.network.ip, ip);
 
-        var geo_asn_response = geo_asn.get(ip);        
+      var ipapi = await axios.get('https://ipapi.co/'+ip+'/json/')
 
-        if (geo_asn_response && geo_asn_response.autonomous_system_organization) {
-          account.network.provider = geo_asn_response.autonomous_system_organization;
-        }
+      account.network.ip = ip;
+      account.network.provider = ipapi.data.org;
+      account.location.country = ipapi.data.country_code;
+      account.location.city = ipapi.data.city;
+      account.location.latitude = ipapi.data.latitude;
+      account.location.longitude = ipapi.data.longitude;
+    }
 
-        var geo_city_response = geo_city.get(ip);
+    var nodeversion = protomap[protoversion];
+    if (nodeversion && !account.monitor.url) {
+      account.monitor.version = protomap[protoversion];
+      //console.log('Update Node Version without Monitor: ', account.monitor.version, account.account);
 
-        if (geo_city_response) {
-          account.location.country = geo_city_response.country.iso_code;
+    }
 
-          if (geo_city_response.city) {
-            account.location.city = geo_city_response.city.names.en;
-          }
+    await account.save();
+    callback();
 
-          account.location.latitude = geo_city_response.location.latitude;
-          account.location.longitude = geo_city_response.location.longitude;
-        } else {
-          console.log('PEERS: No city for ' + ip + ' / ' + peeraccount)
-        }
-
-        var nodeversion = protomap[protoversion];
-        if (nodeversion && !account.monitor.url) {
-          account.monitor.version = protomap[protoversion];
-          //console.log('Update Node Version without Monitor: ', account.monitor.version, account.account);
-
-        }
-
-        account.save(function (err) {
-          if (err) {
-            console.log("PEERS: updatePeer - Error saving account", err);
-          }
-          callback()
-        });
-      } catch (error) {
-        console.error('PEERS: ', error, peeraccount);
-        callback()
-      }
-    });
+  } catch (error) {
+    console.error('PEERS: ', error, peeraccount);
+    callback()
+  }
 }
 
 
