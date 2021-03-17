@@ -171,32 +171,8 @@
       <div v-else>No data</div>
     </div>
     <div class="d-flex py-2">
-      <div class="flex-grow-1">Score <i class="fas fa-question-circle" data-toggle="modal" data-target="#repscore"></i></div>
+      <div class="flex-grow-1">Score <a href="/faq#scoring"><i class="fas fa-question-circle"></i></a></div>
       <div>{{ account.score }} / 100</div>
-    </div>
-  </div>
-</div>
-
-<div class="modal fade" id="repscore" tabindex="-1" role="dialog" aria-hidden="true" v-if="account && account.votingweight > 0">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Representative Score</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <p>
-          The representative score is a good indicator of reliability and is calculated using various attributes such as uptime, voting weight and days since creation.
-        </p>
-        <p>
-          Please do <b>not</b> use this score as the sole indicator when choosing a representative.
-        </p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Done!</button>
-      </div>
     </div>
   </div>
 </div>
