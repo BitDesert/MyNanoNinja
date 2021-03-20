@@ -20,6 +20,7 @@ module.exports = function (nanorpc) {
   router.use('/confirmation', require('./api/confirmation'));
   router.use('/node', require('./api/node'));
   router.use('/general', require('./api/general'));
+  router.use('/github', require('./api/github'));
   router.use('/network', require('./api/network'));
   router.use('/ledger', require('./api/ledger'));
   router.use('/telemetry', require('./api/telemetry'));

@@ -99,6 +99,15 @@ function formatDate(date) {
   return moment(date).format('YYYY-MM-DD HH:mm');
 }
 
+function updateGoal(){
+  axios.get('/api/github/goal').then(res => {
+    var activeGoal = res.data.data.user.sponsorsListing.activeGoal;
+    $(".progress-bar").css('width', activeGoal.percentComplete+'%');
+    $("#sponsor-progress-text").text(activeGoal.percentComplete + '% towards ' + activeGoal.title + ' goal')
+  })
+}
+updateGoal();
+
 // init functions
 for (i = 0, length = init.length; i < length; i++) {
   try {

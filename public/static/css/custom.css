@@ -192,3 +192,8 @@ ul.nav li.dropdown:hover .dropdown-menu{
     display: table-cell;
     vertical-align: middle;
 }
+
+.progress-bar-smooth {
+    -webkit-transition: width 2.5s ease;
+    transition: width 2.5s ease;
+}
