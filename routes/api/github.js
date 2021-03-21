@@ -4,7 +4,7 @@ const axios = require('axios');
 var apicache = require('apicache');
 let cache = apicache.middleware
 
-router.get('/goal', cache('5 minutes'),  async (req, res) => {
+router.get('/goal', cache('15 minutes'),  async (req, res) => {
   var query = `{
     user(login: "BitDesert") {
       sponsorsListing {
