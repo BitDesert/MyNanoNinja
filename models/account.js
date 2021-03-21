@@ -56,7 +56,9 @@ var accountSchema = mongoose.Schema({
     major_version: Number,
     minor_version: Number,
     patch_version: Number,
-    pre_release_version: Number
+    pre_release_version: Number,
+    protocol_version: Number,
+    peer_count: Number
   },
   description: String,
   website: String,

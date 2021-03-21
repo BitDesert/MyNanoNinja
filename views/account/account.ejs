@@ -373,7 +373,7 @@
   </div>
 
   <div class="col-lg-4 mb-4" v-if="account && account.votingweight > 0">
-    <h3>Node</h3>
+    <h3>Server</h3>
     <ul class="list-group mb-3">
       <% if(account !== null && account.server && account.server.type){ %>
       <li class="list-group-item">
@@ -418,14 +418,33 @@
         </span>
       </li>
       <% } %>
-      <% if(account !== null && account.telemetry.major_version){ %>
-      <li class="list-group-item">
-        Node Version
+    </ul>
+    <h3 class="mt-2">Node</h3>
+    <ul class="list-group mb-3" v-if="account.telemetry">
+      <li class="list-group-item" v-if="account.telemetry.major_version">
+        Version
         <span class="float-right">
-          <%= account.telemetry.major_version %>.<%= account.telemetry.minor_version %>.<%= account.telemetry.patch_version %>
+          {{ account.telemetry.major_version }}.{{ account.telemetry.minor_version }}.{{ account.telemetry.patch_version }}
         </span>
       </li>
-      <% } %>
+      <li class="list-group-item" v-if="account.telemetry.block_count">
+        Block Count
+        <span class="float-right">
+          {{ account.telemetry.block_count | toLocaleString }}
+        </span>
+      </li>
+      <li class="list-group-item" v-if="account.telemetry.cemented_count">
+        Cemented Count
+        <span class="float-right">
+          {{ account.telemetry.cemented_count | toLocaleString }}
+        </span>
+      </li>
+      <li class="list-group-item" v-if="account.telemetry.peer_count">
+        Peer Count
+        <span class="float-right">
+          {{ account.telemetry.peer_count | toLocaleString }}
+        </span>
+      </li>
     </ul>
   </div>
 

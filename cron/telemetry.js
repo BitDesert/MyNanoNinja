@@ -45,7 +45,8 @@ async function updateTelemetry(){
       account.telemetry.major_version = telemetry.major_version
       account.telemetry.minor_version = telemetry.minor_version
       account.telemetry.patch_version = telemetry.patch_version
-      account.telemetry.pre_release_version = telemetry.pre_release_version
+      account.telemetry.protocol_version = telemetry.protocol_version
+      account.telemetry.peer_count = telemetry.peer_count
       
       //console.log('TELEMETRY: OK from ', peer.account, telemetry.block_count);
     } catch (error) {
