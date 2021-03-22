@@ -138,37 +138,32 @@
     <div class="d-flex border-bottom py-2" v-if="account.isOnline">
       <div class="flex-grow-1">Vote Latency</div>
       <div v-if="account.votelatency < -100">
-        <span class="badge badge-success" :title="account.votelatency +' ms (average)'">Very Fast</span>
+        <span class="badge badge-success mr-1" :title="account.votelatency +' ms (average)'">Very Fast</span>
       </div>
       <div v-else-if="account.votelatency >= -100 && account.votelatency < 200">
-        <span class="badge badge-success" :title="account.votelatency +' ms (average)'">Fast</span>
+        <span class="badge badge-success mr-1" :title="account.votelatency +' ms (average)'">Fast</span>
       </div>
       <div v-else-if="account.votelatency >= 200 && account.votelatency < 500">
-        <span class="badge badge-info" :title="account.votelatency +' ms (average)'">Medium</span>
+        <span class="badge badge-info mr-1" :title="account.votelatency +' ms (average)'">Medium</span>
       </div>
       <div v-else-if="account.votelatency >= 500 && account.votelatency < 1000">
-        <span class="badge badge-warning" :title="account.votelatency +' ms (average)'">Slow</span>
+        <span class="badge badge-warning mr-1" :title="account.votelatency +' ms (average)'">Slow</span>
       </div>
       <div v-else-if="account.votelatency >= 1000">
-        <span class="badge badge-danger" :title="account.votelatency +' ms (average)'">Very Slow</span>
+        <span class="badge badge-danger mr-1" :title="account.votelatency +' ms (average)'">Very Slow</span>
       </div>
-      <div v-else>No data</div>
-      <div v-if="account.votelatency_current < -100">
-        <span class="badge badge-success ml-1" :title="account.votelatency_current +' ms (current)'">Very Fast</span>
+      <div v-else>
+        <span class="badge badge-info mr-1">No data</span>
       </div>
-      <div v-else-if="account.votelatency_current >= -100 && account.votelatency_current < 200">
-        <span class="badge badge-success ml-1" :title="account.votelatency_current +' ms (current)'">Fast</span>
+      <div v-if="account.votelatency_current < 0">
+        <i class="fas fa-angle-double-up text-success"></i>
       </div>
-      <div v-else-if="account.votelatency_current >= 200 && account.votelatency_current < 500">
-        <span class="badge badge-info ml-1" :title="account.votelatency_current +' ms (current)'">Medium</span>
+      <div v-else-if="account.votelatency_current >= 0">
+        <i class="fas fa-angle-double-up text-danger"></i>
       </div>
-      <div v-else-if="account.votelatency_current >= 500 && account.votelatency_current < 1000">
-        <span class="badge badge-warning ml-1" :title="account.votelatency_current +' ms (current)'">Slow</span>
+      <div v-else>
+        <i class="fas fa-question"></i>
       </div>
-      <div v-else-if="account.votelatency_current >= 1000">
-        <span class="badge badge-danger ml-1" :title="account.votelatency_current +' ms (current)'">Very Slow</span>
-      </div>
-      <div v-else>No data</div>
     </div>
     <div class="d-flex py-2">
       <div class="flex-grow-1">Score <a href="/faq#scoring"><i class="fas fa-question-circle"></i></a></div>
