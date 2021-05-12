@@ -16,7 +16,7 @@
     "bcrypt-nodejs": "latest",
     "big.js": "^5.2.2",
     "body-parser": "^1.18.3",
-    "chart.js": "^2.7.2",
+    "chart.js": "^2.9.4",
     "clipboard": "^2.0.0",
     "connect-flash": "~0.1.1",
     "connect-mongo": "^3.2.0",
