@@ -16,8 +16,12 @@ function getData() {
       p[name]++;
       return p;
     }, {});
-    
+
     prepareGraphData(counts);
+  });
+
+  $.get("/api/statistics/versions/weight", function (data) {
+    prepareGraphDataWeight(data);
   });
 }
 
@@ -47,7 +51,47 @@ function prepareGraphData(data){
 }
 
 function setupGraph(data) {
-  var ctx = document.getElementById('chartcanvas').getContext('2d');
+  var ctx = document.getElementById('chartcanvascount').getContext('2d');
+  var myLineChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: data,
+    options: {
+      responsive: true,
+      cutoutPercentage: 0,
+      legend: {
+        display: true
+      }
+    }
+  });
+}
+
+function prepareGraphDataWeight(data){
+  var chartdata = {
+    labels: [],
+    datasets: [
+      {
+        label: 'Versions',
+        data: [],
+        backgroundColor: []
+      }
+    ]
+  };
+
+  var colorcount = 0;
+  for (const [key, value] of Object.entries(data)) {
+    console.log(value);
+
+    chartdata.labels.push(value._id.major + '.' + value._id.minor + '.' + value._id.patch);
+    chartdata.datasets[0].data.push(toMnano(value.totalWeight));
+    chartdata.datasets[0].backgroundColor.push(chartColors[colorcount]);
+    colorcount++;
+  }
+
+  setupGraphWeight(chartdata);
+}
+
+function setupGraphWeight(data) {
+  var ctx = document.getElementById('chartcanvasweight').getContext('2d');
   var myLineChart = new Chart(ctx, {
     type: 'doughnut',
     data: data,

@@ -28,6 +28,14 @@ router.get('/representatives', function (req, res) {
 router.get('/versions/weight', async (req, res) => {
   var accounts = await Account.aggregate([
     {
+      "$match": {
+        'telemetry.major_version': {
+          $exists: true,
+          $ne: null
+        }
+      }
+    },
+    {
       "$group": {
         _id: {
           "major": "$telemetry.major_version",

@@ -99,6 +99,15 @@ function formatDate(date) {
   return moment(date).format('YYYY-MM-DD HH:mm');
 }
 
+function toMnano(value) {
+  if (!value) return ''
+  value = value.toString()
+
+  multNANO = Big('1000000000000000000000000000000');
+
+  return Big(value).div(multNANO).toFixed(6).toString()
+}
+
 function updateGoal(){
   axios.get('/api/github/goal').then(res => {
     var activeGoal = res.data.data.user.sponsorsListing.activeGoal;
