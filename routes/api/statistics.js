@@ -25,6 +25,23 @@ router.get('/representatives', function (req, res) {
   });
 });
 
+router.get('/versions/weight', async (req, res) => {
+  var accounts = await Account.aggregate([
+    {
+      "$group": {
+        _id: {
+          "major": "$telemetry.major_version",
+          "minor": "$telemetry.minor_version",
+          "patch": "$telemetry.patch_version"
+        },
+        totalWeight: { $sum: "$votingweight" }
+      }
+    }
+  ]).exec()
+
+  res.json(accounts);
+});
+
 router.get('/nodeversions', function (req, res) {
   StatisticsVersions.find({
     'date': {$gt: moment().subtract(3, 'days').toDate()}
