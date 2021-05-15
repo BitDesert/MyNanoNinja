@@ -1,18 +1,19 @@
 <% include ../../partials/header.ejs %>
 
-  <h1>Versions</h1>
+<h1>Node Versions</h1>
 
-  <h2>By node count</h2>
+<div class="row">
+  <div class="col">
+    <h3>By node count</h3>
+    <canvas id="chartcanvascount"></canvas>
+  </div>
+  <div class="col">
+    <h3>By weight</h3>
+    <canvas id="chartcanvasweight"></canvas>
+  </div>
+</div>
 
-  <canvas id="chartcanvascount"></canvas>
+<script src="/static/js/Chart.min.js"></script>
+<script src="/static/js/sites/statistics/versions.js?v=3"></script>
 
-  <h2>By weight</h2>
-
-  <canvas id="chartcanvasweight"></canvas>
-
-  <div id="content"></div>
-
-  <script src="/static/js/Chart.min.js"></script>
-  <script src="/static/js/sites/statistics/versions.js?v=2"></script>
-
-  <% include ../../partials/footer.ejs %>
+<% include ../../partials/footer.ejs %>

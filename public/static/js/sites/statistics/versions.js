@@ -8,7 +8,9 @@ init.push(getData);
 
 function getData() {
   $.get("/api/telemetry/raw", function (data) {
-    var counts = data.metrics.reduce((p, c) => {
+    var sortedmetrics = data.metrics.sort(dynamicSortMultiple('-major_version', '-minor_version', '-patch_version'));
+
+    var counts = sortedmetrics.reduce((p, c) => {
       var name = c.major_version + '.' + c.minor_version + '.' + c.patch_version;
       if (!p.hasOwnProperty(name)) {
         p[name] = 0;
@@ -79,8 +81,6 @@ function prepareGraphDataWeight(data){
 
   var colorcount = 0;
   for (const [key, value] of Object.entries(data)) {
-    console.log(value);
-
     chartdata.labels.push(value._id.major + '.' + value._id.minor + '.' + value._id.patch);
     chartdata.datasets[0].data.push(toMnano(value.totalWeight));
     chartdata.datasets[0].backgroundColor.push(chartColors[colorcount]);

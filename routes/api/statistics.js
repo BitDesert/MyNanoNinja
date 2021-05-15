@@ -44,6 +44,13 @@ router.get('/versions/weight', async (req, res) => {
         },
         totalWeight: { $sum: "$votingweight" }
       }
+    },
+    {
+      "$sort": {
+        "_id.major": -1,
+        "_id.minor": -1,
+        "_id.patch": -1
+      }
     }
   ]).exec()
 
