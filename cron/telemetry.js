@@ -2,16 +2,45 @@ var cron = require('node-cron');
 const Account = require('../models/account');
 var tools = require('../tools');
 var nanorpc = require('../nano/rpc_client');
+const axios = require('axios');
 
 const NanoClient = require('nano-node-rpc');
 const client = new NanoClient({ url: process.env.NODE_RPC })
 
 async function updateTelemetry() {
-  var quorum = await client._send('confirmation_quorum', {
-    peer_details: true
-  })
+  var peers = await getPeers()
+  console.log('PEERS:', peers);
+}
 
-  quorum.peers.forEach(async peer => {
+async function getPeers() {
+  var providers = JSON.parse(process.env.DRPC_REPSONLINE);
+  providers.push(process.env.NODE_RPC)
+  
+  var peers = [];
+
+  for (const provider of providers) {
+    var res = await axios.post(provider, {
+      action: 'confirmation_quorum',
+      peer_details: true
+    },{
+      timeout: 5000
+    })
+
+    for (const peer of res.data.peers) {
+      if (!peers.some(e => e.ip === peer.ip)) {
+        peers.push(peer)
+      }
+    }
+
+    console.log('TELEMETRY:', provider, res.data.peers.length);
+  }
+
+  console.log('TELEMETRY: Total peers:', peers.length);
+  updateAccountTelemetry(peers);
+}
+
+async function updateAccountTelemetry(peers) {
+  peers.forEach(async peer => {
     const regex_ip = /([\[0-9a-f.:\]]+):([0-9]+)/
 
     var match = peer.ip.match(regex_ip)
