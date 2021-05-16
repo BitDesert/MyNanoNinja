@@ -84,7 +84,7 @@ function prepareGraphDataWeight(data) {
     if (value._id.major) {
       chartdata.labels.push(value._id.major + '.' + value._id.minor + '.' + value._id.patch);
     } else {
-      chartdata.labels.push('Unknown');
+      chartdata.labels.push('Unknown Version');
     }
     chartdata.datasets[0].data.push(toMnano(value.totalWeight, 0));
     chartdata.datasets[0].backgroundColor.push(chartColors[colorcount]);
