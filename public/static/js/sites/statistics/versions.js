@@ -1,7 +1,7 @@
 /* NODE VERSIONS */
 var chartColors = ['#f44336', '#9C27B0', '#3F51B5', '#03A9F4', '#009688', '#8BC34A',
-'#FFEB3B', '#FF9800', '#795548', '#E91E63', '#673AB7', '#2196F3', '#00BCD4', '#4CAF50',
-'#CDDC39', '#FFC107', '#FF5722'
+  '#FFEB3B', '#FF9800', '#795548', '#E91E63', '#673AB7', '#2196F3', '#00BCD4', '#4CAF50',
+  '#CDDC39', '#FFC107', '#FF5722'
 ];
 
 init.push(getData);
@@ -27,7 +27,7 @@ function getData() {
   });
 }
 
-function prepareGraphData(data){
+function prepareGraphData(data) {
   var chartdata = {
     labels: [],
     datasets: [
@@ -67,7 +67,7 @@ function setupGraph(data) {
   });
 }
 
-function prepareGraphDataWeight(data){
+function prepareGraphDataWeight(data) {
   var chartdata = {
     labels: [],
     datasets: [
@@ -81,12 +81,12 @@ function prepareGraphDataWeight(data){
 
   var colorcount = 0;
   for (const [key, value] of Object.entries(data)) {
-    if(value._id.major){
+    if (value._id.major) {
       chartdata.labels.push(value._id.major + '.' + value._id.minor + '.' + value._id.patch);
     } else {
       chartdata.labels.push('Unknown');
     }
-    chartdata.datasets[0].data.push(toMnano(value.totalWeight));
+    chartdata.datasets[0].data.push(toMnano(value.totalWeight, 0));
     chartdata.datasets[0].backgroundColor.push(chartColors[colorcount]);
     colorcount++;
   }
@@ -104,6 +104,13 @@ function setupGraphWeight(data) {
       cutoutPercentage: 0,
       legend: {
         display: true
+      },
+      tooltips: {
+        callbacks: {
+          label: function (tooltipItem, data) {
+            return data.labels[tooltipItem.index] + ': ' + parseInt(data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]).toLocaleString('en-US') +' NANO';
+          }
+        }
       }
     }
   });
