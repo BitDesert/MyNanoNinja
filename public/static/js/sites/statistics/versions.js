@@ -81,7 +81,11 @@ function prepareGraphDataWeight(data){
 
   var colorcount = 0;
   for (const [key, value] of Object.entries(data)) {
-    chartdata.labels.push(value._id.major + '.' + value._id.minor + '.' + value._id.patch);
+    if(value._id.major){
+      chartdata.labels.push(value._id.major + '.' + value._id.minor + '.' + value._id.patch);
+    } else {
+      chartdata.labels.push('Unknown');
+    }
     chartdata.datasets[0].data.push(toMnano(value.totalWeight));
     chartdata.datasets[0].backgroundColor.push(chartColors[colorcount]);
     colorcount++;
