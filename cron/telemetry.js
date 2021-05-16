@@ -48,6 +48,11 @@ async function updateAccountTelemetry(peers) {
     const address = match[1]
     const port = match[2]
 
+    var telemetry = await client._send('bootstrap', {
+      address,
+      port
+    })
+
     var telemetry = await client._send('telemetry', {
       address,
       port
