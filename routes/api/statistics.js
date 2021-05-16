@@ -10,6 +10,9 @@ var Account = require('../../models/account');
 
 var nodeclient = require('../../nano/client');
 
+var apicache = require('apicache');
+let cache = apicache.middleware
+
 /* GET home page. */
 router.get('/representatives', function (req, res) {
   Statistics.find({
@@ -25,16 +28,8 @@ router.get('/representatives', function (req, res) {
   });
 });
 
-router.get('/versions/weight', async (req, res) => {
+router.get('/versions/weight', cache('5 minutes'), async (req, res) => {
   var accounts = await Account.aggregate([
-    {
-      "$match": {
-        'telemetry.major_version': {
-          $exists: true,
-          $ne: null
-        }
-      }
-    },
     {
       "$group": {
         _id: {

@@ -86,5 +86,5 @@ async function updateAccountTelemetry(peers) {
   });
 }
 
-cron.schedule('*/15 * * * *', updateTelemetry);
+cron.schedule('*/5 * * * *', updateTelemetry);
 updateTelemetry()
