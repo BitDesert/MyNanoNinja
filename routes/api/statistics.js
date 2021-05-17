@@ -29,7 +29,7 @@ router.get('/representatives', function (req, res) {
 });
 
 router.get('/versions/weight', cache('5 minutes'), async (req, res) => {
-  var accounts = await Account.aggregate([
+  var mongoQuery = [
     {
       "$group": {
         _id: {
@@ -47,7 +47,19 @@ router.get('/versions/weight', cache('5 minutes'), async (req, res) => {
         "_id.patch": -1
       }
     }
-  ]).exec()
+  ];
+
+  if(req.query.onlyonline){
+    mongoQuery.unshift({
+      "$match": {
+        'lastVoted': {
+            $gt: moment().subtract(1, 'day').toDate(),
+          }
+      }
+    });
+  }
+
+  var accounts = await Account.aggregate(mongoQuery).exec()
 
   res.json(accounts);
 });
