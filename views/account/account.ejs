@@ -419,7 +419,7 @@
       <li class="list-group-item" v-if="account.telemetry.major_version">
         Version
         <span class="float-right">
-          {{ account.telemetry.major_version }}.{{ account.telemetry.minor_version }}.{{ account.telemetry.patch_version }}
+          {{ account.telemetry.major_version }}.{{ account.telemetry.minor_version }}.{{ account.telemetry.patch_version }}<span v-if="account.telemetry.pre_release_version && account.telemetry.pre_release_version !== 0">.{{ account.telemetry.pre_release_version }}</span>
         </span>
       </li>
       <li class="list-group-item" v-if="account.telemetry.block_count">

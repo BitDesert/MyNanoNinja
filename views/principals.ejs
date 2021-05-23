@@ -144,7 +144,7 @@
                 <% } %>
               <% } %>
               <% if(accounts[i].telemetry.major_version) { %>
-              <span class="badge badge-secondary"><%= accounts[i].telemetry.major_version %>.<%= accounts[i].telemetry.minor_version %>.<%= accounts[i].telemetry.patch_version %></span>
+              <span class="badge badge-secondary"><%= accounts[i].telemetry.major_version %>.<%= accounts[i].telemetry.minor_version %>.<%= accounts[i].telemetry.patch_version %><% if(accounts[i].telemetry.pre_release_version && accounts[i].telemetry.pre_release_version !== 0) { %>.<%= accounts[i].telemetry.pre_release_version %><% } %></span>
               <% } %>
             </h5>
           </div>
