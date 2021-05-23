@@ -1,6 +1,9 @@
 module.exports = function (nanorpc) {
   var express = require('express');
 
+  const NanoClient = require('nano-node-rpc');
+  const client = new NanoClient({ url: process.env.NODE_RPC })
+
   var apicache = require('apicache');
   let cache = apicache.middleware
 
@@ -32,10 +35,16 @@ module.exports = function (nanorpc) {
     });
   });
 
-  router.get('/blockcount', cache('1 minute'), function (req, res) {
-    res.json({
-      count: nanorpc.getBlockcount()
-    });
+  router.get('/blockcount', cache('1 minute'), async (req, res) => {
+    try {
+      var block_count = await client._send('block_count');
+      res.json(block_count);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({
+        "error": "There was an error.",
+      });
+    }
   });
 
   router.post('/editAccount', ensureAuthenticated, function (req, res) {    
