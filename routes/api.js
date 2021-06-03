@@ -1,5 +1,6 @@
 module.exports = function (nanorpc) {
   var express = require('express');
+  const axios = require('axios');
 
   const NanoClient = require('nano-node-rpc');
   const client = new NanoClient({ url: process.env.NODE_RPC })
@@ -47,51 +48,89 @@ module.exports = function (nanorpc) {
     }
   });
 
-  router.post('/editAccount', ensureAuthenticated, function (req, res) {    
-    Account.findOne({
+  router.post('/editAccount', ensureAuthenticated, async (req, res) => {
+    try {
+      var account = await Account.findOne({
         'account': req.body.account
       })
-      .populate('owner')
-      .exec(function (err, account) {
-        if (err || !account) {
-          // Not found
-          res.status(404).end();
-          return;
-        }
+        .populate('owner')
+    } catch (error) {
+      res.status(404).end();
+      return;
+    }
 
-        if (account.owner._id.toString() != req.user._id.toString()) {
-          // Forbidden
-          res.status(403).end();
-          return;
-        }
+    if (account.owner._id.toString() != req.user._id.toString()) {
+      // Forbidden
+      res.status(403).end();
+      return;
+    }
 
-        var output = {};
+    var output = {};
 
-        account.alias = req.body.account_alias;
-        account.description = req.body.account_description;
-        account.website = req.body.account_website;
+    account.alias = req.body.account_alias;
+    account.description = req.body.account_description;
+    account.website = req.body.account_website;
 
-        if(!account.server){
-          account.server = {}
-        }
+    if (!account.server) {
+      account.server = {}
+    }
 
-        account.server.type = req.body.server_type;
-        account.server.cpu = req.body.server_cpu;
-        account.server.ram = req.body.server_ram;
-        account.donation = req.body.donation;
-        account.closing = req.body.closing;
+    account.server.type = req.body.server_type;
+    account.server.cpu = req.body.server_cpu;
+    account.server.ram = req.body.server_ram;
+    account.donation = req.body.donation;
+    account.closing = req.body.closing;
 
-        account.save(function (err) {
-          if (err) {
-            output.status = 'error';
-            output.msg = 'Error!';
-          } else {
-            output.status = 'success';
-            output.msg = 'Success!';
-          }
-          res.json(output);
+    if (req.body.account_monitorUrl) {
+      try {
+        var monitor_response = await axios.get(req.body.account_monitorUrl + '/api.php');
+      } catch (error) {
+        res.json({
+          status: 'error',
+          msg: 'Couldn\'t contact Node Monitor!'
         });
+        return;
+      }
+
+      if (monitor_response.status !== 200) {
+        res.json({
+          status: 'error',
+          msg: 'Couldn\'t contact Node Monitor!'
+        });
+        return;
+
+      } else if (monitor_response.request.protocol != 'https:') {
+        output.status = 'error';
+        output.msg = 'The monitor is not available via HTTPS!';
+        console.log(output);
+        return res.status(400).json(output);
+
+      } else if (monitor_response.data.nanoNodeAccount != account.account) {
+        output.status = 'error';
+        output.msg = 'Node Monitor account mismatch!';
+        console.log(output);
+        return res.status(400).json(output);
+
+      } else {
+        account.monitor.url = req.body.account_monitorUrl;
+        account.monitor.version = monitor_response.data.version;
+        account.monitor.blocks = monitor_response.data.currentBlock;
+      }
+    }
+
+    try {
+      await account.save();
+    } catch (error) {
+      res.json({
+        status: 'error',
+        msg: 'Error!'
       });
+    }
+
+    res.json({
+      status: 'success',
+      msg: 'Success!'
+    });
   });
 
   function ensureAuthenticated(req, res, next) {

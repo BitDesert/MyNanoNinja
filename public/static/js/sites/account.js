@@ -19,6 +19,7 @@ var app = new Vue({
         server_cpu: '',
         server_ram: '',
         account_website: '',
+        account_monitorUrl: '',
         donation: {
           account: null,
           website: null
@@ -54,6 +55,9 @@ var app = new Vue({
 
         if (response.data.closing)
           this.editAccount.closing = response.data.closing;
+
+        if (response.data.monitor.url)
+          this.editAccount.account_monitorUrl = response.data.monitor.url;
 
         if (response.data.server){
           if (response.data.server.type)
@@ -104,6 +108,7 @@ var app = new Vue({
           account_alias: '' + this.editAccount.account_alias,
           account_description: '' + this.editAccount.account_description,
           account_website: '' + this.editAccount.account_website,
+          account_monitorUrl: '' + this.editAccount.account_monitorUrl,
           server_type: '' + this.editAccount.server_type,
           server_cpu: '' + this.editAccount.server_cpu,
           server_ram: '' + this.editAccount.server_ram,
