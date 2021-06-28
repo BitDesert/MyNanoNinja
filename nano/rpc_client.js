@@ -8,7 +8,8 @@ const nano = new Nano({
 });
 
 var available = 133248289218203497353846153999000000001;
-var online_stake_total = 111073634713394802707654827519888461987;
+var online_stake_total = 106133443682229612835545290079262542348;
+var trended_stake_total = 103368968733464125722641480308757726616;
 var blockcount = 0;
 
 function getAvailable(){
@@ -17,6 +18,10 @@ function getAvailable(){
 
 function getOnlineStakeTotal(){
   return online_stake_total;
+}
+
+function getTrendedStakeTotal(){
+  return trended_stake_total;
 }
 
 function getBlockcount(){
@@ -32,7 +37,7 @@ updateLocalVars();
 function updateLocalVars(){
   updateBlockcount();
   updateAvailable();
-  updateOnlineStakeTotal();
+  updateStakes();
 }
 
 function updateAvailable(){
@@ -58,12 +63,12 @@ function updateBlockcount(){
   });
 }
 
-function updateOnlineStakeTotal(){
-  console.log('RPC: Updating online_stake_total...');
+function updateStakes(){
+  console.log('RPC: Updating current stakes...');
   nano.rpc("confirmation_quorum")
   .then((result) => {
     online_stake_total = result.online_stake_total;
-    console.log('RPC: Current online_stake_total: ' + online_stake_total);
+    trended_stake_total = result.trended_stake_total;
   })
   .catch( reason => {
     console.error( 'onRejected function called: ', reason );
@@ -74,5 +79,6 @@ module.exports = {
   rpc: nano, 
   getAvailable: getAvailable,
   getOnlineStakeTotal: getOnlineStakeTotal,
+  getTrendedStakeTotal: getTrendedStakeTotal,
   getBlockcount: getBlockcount
 };
