@@ -83,7 +83,8 @@ module.exports = function (nanorpc) {
 
     if (req.body.account_monitorUrl) {
       try {
-        var monitor_response = await axios.get(req.body.account_monitorUrl + '/api.php');
+        var monitor_url = new URL("/api.php", req.body.account_monitorUrl);
+        var monitor_response = await axios.get(monitor_url.href);
       } catch (error) {
         res.json({
           status: 'error',
