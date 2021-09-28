@@ -56,8 +56,10 @@ var app = new Vue({
         if (response.data.closing)
           this.editAccount.closing = response.data.closing;
 
-        if (response.data.monitor.url)
-          this.editAccount.account_monitorUrl = response.data.monitor.url;
+        if (response.data.monitor){
+          if (response.data.monitor.url)
+            this.editAccount.account_monitorUrl = response.data.monitor.url;
+        }
 
         if (response.data.server){
           if (response.data.server.type)
