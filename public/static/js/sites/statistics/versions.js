@@ -153,7 +153,7 @@ function setupGraphWeight(data) {
             var meta = dataset._meta[Object.keys(dataset._meta)[0]];
             var total = meta.total;
             var currentValue = dataset.data[tooltipItem.index];
-            var currentValueNano = data.labels[tooltipItem.index] + ': ' + parseInt(data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]).toLocaleString('en-US') + ' NANO';
+            var currentValueNano = data.labels[tooltipItem.index] + ': Ӿ' + parseInt(data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]).toLocaleString('en-US');
             var percentage = parseFloat((currentValue / total * 100).toFixed(1));
             return currentValueNano + ' (' + percentage + '%)';
           },
