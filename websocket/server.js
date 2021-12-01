@@ -35,6 +35,9 @@ function init(server) {
         heartbeat(ws)
         sendMessage(ws, { action: 'pong' })
       })
+      .on('pong', function (data) {
+        heartbeat(ws)
+      })
       .on('subscribe', function (data) {
         try {
           if (data.topic !== 'confirmation') {
