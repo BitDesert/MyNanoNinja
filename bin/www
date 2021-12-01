@@ -9,6 +9,7 @@ require('dotenv').config()
 var app = require('../app');
 var debug = require('debug')('expresstest:server');
 var http = require('http');
+var wsserver = require('../websocket/server')
 
 /**
  * Get port from environment and store in Express.
@@ -22,6 +23,9 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
+
+// Websocket
+wsserver.init(server)
 
 /**
  * Listen on provided port, on all network interfaces.

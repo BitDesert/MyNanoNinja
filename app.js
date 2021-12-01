@@ -131,4 +131,7 @@ app.use(function (err, req, res, next) {
   });
 });
 
+// websocket
+require('./websocket/client')
+
 module.exports = app;

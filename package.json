@@ -55,8 +55,9 @@
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
     "universal-analytics": "^0.4.20",
+    "url": "^0.11.0",
     "vue": "^2.5.17",
-    "ws": "^7.1.0"
+    "ws": "^7.5.6"
   },
   "devDependencies": {
     "nodemon": "^2.0.7"
