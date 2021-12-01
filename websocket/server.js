@@ -95,7 +95,7 @@ const interval = setInterval(() => {
     ws.isAlive = false
     ws.ping(() => { ping(ws) })
   })
-}, 30 * 1000)
+}, 2 * 60 * 1000)
 
 function sendAccount(account, data) {
   wss.clients.forEach(client => {
