@@ -89,16 +89,16 @@ const ping = (ws) => {
   sendMessage(ws, { action: 'ping' })
 }
 
-const interval = setInterval(() => {
-  wss.clients.forEach((ws) => {
-    if (ws.isAlive === false) {
-      return ws.terminate()
-    }
+// const interval = setInterval(() => {
+//   wss.clients.forEach((ws) => {
+//     if (ws.isAlive === false) {
+//       return ws.terminate()
+//     }
 
-    ws.isAlive = false
-    ws.ping(() => { ping(ws) })
-  })
-}, 2 * 60 * 1000)
+//     ws.isAlive = false
+//     ws.ping(() => { ping(ws) })
+//   })
+// }, 2 * 60 * 1000)
 
 function sendAccount(account, data) {
   wss.clients.forEach(client => {
