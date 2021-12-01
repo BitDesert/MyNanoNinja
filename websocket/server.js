@@ -7,7 +7,6 @@ function toEvent(message) {
   try {
     const parsedmessage = JSON.parse(message)
     this.emit(parsedmessage.action, parsedmessage)
-    console.log('WS ACTION:', parsedmessage.action);
   } catch (ignore) {
     this.emit(undefined, message)
   }
@@ -24,14 +23,22 @@ function init(server) {
     })
   })
 
-  wss.on('connection', function (ws) {
-    console.log('WS: New connection')
+  wss.on('connection', function (ws, req) {
+    const ip = req.socket.remoteAddress;
+    var ip_forwarded = 'x-forwarded-for'
+    try {
+      ip_forwarded = req.headers['x-forwarded-for'].split(',')[0].trim();
+    } catch (error) {
+      // no error
+    }
+    console.log('WS: New connection', ip, ip_forwarded)
 
     ws.isAlive = true
     ws.accounts = []
 
     ws.on('message', toEvent)
       .on('ping', function (data) {
+        console.log('WS: Ping', ip, ip_forwarded)
         heartbeat(ws)
         sendMessage(ws, { action: 'pong' })
       })
