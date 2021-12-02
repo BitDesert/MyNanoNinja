@@ -40,7 +40,7 @@ function init(server) {
       .on('ping', function (data) {
         console.log('WS: Ping', ip, ip_forwarded)
         heartbeat(ws)
-        sendMessage(ws, { action: 'pong' })
+        return sendMessage(ws, { ack: 'pong' })
       })
       .on('pong', function (data) {
         heartbeat(ws)
@@ -55,12 +55,14 @@ function init(server) {
           if (data.options.accounts.length > 0) {
             ws.accounts = data.options.accounts
 
+            return sendMessage(ws, { ack: 'subscribe' })
+
           } else {
-            sendError(ws, 'malformed options')
+            return sendError(ws, 'malformed options')
           }
         } catch (error) {
           console.log(error);
-          sendError(ws, 'malformed message')
+          return sendError(ws, 'malformed message')
         }
       })
       .on('unsubscribe', function (data) {
@@ -72,9 +74,11 @@ function init(server) {
 
           ws.accounts = []
 
+          return sendMessage(ws, { ack: 'unsubscribe' })
+
         } catch (error) {
           console.log(error);
-          sendError(ws, 'malformed message')
+          return sendError(ws, 'malformed message')
         }
       })
   })
