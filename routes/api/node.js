@@ -167,6 +167,12 @@ router.post('/', isApiAuthorized, function (req, res) {
         });
       });
 
+  } else if(action == 'pending' && params.account?.toLowerCase().replace(/(xrb|nano)[_-]/,'nano_') == 'nano_1111111111111111111111111111111111111111111111111111hifc8npp'){
+    console.log('burn account');
+    res.status(400).json({
+      error: 'Not allowed',
+      msg: 'This account is not allowed'
+    });
   } else {
     nano.rpc(action, params)
       .then(response => {
