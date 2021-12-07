@@ -1,14 +1,63 @@
 
 var WebSocketServer = require('ws').Server
+var User = require('../models/user');
+const RateLimiterMemory = require('rate-limiter-flexible').RateLimiterMemory;
 
 var wss
+
+const opts = {
+  points: 5,
+  duration: 60 * 60, // in seconds
+};
+
+const rateLimiter = new RateLimiterMemory(opts);
 
 function toEvent(message) {
   try {
     const parsedmessage = JSON.parse(message)
+    console.log('WS: Action', parsedmessage.action)
     this.emit(parsedmessage.action, parsedmessage)
   } catch (ignore) {
     this.emit(undefined, message)
+  }
+}
+
+isApiAuthorized = (req, next) => {
+  const authHeader = req.headers.authorization
+
+  if (!authHeader) {
+    next();
+
+  } else {
+    User.findOne({
+        'api.key': authHeader
+      })
+      .select('api')
+      .exec(function (err, user) {
+        if (err || !user) {
+          return next('User not found')
+        }
+        next(undefined, user);
+      });
+  }
+}
+
+consumePoints = async (ws, ip, consumePoints) => {
+  if(ws.user){
+    ws.user.api.calls_remaining = ws.user.api.calls_remaining - consumePoints;
+    await ws.user.save();
+    console.log('WS: User existing:', ws.user.api.calls_remaining);
+    remainingPoints = ws.user.api.calls_remaining;
+  } else {
+    rateLimiterRes = await rateLimiter.consume(ip, consumePoints).catch((rateLimiterRes) => {return rateLimiterRes})
+    remainingPoints = rateLimiterRes.remainingPoints;
+  }
+
+  if(remainingPoints <= 0){
+    sendMessage(ws, { error: 'No more points'})
+    return false
+  } else {
+    return remainingPoints
   }
 }
 
@@ -18,34 +67,42 @@ function init(server) {
   })
 
   server.on('upgrade', function upgrade(request, socket, head) {
-    wss.handleUpgrade(request, socket, head, function done(ws) {
-      wss.emit('connection', ws, request)
-    })
+    isApiAuthorized(request, function next(err, user) {
+      if (err) {
+        console.log('WS AUTH:', err);
+        socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n');
+        socket.destroy();
+        return;
+      }
+
+      wss.handleUpgrade(request, socket, head, function done(ws) {
+        wss.emit('connection', ws, request, user);
+      });
+    });
   })
 
-  wss.on('connection', function (ws, req) {
-    const ip = req.socket.remoteAddress;
-    var ip_forwarded = 'x-forwarded-for'
+  wss.on('connection', function (ws, req, user) {
+    var ip = req.socket.remoteAddress;
     try {
-      ip_forwarded = req.headers['x-forwarded-for'].split(',')[0].trim();
+      ip = req.headers['x-forwarded-for'].split(',')[0].trim();
     } catch (error) {
       // no error
     }
-    console.log('WS: New connection', ip, ip_forwarded)
+    console.log('WS: New connection', ip)
 
     ws.isAlive = true
     ws.accounts = []
+    ws.user = user
 
     ws.on('message', toEvent)
       .on('ping', function (data) {
-        console.log('WS: Ping', ip, ip_forwarded)
         heartbeat(ws)
         return sendMessage(ws, { ack: 'pong' })
       })
       .on('pong', function (data) {
         heartbeat(ws)
       })
-      .on('subscribe', function (data) {
+      .on('subscribe', async (data) => {
         try {
           if (data.topic !== 'confirmation') {
             sendError(ws, 'topic not supported')
@@ -55,8 +112,8 @@ function init(server) {
           if (data.options.accounts.length > 0) {
             ws.accounts = data.options.accounts
 
-            return sendMessage(ws, { ack: 'subscribe' })
-
+            remainingPoints = await consumePoints(ws, ip, 1)
+            return sendMessage(ws, { ack: 'subscribe', remainingPoints })
           } else {
             return sendError(ws, 'malformed options')
           }
