@@ -9,7 +9,7 @@
     "dev-cron": "nodemon ./cron.js"
   },
   "dependencies": {
-    "@accept-nano/client": "^1.7.0",
+    "@accept-nano/client": "^1.8.1",
     "apicache": "^1.6.2",
     "async": "^2.6.0",
     "axios": "^0.21.1",

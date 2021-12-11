@@ -81,7 +81,7 @@ app.use('/static/js', express.static(__dirname + '/node_modules/popper.js/dist/u
 app.use('/static/js', express.static(__dirname + '/node_modules/big.js/'));
 app.use('/static/js', express.static(__dirname + '/node_modules/vue/dist/'));
 app.use('/static/js', express.static(__dirname + '/node_modules/axios/dist/'));
-//app.use('/static/js/accept-nano', express.static(__dirname + '/node_modules/@accept-nano/client/dist/'));
+app.use('/static/js/accept-nano', express.static(__dirname + '/node_modules/@accept-nano/client/dist'));
 
 // required for passport
 app.use(session({
