@@ -81,7 +81,7 @@ module.exports = function (nanorpc) {
     account.donation = req.body.donation;
     account.closing = req.body.closing;
 
-    if (req.body.account_monitorUrl) {
+    if (req.body.account_monitorUrl !== '') {
       try {
         var monitor_url = new URL("/api.php", req.body.account_monitorUrl);
         var monitor_response = await axios.get(monitor_url.href);
@@ -118,6 +118,11 @@ module.exports = function (nanorpc) {
         account.monitor.version = monitor_response.data.version;
         account.monitor.blocks = monitor_response.data.currentBlock;
       }
+    } else {
+      console.log('EDIT ACCOUNT - Deleting monitor')
+      account.monitor.url = undefined;
+      account.monitor.version = undefined;
+      account.monitor.blocks = undefined;
     }
 
     try {
