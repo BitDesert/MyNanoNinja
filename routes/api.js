@@ -86,7 +86,8 @@ module.exports = function (nanorpc) {
         var monitor_url = new URL("/api.php", req.body.account_monitorUrl);
         var monitor_response = await axios.get(monitor_url.href);
       } catch (error) {
-        res.json({
+        console.error('MONITOR ERROR', error);
+        res.status(400).json({
           status: 'error',
           msg: 'Couldn\'t contact Node Monitor!'
         });
@@ -94,7 +95,7 @@ module.exports = function (nanorpc) {
       }
 
       if (monitor_response.status !== 200) {
-        res.json({
+        res.status(400).json({
           status: 'error',
           msg: 'Couldn\'t contact Node Monitor!'
         });
