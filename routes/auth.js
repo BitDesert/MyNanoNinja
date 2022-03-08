@@ -71,6 +71,13 @@ module.exports = function (passport, nanorpc) {
               var account = new Account();
               account.account = sender;
             }
+
+            if(account.owner){
+              output.error = 'owner_existing';
+              res.send(output);
+              return;
+            }
+
             account.owner = user._id;
         
             account.save(function (err) {
