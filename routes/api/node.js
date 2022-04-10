@@ -147,7 +147,7 @@ router.post('/', isApiAuthorized, function (req, res) {
   if (action == 'work_generate') {
     console.log('work_generate via DPOW');
 
-    axios.post('https://dpow.nanocenter.org/service/', {
+    axios.post(process.env.DPOW_URL, {
         "hash": params.hash,
         "user": process.env.DPOW_USER,
         "api_key": process.env.DPOW_KEY
