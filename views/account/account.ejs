@@ -267,7 +267,7 @@
       <li class="list-group-item">
         <i class="fab fa-twitter"></i> Twitter
         <span class="float-right">
-          <a href="https://twitter.com/<%= account.owner.twitter.username %>" target="_blank" rel="noreferer, noopener"
+          <a href="https://twitter.com/<%= account.owner.twitter.username %>"
             target="_blank" rel="noreferer, noopener">
             @<%= account.owner.twitter.username %>
           </a>
@@ -278,7 +278,7 @@
       <li class="list-group-item">
         <i class="fab fa-github"></i> GitHub
         <span class="float-right">
-          <a href="https://github.com/<%= account.owner.github.username %>" target="_blank" rel="noreferer, noopener"
+          <a href="https://github.com/<%= account.owner.github.username %>"
             target="_blank" rel="noreferer, noopener">
             <%= account.owner.github.username %>
           </a>
@@ -289,7 +289,7 @@
       <li class="list-group-item">
         <i class="fab fa-reddit"></i> Reddit
         <span class="float-right">
-          <a href="https://www.reddit.com/user/<%= account.owner.reddit.name %>" target="_blank" rel="noreferer, noopener"
+          <a href="https://www.reddit.com/user/<%= account.owner.reddit.name %>"
             target="_blank" rel="noreferer, noopener">
             <%= account.owner.reddit.name %>
           </a>
@@ -300,7 +300,10 @@
       <li class="list-group-item">
         <i class="fab fa-discord"></i> Discord
         <span class="float-right">
-          <%= account.owner.discord.username %>#<%= account.owner.discord.discriminator %>
+          <a href="https://discord.com/users/<%= account.owner.discord.id %>"
+            target="_blank" rel="noreferer, noopener">
+            <%= account.owner.discord.username %>#<%= account.owner.discord.discriminator %>
+          </a>
         </span>
       </li>
       <% } %>
@@ -561,6 +564,7 @@
 <script src="/static/js/main-vue.js?v=7"></script>
 <script src="/static/js/axios.min.js"></script>
 <script src="/static/js/moment.min.js"></script>
+<script src="/static/js/big.min.js"></script>
 <script>
   const address = "<% if (account === null) { %><%= myaccount %><% } else { %><%= account.account %><% } %>";
 </script>
