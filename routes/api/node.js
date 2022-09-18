@@ -155,9 +155,17 @@ router.post('/', isApiAuthorized, function (req, res) {
       .then(function (response) {
         console.log('work_generate success', response.data.work);
 
-        res.json({
-          work: response.data.work
-        });
+        if(response.data.work){
+          res.json({
+            work: response.data.work
+          });
+        } else {
+          res.status(500).json({
+            error: 'Not found',
+            msg: 'PoW generation is currently not available'
+          });
+        }
+
       })
       .catch(function (error) {
         console.log('work_generate error', error);
