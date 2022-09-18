@@ -30,7 +30,7 @@ function updatePeers() {
       var match = regex_ip.exec(peer.ip)
 
       if (match) {
-        updatePeer(peer.account, match[1], peer.protocol_version, callback)
+        updatePeer(peer.account, match[1], peer.protocol_version, peer.node_id, callback)
         checkForMonitor(peer.account, match[1]);
       } else {
         callback()
@@ -62,6 +62,7 @@ async function getAdvancedPeers() {
       ip: address,
       account: repInfo ? repInfo.account : null,
       weight: repInfo ? repInfo.weight : null,
+      node_id: peer.node_id,
       protocol_version: peer.protocol_version,
       type: peer.type
     };
@@ -69,7 +70,7 @@ async function getAdvancedPeers() {
 
 }
 
-async function updatePeer(peeraccount, ip, protoversion, callback) {
+async function updatePeer(peeraccount, ip, protoversion, node_id, callback) {
   var account = await Account.findOne({ 'account': peeraccount })
 
   try {
